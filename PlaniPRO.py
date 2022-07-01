@@ -4,7 +4,6 @@ from tkinter.ttk import Treeview, Style, Combobox
 from datetime import datetime
 import sqlite3
 import pandas as pd
-from ApisNetPe import ApisNetPe
 from dateutil.relativedelta import relativedelta
 from tkcalendar import Calendar
 
