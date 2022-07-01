@@ -1052,12 +1052,12 @@ class App(Tk):
             if ingreso[0] == None:
                 ingreso = '0.00'
             else:
-                ingreso = f'{ingreso[0]:,.2f}'
+                ingreso = f'{ingreso[0]:.2f}'
 
             if descuento[0] == None:
                 descuento = '0.00'
             else:
-                descuento = f'{descuento[0]:,.2f}'
+                descuento = f'{descuento[0]:.2f}'
 
             if dmedico[0] == None:
                 dmedico = '0'
@@ -1077,12 +1077,12 @@ class App(Tk):
             if adelanto[0] == None:
                 adelanto = '0.00'
             else:
-                adelanto = f'{adelanto[0]:,.2f}'
+                adelanto = f'{adelanto[0]:.2f}'
 
             if xfuera[0] == None:
                 xfuera = '0.00'
             else:
-                xfuera = f'{xfuera[0]:,.2f}'
+                xfuera = f'{xfuera[0]:.2f}'
                    
             # Insertamos datos al treeview
             self.tre2.insert('', END, text=id, values=(orden, nombre, apoyo[0], falta[0], feriado[0], ingreso, descuento, dmedico, vacaciones, cvacaciones, adelanto, xfuera)) 
@@ -1673,7 +1673,7 @@ class App(Tk):
             
             monto = float(self.adelanto.item(self.adelanto.focus())['values'][1])    
             saldo = float(valores[10]) - monto    
-            valores[10] = f'{saldo:,.2f}'      
+            valores[10] = f'{saldo:.2f}'      
 
             # Obtener id de trabajador
             id = int(self.adelanto.item(self.adelanto.focus())['text'] )
@@ -1683,32 +1683,76 @@ class App(Tk):
             
             self.adelanto.delete(self.adelanto.focus())     
             
-
         if self.ingreso.selection():
 
             monto = float(self.ingreso.item(self.ingreso.focus())['values'][1])    
             saldo = float(valores[5]) - monto    
-            valores[5] = f'{saldo:,.2f}'      
+            valores[5] = f'{saldo:.2f}'      
 
             # Obtener id de trabajador
             id = int(self.ingreso.item(self.ingreso.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM ADELANTO WHERE ID = {id}')
+            cursor.execute(F'DELETE FROM INGRESO WHERE ID = {id}')
             
             self.ingreso.delete(self.ingreso.focus())     
 
         if self.descuento.selection():
-            print('esta selecionado un item del menu descuento')
+
+            monto = float(self.descuento.item(self.descuento.focus())['values'][1])    
+            saldo = float(valores[6]) - monto    
+            valores[6] = f'{saldo:.2f}'      
+
+            # Obtener id de trabajador
+            id = int(self.descuento.item(self.descuento.focus())['text'] )
+           
+            # Ejecutamos la query de grabar dia de apoyo
+            cursor.execute(F'DELETE FROM DESCUENTO WHERE ID = {id}')
+            
+            self.descuento.delete(self.descuento.focus())     
 
         if self.vacaciones.selection():
-            print('esta selecionado un item del menu vacaciones')
+            
+            total = int(self.vacaciones.item(self.vacaciones.focus())['values'][2])    
+            dias = int(valores[8]) - total    
+            valores[8] = dias     
+
+            # Obtener id de trabajador
+            id = int(self.vacaciones.item(self.vacaciones.focus())['text'] )
+           
+            # Ejecutamos la query de grabar dia de apoyo
+            cursor.execute(F'DELETE FROM VACACIONES WHERE ID = {id}')
+            
+            self.vacaciones.delete(self.vacaciones.focus())     
 
         if self.dmedico.selection():
-            print('esta selecionado un item del menu descanso medico')
+
+            total = int(self.dmedico.item(self.dmedico.focus())['values'][3])    
+            dias = int(valores[7]) - total    
+            valores[7] = dias     
+
+            # Obtener id de trabajador
+            id = int(self.dmedico.item(self.dmedico.focus())['text'] )
+           
+            # Ejecutamos la query de grabar dia de apoyo
+            cursor.execute(F'DELETE FROM DMEDICO WHERE ID = {id}')
+            
+            self.dmedico.delete(self.dmedico.focus())       
 
         if self.cvacaciones.selection():
-            print('esta selecionado un item del menu compra de vacaciones')    
+
+            total = int(self.cvacaciones.item(self.cvacaciones.focus())['values'][2])    
+            dias = int(valores[9]) - total    
+            valores[9] = dias     
+
+            # Obtener id de trabajador
+            id = int(self.cvacaciones.item(self.cvacaciones.focus())['text'] )
+           
+            # Ejecutamos la query de grabar dia de apoyo
+            cursor.execute(F'DELETE FROM CVACACIONES WHERE ID = {id}')
+            
+            self.cvacaciones.delete(self.cvacaciones.focus())       
+
 
         self.tre2.item(self.tre2.focus(), values=valores)
 
@@ -1821,6 +1865,7 @@ class App(Tk):
             self.dmedico.selection_set('')        
           
     def Menu2DetallesSeleccionarFecha(self, boton):
+
         if boton == 'fivacaciones':
             # Agregar fecha inicial al cuadro de vacaciones
             self.vacacionesInicial.configure(state='normal')
