@@ -59,10 +59,10 @@ class ApisNetPe:
         return self._get('/v1/tipo-cambio-sunat', {'month': month, 'year': year})
 
 
-#print(ApisNetPe().get_company('20511466629'))
-#print(ApisNetPe().get_person('48555618'))
-#print(ApisNetPe().get_exchange_rate('2020-01-01'))
-#print(ApisNetPe().get_exchange_rate_for_month(1, 2020))
+    ''' #print(ApisNetPe().get_company('20511466629'))
+    #print(ApisNetPe().get_person('48555618'))
+    #print(ApisNetPe().get_exchange_rate('2020-01-01'))
+    #print(ApisNetPe().get_exchange_rate_for_month(1, 2020)) '''
 
 class App(Tk):
 
