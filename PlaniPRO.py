@@ -1345,9 +1345,7 @@ class App(Tk):
             
             # Si no esta registrado la fecha agregamos al treeview
             self.apoyo.insert('',END, text=idRegistro[0] ,values=self.calendario.get_date())
-
-            
-        
+                   
         elif widget == 'FALTA':
 
             # Verificamos si se repite la fecha para anular registro       
@@ -1361,8 +1359,9 @@ class App(Tk):
             # Ejecutamos la query de grabar dia de apoyo
             cursor.execute(F'INSERT INTO FALTA (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
 
+            idRegistro = cursor.execute(F'SELECT ID FROM FALTA ORDER BY ID DESC').fetchone()  
             # Si no esta registrado la fecha agregamos al treeview
-            self.falta.insert('',END, values=self.calendario.get_date())
+            self.falta.insert('',END, text=idRegistro[0], values=self.calendario.get_date())
 
         elif widget == 'FERIADO':
 
@@ -1376,9 +1375,9 @@ class App(Tk):
         
             # Ejecutamos la query de grabar dia de apoyo
             cursor.execute(F'INSERT INTO FERIADO (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
-
+            idRegistro = cursor.execute(F'SELECT ID FROM FERIADO ORDER BY ID DESC').fetchone()
             # Si no esta registrado la fecha agregamos al treeview
-            self.feriado.insert('',END, values=self.calendario.get_date())
+            self.feriado.insert('',END,text=idRegistro[0], values=self.calendario.get_date())
 
         elif widget == 'ADELANTO':
 
@@ -1406,7 +1405,8 @@ class App(Tk):
                         # Ejecutamos la query de grabar dia de apoyo
                         cursor.execute(F'INSERT INTO ADELANTO (IDAC, FECH, MONT) VALUES ({id}, "{self.calendario.get_date()}", {monto})')
 
-                        self.adelanto.insert('',END , values=(self.calendario.get_date(), f'{monto:.2f}'))
+                        idRegistro = cursor.execute(F'SELECT ID FROM ADELANTO ORDER BY ID DESC').fetchone()
+                        self.adelanto.insert('',END ,text=idRegistro[0], values=(self.calendario.get_date(), f'{monto:.2f}'))
                         self.adelantoImporte.delete(0, END)                    
                 
                 # Si esta mal la validacion del importe o esta vacio enviamos el foco al cuadro
@@ -1440,7 +1440,8 @@ class App(Tk):
                         # Ejecutamos la query de grabar dia de apoyo
                         cursor.execute(F'INSERT INTO INGRESO (IDAC, DETA, MONT) VALUES ({id}, "{self.ingresoDetalle.get()}", {monto})')
 
-                        self.ingreso.insert('', END, values=(self.ingresoDetalle.get(), f'{monto:.2f}'))
+                        idRegistro = cursor.execute(F'SELECT ID FROM INGRESO ORDER BY ID DESC').fetchone()
+                        self.ingreso.insert('', END,text=idRegistro[0], values=(self.ingresoDetalle.get(), f'{monto:.2f}'))
 
                         self.ingresoDetalle.delete(0, END)
                         self.ingresoImporte.delete(0, END)
@@ -1452,6 +1453,170 @@ class App(Tk):
                 else:
                     self.ingresoImporte.focus_set()
                     messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !', icon = 'warning')   
+
+        elif widget == 'DESCUENTO':
+
+            # Validamos los cuadros de descuento si estan vacios enviar el foco
+            if self.descuentoDetalle.get() == '':
+                self.descuentoDetalle.focus_set()
+                messagebox.showinfo('DESCUENTO', 'Registra el detalle del descuento !', icon = 'warning')
+            elif self.descuentoImporte.get() == '':
+                self.descuentoImporte.focus_set()    
+                messagebox.showinfo('DESCUENTO', 'Registra el importe del descuento !', icon = 'warning')
+            else:
+                
+                # Validamos el importe que este bien escrito 
+                if self.descuentoImporte.get().count('.') == 1 or self.descuentoImporte.get().count('.') == 0:          
+                    if self.descuentoImporte.get().replace('.','').isnumeric():
+                                                                   
+                        # Si todo esta ok, registramos en el treeview
+                        monto = float(self.descuentoImporte.get())
+
+                        valores[6] = f'{float(valores[6]) + monto:.2f}' 
+
+                        # Ejecutamos la query de grabar dia de apoyo
+                        cursor.execute(F'INSERT INTO DESCUENTO (IDAC, DETA, MONT) VALUES ({id}, "{self.descuentoDetalle.get()}", {monto})')
+
+                        idRegistro = cursor.execute(F'SELECT ID FROM DESCUENTO ORDER BY ID DESC').fetchone()
+                        self.descuento.insert('', END,text=idRegistro[0], values=(self.descuentoDetalle.get(), f'{monto:.2f}'))
+
+                        self.descuentoDetalle.delete(0, END)
+                        self.descuentoImporte.delete(0, END)
+                    
+                # Si esta mal la validacion del importe o esta vacio enviamos el foco al cuadro
+                    else:
+                        self.descuentoImporte.focus_set()    
+                        messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !', icon = 'warning') 
+                else:
+                    self.descuentoImporte.focus_set()
+                    messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !', icon = 'warning')
+
+        elif widget == 'VACACIONES':
+
+            # Validamos los cuadros de vacaciones si estan vacios enviar el foco
+            if self.vacacionesInicial.get() == '':
+                self.vacacionesTotal.focus_set() 
+                messagebox.showinfo('VACACIONES', 'Selecciona la fecha inicial de las vacaciones !', icon = 'warning')
+            elif self.vacacionesFinal.get() == '':
+                self.vacacionesTotal.focus_set() 
+                messagebox.showinfo('VACACIONES', 'Selecciona la fecha final de las vacaciones !', icon = 'warning')
+            elif self.vacacionesTotal.get() == '':
+                self.vacacionesTotal.focus_set()   
+                messagebox.showinfo('VACACIONES', 'Registra el total de dias de las vacaciones !', icon = 'warning')
+            else:
+                
+                # Validamos el total que este bien escrito             
+                if self.vacacionesTotal.get().isnumeric():
+                    
+                    # Si todo esta ok, registramos en el treeview
+                    total =int(self.vacacionesTotal.get())                    
+
+                    valores[8] = int(valores[8]) + total
+
+                    # Ejecutamos la query de grabar dia de apoyo
+                    cursor.execute(F'INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{self.vacacionesInicial.get()}", "{self.vacacionesFinal.get()}",  {total})')
+
+                    idRegistro = cursor.execute(F'SELECT ID FROM VACACIONES ORDER BY ID DESC').fetchone()
+                    self.vacaciones.insert('', END,text=idRegistro[0], values=(self.vacacionesInicial.get(), self.vacacionesFinal.get(), total))
+
+                    self.vacacionesInicial.configure(state='normal')
+                    self.vacacionesFinal.configure(state='normal')
+                    self.vacacionesInicial.delete(0, END)
+                    self.vacacionesFinal.delete(0, END)
+                    self.vacacionesTotal.delete(0, END)
+                    self.vacacionesInicial.configure(state='readonly')
+                    self.vacacionesFinal.configure(state='readonly')
+                    
+                # Si esta mal la validacion del total enviamos el foco al cuadro               
+                else:
+                    self.vacacionesTotal.focus_set()
+                    messagebox.showinfo('VACACIONES', 'Registra correctamente el total de dias de las vacaciones !', icon = 'warning')
+
+        elif widget == 'DMEDICO':
+            
+            # Validamos los cuadros de descanso medico si estan vacios enviar el foco
+            if self.dmedicoInicial.get() == '':
+                self.dmedicoDetalle.focus_set() 
+                messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha inicial del descanso medico !', icon = 'warning')
+            elif self.dmedicoFinal.get() == '':
+                self.dmedicoDetalle.focus_set() 
+                messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha final del descanso medico !', icon = 'warning')
+            elif self.dmedicoDetalle.get() == '':
+                self.dmedicoDetalle.focus_set()   
+                messagebox.showinfo('DESCANSO MEDICO', 'Registra el detalle del descanso medico !', icon = 'warning')
+            elif self.dmedicoTotal.get() == '':
+                self.dmedicoTotal.focus_set()   
+                messagebox.showinfo('DESCANSO MEDICO', 'Registra el total de dias del descanso medico !', icon = 'warning')
+            else:
+                
+                # Validamos el total que este bien escrito             
+                if self.dmedicoTotal.get().isnumeric():
+                    
+                    # Si todo esta ok, registramos en el treeview
+                    total =int(self.dmedicoTotal.get())                    
+
+                    valores[7] = int(valores[7]) + total
+
+                    # Ejecutamos la query de grabar dia de apoyo
+                    cursor.execute(F'INSERT INTO DMEDICO (IDAC, FINI, FFIN, DETA, DTOT) VALUES ({id}, "{self.dmedicoInicial.get()}", "{self.dmedicoFinal.get()}", "{self.dmedicoDetalle.get()}",  {total})')
+
+                    idRegistro = cursor.execute(F'SELECT ID FROM DMEDICO ORDER BY ID DESC').fetchone()
+                    self.dmedico.insert('', END,text=idRegistro[0], values=(self.dmedicoInicial.get(), self.dmedicoFinal.get(), self.dmedicoDetalle.get(), total))
+
+                    self.dmedicoInicial.configure(state='normal')
+                    self.dmedicoFinal.configure(state='normal')
+                    self.dmedicoInicial.delete(0, END)
+                    self.dmedicoFinal.delete(0, END)
+                    self.dmedicoDetalle.delete(0, END)
+                    self.dmedicoTotal.delete(0, END)
+                    self.dmedicoInicial.configure(state='readonly')
+                    self.dmedicoFinal.configure(state='readonly')
+
+                # Si esta mal la validacion del total enviamos el foco al cuadro               
+                else:
+                    self.dmedicoTotal.focus_set()
+                    messagebox.showinfo('DESCANSO MEDICO', 'Registra correctamente el total de dias del descanso medico !', icon = 'warning')
+
+        elif widget == 'CVACACIONES':
+
+             # Validamos los cuadros de compra de vacaciones si estan vacios enviar el foco
+            if self.cvacacionesInicial.get() == '':
+                self.cvacacionesTotal.focus_set() 
+                messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha inicial de la compra de vacaciones !', icon = 'warning')
+            elif self.cvacacionesFinal.get() == '':
+                self.cvacacionesTotal.focus_set() 
+                messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha final de la compra de vacaciones !', icon = 'warning')
+            elif self.cvacacionesTotal.get() == '':
+                self.cvacacionesTotal.focus_set()   
+                messagebox.showinfo('COMPRA DE VACACIONES', 'Registra el total de dias de la compra de vacaciones !', icon = 'warning')
+            else:
+                
+                # Validamos el total que este bien escrito             
+                if self.cvacacionesTotal.get().isnumeric():
+
+                    # Si todo esta ok, registramos en el treeview
+                    total =int(self.cvacacionesTotal.get())                    
+
+                    valores[9] = int(valores[9]) + total
+
+                    # Ejecutamos la query de grabar dia de apoyo
+                    cursor.execute(F'INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{self.cvacacionesInicial.get()}", "{self.cvacacionesFinal.get()}",  {total})')
+
+                    idRegistro = cursor.execute(F'SELECT ID FROM CVACACIONES ORDER BY ID DESC').fetchone()
+                    self.cvacaciones.insert('', END,text=idRegistro[0], values=(self.cvacacionesInicial.get(), self.cvacacionesFinal.get(), total))
+
+                    self.cvacacionesInicial.configure(state='normal')
+                    self.cvacacionesFinal.configure(state='normal')
+                    self.cvacacionesInicial.delete(0, END)
+                    self.cvacacionesFinal.delete(0, END)
+                    self.cvacacionesTotal.delete(0, END)
+                    self.cvacacionesInicial.configure(state='readonly')
+                    self.cvacacionesFinal.configure(state='readonly')
+
+                # Si esta mal la validacion del total enviamos el foco al cuadro               
+                else:
+                    self.cvacacionesTotal.focus_set()
+                    messagebox.showinfo('COMPRA DE VACACIONES', 'Registra correctamente el total de dias de la compra de vacaciones !', icon = 'warning')
 
         # Grabamos cambios en base de datos y cerramos conexion
         conexion.commit()
@@ -1557,7 +1722,7 @@ class App(Tk):
 
         # Desactivar foco de los demas treeview
         if widget == 'treeview':                
-
+            print(self.apoyo.item(self.apoyo.focus())['text'])
             self.falta.selection_set('')      
             self.feriado.selection_set('')       
             self.adelanto.selection_set('')        
@@ -1568,6 +1733,7 @@ class App(Tk):
             self.cvacaciones.selection_set('')
 
         elif widget == 'treeview2':
+            print(self.falta.item(self.falta.focus())['text'])
             self.apoyo.selection_set('')      
             self.feriado.selection_set('')       
             self.adelanto.selection_set('')        
@@ -1578,6 +1744,7 @@ class App(Tk):
             self.cvacaciones.selection_set('')
 
         elif widget == 'treeview3':
+            print(self.feriado.item(self.feriado.focus())['text'])
             self.apoyo.selection_set('')      
             self.falta.selection_set('')       
             self.adelanto.selection_set('')        
@@ -1588,6 +1755,7 @@ class App(Tk):
             self.cvacaciones.selection_set('')
 
         elif widget == 'treeview4':
+            print(self.adelanto.item(self.adelanto.focus())['text'])
             self.apoyo.selection_set('')      
             self.falta.selection_set('')       
             self.feriado.selection_set('')        
@@ -1598,6 +1766,7 @@ class App(Tk):
             self.cvacaciones.selection_set('')
 
         elif widget == 'treeview5':
+            print(self.ingreso.item(self.ingreso.focus())['text'])
             self.apoyo.selection_set('')      
             self.falta.selection_set('')       
             self.feriado.selection_set('')        
@@ -1608,6 +1777,7 @@ class App(Tk):
             self.cvacaciones.selection_set('')
 
         elif widget == 'treeview6':
+            print(self.descuento.item(self.descuento.focus())['text'])
             self.apoyo.selection_set('')      
             self.falta.selection_set('')       
             self.feriado.selection_set('')        
@@ -1618,6 +1788,7 @@ class App(Tk):
             self.cvacaciones.selection_set('')
 
         elif widget == 'treeview7':
+            print(self.vacaciones.item(self.vacaciones.focus())['text'])
             self.apoyo.selection_set('')      
             self.falta.selection_set('')       
             self.feriado.selection_set('')        
@@ -1628,6 +1799,7 @@ class App(Tk):
             self.cvacaciones.selection_set('')
 
         elif widget == 'treeview8':
+            print(self.dmedico.item(self.dmedico.focus())['text'])
             self.apoyo.selection_set('')      
             self.falta.selection_set('')       
             self.feriado.selection_set('')        
@@ -1638,6 +1810,7 @@ class App(Tk):
             self.cvacaciones.selection_set('')
 
         elif widget == 'treeview9':
+            print(self.cvacaciones.item(self.cvacaciones.focus())['text'])
             self.apoyo.selection_set('')      
             self.falta.selection_set('')       
             self.feriado.selection_set('')        
@@ -1646,173 +1819,7 @@ class App(Tk):
             self.descuento.selection_set('')
             self.vacaciones.selection_set('')
             self.dmedico.selection_set('')        
-
-    
-    
-    
-    
-
-    def Menu2Ingreso(self):  
-
-        # Validamos los cuadros de ingreso si estan vacios enviar el foco
-        if self.ingresoDetalle.get() == '':
-            self.ingresoDetalle.focus_set()
-            messagebox.showinfo('INGRESO', 'Registra el detalle del ingreso !', icon = 'warning')
-        elif self.ingresoImporte.get() == '':
-            self.ingresoImporte.focus_set()    
-            messagebox.showinfo('INGRESO', 'Registra el importe del ingreso !', icon = 'warning')  
-        else:
-            
-            # Validamos el importe que este bien escrito 
-            if self.ingresoImporte.get().count('.') == 1 or self.ingresoImporte.get().count('.') == 0:          
-                if self.ingresoImporte.get().replace('.','').isnumeric():
-
-                    # Si todo esta ok, registramos en el treeview
-                    monto = f'{float(self.ingresoImporte.get()):.2f}'     
-                    self.ingreso.insert('',END , values=(self.ingresoDetalle.get(), monto))
-                    self.ingresoDetalle.delete(0, END)
-                    self.ingresoImporte.delete(0, END)
-                
-            # Si esta mal la validacion del importe o esta vacio enviamos el foco al cuadro
-                else:
-                    self.ingresoImporte.focus_set()  
-                    messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !', icon = 'warning')   
-            else:
-                self.ingresoImporte.focus_set()
-                messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !', icon = 'warning')   
-
-    def Menu2Descuento(self):  
-
-        # Validamos los cuadros de descuento si estan vacios enviar el foco
-        if self.descuentoDetalle.get() == '':
-            self.descuentoDetalle.focus_set()
-            messagebox.showinfo('DESCUENTO', 'Registra el detalle del descuento !', icon = 'warning')
-        elif self.descuentoImporte.get() == '':
-            self.descuentoImporte.focus_set()    
-            messagebox.showinfo('DESCUENTO', 'Registra el importe del descuento !', icon = 'warning')
-        else:
-            
-            # Validamos el importe que este bien escrito 
-            if self.descuentoImporte.get().count('.') == 1 or self.descuentoImporte.get().count('.') == 0:          
-                if self.descuentoImporte.get().replace('.','').isnumeric():
-
-                    # Si todo esta ok, registramos en el treeview
-                    monto = f'{float(self.descuentoImporte.get()):.2f}'     
-                    self.descuento.insert('',END , values=(self.descuentoDetalle.get(), monto))
-                    self.descuentoDetalle.delete(0, END)
-                    self.descuentoImporte.delete(0, END)
-                
-            # Si esta mal la validacion del importe o esta vacio enviamos el foco al cuadro
-                else:
-                    self.descuentoImporte.focus_set()    
-                    messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !', icon = 'warning') 
-            else:
-                self.descuentoImporte.focus_set()
-                messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !', icon = 'warning')
-    
-    def Menu2Vacaciones(self):
-
-        # Validamos los cuadros de vacaciones si estan vacios enviar el foco
-        if self.vacacionesInicial.get() == '':
-            self.vacacionesTotal.focus_set() 
-            messagebox.showinfo('VACACIONES', 'Selecciona la fecha inicial de las vacaciones !', icon = 'warning')
-        elif self.vacacionesFinal.get() == '':
-            self.vacacionesTotal.focus_set() 
-            messagebox.showinfo('VACACIONES', 'Selecciona la fecha final de las vacaciones !', icon = 'warning')
-        elif self.vacacionesTotal.get() == '':
-            self.vacacionesTotal.focus_set()   
-            messagebox.showinfo('VACACIONES', 'Registra el total de dias de las vacaciones !', icon = 'warning')
-        else:
-            
-            # Validamos el total que este bien escrito             
-            if self.vacacionesTotal.get().isnumeric():
-                
-                # Si todo esta ok, registramos en el treeview
-                total =int(self.vacacionesTotal.get()) 
-                self.vacaciones.insert('',END , values=(self.vacacionesInicial.get(), self.vacacionesFinal.get(), total))
-                self.vacacionesInicial.configure(state='normal')
-                self.vacacionesFinal.configure(state='normal')
-                self.vacacionesInicial.delete(0, END)
-                self.vacacionesFinal.delete(0, END)
-                self.vacacionesTotal.delete(0, END)
-                self.vacacionesInicial.configure(state='readonly')
-                self.vacacionesFinal.configure(state='readonly')
-                
-            # Si esta mal la validacion del total enviamos el foco al cuadro               
-            else:
-                self.vacacionesTotal.focus_set()
-                messagebox.showinfo('VACACIONES', 'Registra correctamente el total de dias de las vacaciones !', icon = 'warning')
-
-    def Menu2Dmedico(self):
-
-        # Validamos los cuadros de descanso medico si estan vacios enviar el foco
-        if self.dmedicoInicial.get() == '':
-            self.dmedicoDetalle.focus_set() 
-            messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha inicial del descanso medico !', icon = 'warning')
-        elif self.dmedicoFinal.get() == '':
-            self.dmedicoDetalle.focus_set() 
-            messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha final del descanso medico !', icon = 'warning')
-        elif self.dmedicoDetalle.get() == '':
-            self.dmedicoDetalle.focus_set()   
-            messagebox.showinfo('DESCANSO MEDICO', 'Registra el detalle del descanso medico !', icon = 'warning')
-        elif self.dmedicoTotal.get() == '':
-            self.dmedicoTotal.focus_set()   
-            messagebox.showinfo('DESCANSO MEDICO', 'Registra el total de dias del descanso medico !', icon = 'warning')
-        else:
-            
-            # Validamos el total que este bien escrito             
-            if self.dmedicoTotal.get().isnumeric():
-                
-                # Si todo esta ok, registramos en el treeview
-                total =int(self.dmedicoTotal.get()) 
-                self.dmedico.insert('',END , values=(self.dmedicoInicial.get(), self.dmedicoFinal.get(), self.dmedicoDetalle.get(), total))
-                self.dmedicoInicial.configure(state='normal')
-                self.dmedicoFinal.configure(state='normal')
-                self.dmedicoInicial.delete(0, END)
-                self.dmedicoFinal.delete(0, END)
-                self.dmedicoDetalle.delete(0, END)
-                self.dmedicoTotal.delete(0, END)
-                self.dmedicoInicial.configure(state='readonly')
-                self.dmedicoFinal.configure(state='readonly')
-                
-            # Si esta mal la validacion del total enviamos el foco al cuadro               
-            else:
-                self.dmedicoTotal.focus_set()
-                messagebox.showinfo('DESCANSO MEDICO', 'Registra correctamente el total de dias del descanso medico !', icon = 'warning')
-
-    def Menu2Cvacaciones(self):
-
-         # Validamos los cuadros de compra de vacaciones si estan vacios enviar el foco
-        if self.cvacacionesInicial.get() == '':
-            self.cvacacionesTotal.focus_set() 
-            messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha inicial de la compra de vacaciones !', icon = 'warning')
-        elif self.cvacacionesFinal.get() == '':
-            self.cvacacionesTotal.focus_set() 
-            messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha final de la compra de vacaciones !', icon = 'warning')
-        elif self.cvacacionesTotal.get() == '':
-            self.cvacacionesTotal.focus_set()   
-            messagebox.showinfo('COMPRA DE VACACIONES', 'Registra el total de dias de la compra de vacaciones !', icon = 'warning')
-        else:
-            
-            # Validamos el total que este bien escrito             
-            if self.cvacacionesTotal.get().isnumeric():
-                
-                # Si todo esta ok, registramos en el treeview
-                total =int(self.cvacacionesTotal.get()) 
-                self.cvacaciones.insert('',END , values=(self.cvacacionesInicial.get(), self.cvacacionesFinal.get(), total))
-                self.cvacacionesInicial.configure(state='normal')
-                self.cvacacionesFinal.configure(state='normal')
-                self.cvacacionesInicial.delete(0, END)
-                self.cvacacionesFinal.delete(0, END)
-                self.cvacacionesTotal.delete(0, END)
-                self.cvacacionesInicial.configure(state='readonly')
-                self.cvacacionesFinal.configure(state='readonly')
-
-            # Si esta mal la validacion del total enviamos el foco al cuadro               
-            else:
-                self.cvacacionesTotal.focus_set()
-                messagebox.showinfo('COMPRA DE VACACIONES', 'Registra correctamente el total de dias de la compra de vacaciones !', icon = 'warning')
-      
+          
     def Menu2DetallesSeleccionarFecha(self, boton):
         if boton == 'fivacaciones':
             # Agregar fecha inicial al cuadro de vacaciones
