@@ -1909,4 +1909,5 @@ class App(Tk):
 
 
 if __name__ == '__main__':   
+    #Mi nombre es Jean
     aplicacion = App()
