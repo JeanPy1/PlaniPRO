@@ -76,7 +76,16 @@ class App(Tk):
         self.iconbitmap('./img/0.ico')  
         self.option_add('*Font', ('Segoe UI Semibold', '10'))   
         self.option_add('*Button*Font', ('Segoe UI Semibold', '8'))  
-        
+        self.option_add('*Button*BorderWidth', 0)  
+        self.option_add('*Button*Cursor', 'hand2')         
+        self.option_add('*Button*TakeFocus', False) 
+        self.option_add('*Entry*relief', 'flat') 
+        self.option_add('*Treeview*SelectMode', 'browse') 
+        self.option_add('*Treeview*Show', 'tree') 
+        self.option_add('*Treeview*padding', -1) 
+        self.option_add('*Treeview*TakeFocus', False)         
+        Style().configure('Treeview', background='#F0F0F0', font=('Segoe UI Semibold', 10)) 
+
         # Cargamos las imagenes de los botones
         img1 = PhotoImage(file='./img/1.png')
         img2 = PhotoImage(file='./img/2.png')
@@ -86,12 +95,12 @@ class App(Tk):
         img6 = PhotoImage(file='./img/6.png')
 
         # Creamos los botones de los menus  
-        self.btn1 = Button(self, image=img1, cursor='hand2', border=0, takefocus=False, command=self.Menu1)
-        self.btn2 = Button(self, image=img2, cursor='hand2', border=0, takefocus=False, command=self.Menu2)
-        self.btn3 = Button(self, image=img3, cursor='hand2', border=0, takefocus=False)
-        self.btn4 = Button(self, image=img4, cursor='hand2', border=0, takefocus=False)
-        self.btn5 = Button(self, image=img5, cursor='hand2', border=0, takefocus=False)
-        self.btn6 = Button(self, image=img6, cursor='hand2', border=0, takefocus=False)
+        self.btn1 = Button(self, image=img1, command=self.Menu1)
+        self.btn2 = Button(self, image=img2, command=self.Menu2)
+        self.btn3 = Button(self, image=img3, )
+        self.btn4 = Button(self, image=img4, )
+        self.btn5 = Button(self, image=img5, )
+        self.btn6 = Button(self, image=img6, )
         
         # Pocisionamos los botones de los menus  
         self.btn1.place(       width=100, height=100)        
@@ -168,7 +177,7 @@ class App(Tk):
         Label(menu, text='DNI'               ).place(x=325, y=15, width= 82, height=30)
     
         # Creamos el treeview
-        self.tre1 = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1','#2','#3'), takefocus=False)
+        self.tre1 = Treeview(menu, columns=('#1','#2','#3'))
         self.tre1.column('#0', width=  0)
         self.tre1.column('#1', width= 30)
         self.tre1.column('#2', width=270)
@@ -180,10 +189,7 @@ class App(Tk):
         
         # Posicionamos el treeview y scrollbar
         self.tre1.place(x= 15, y=45, height=520)
-        self.scroll1.place   (x=409, y=15, height=550)
-        
-        # Cambiar aspecto del treeview
-        Style().configure('Treeview', background='#F0F0F0', font=('Segoe UI Semibold', 10))        
+        self.scroll1.place   (x=409, y=15, height=550)  
         
         # Evento de seleccion en treeview
         self.tre1.bind('<<TreeviewSelect>>', self.Menu1SeleccionarTreeview)
@@ -255,9 +261,9 @@ class App(Tk):
         self.men1_renu.place(x=649, y=535, width=184)   
                   
         # Creamos los botones
-        Button(menu, text='AGREGAR'  , cursor='hand2', bg='#88C7FF', bd=0, takefocus=False, command= lambda: self.Menu1Agregar('agregar')).place(x=875, y= 15, width=90, height=30)     
-        Button(menu, text='MODIFICAR', cursor='hand2', bg='#88C7FF', bd=0, takefocus=False, command=self.Menu1Modificar                  ).place(x=875, y= 50, width=90, height=30)
-        Button(menu, text='ELIMINAR' , cursor='hand2', bg='#88C7FF', bd=0, takefocus=False, command=self.Menu1Eliminar                   ).place(x=875, y= 85, width=90, height=30)        
+        Button(menu, text='AGREGAR'  , command= lambda: self.Menu1Agregar('agregar')).place(x=875, y= 15, width=90, height=30)     
+        Button(menu, text='MODIFICAR', command=self.Menu1Modificar                  ).place(x=875, y= 50, width=90, height=30)
+        Button(menu, text='ELIMINAR' , command=self.Menu1Eliminar                   ).place(x=875, y= 85, width=90, height=30)        
         
         # Cargamos datos al treeview
         self.Menu1CargarDatos()
@@ -304,33 +310,33 @@ class App(Tk):
         Label(menu, text='  Fecha de Baja'      , fg='#5B5857', anchor='nw').place(x=201, y=275, width=200, height=54)
                 
         # Creamos los widges a interactuar} 
-        self.men1_agregar_buscar_dni = Entry(menu, relief='flat')       
-        self.men1_agre_btn1 = Button(menu, text='BUSCAR', bg='#88C7FF', cursor='hand2', bd=0, takefocus=False, command=self.Menu1ValidarDni)
+        self.men1_agregar_buscar_dni = Entry(menu)       
+        self.men1_agre_btn1 = Button(menu, text='BUSCAR', bg='#88C7FF', command=self.Menu1ValidarDni)
         self.men1_agre_btn1.place(x=136, y=23, width=54, height=24)         
-        self.men1_agre_dni  = Label(menu, relief='flat', bg='white', anchor='w')        
-        self.men1_agre_apat = Label(menu, relief='flat', bg='white', anchor='w')
-        self.men1_agre_amat = Label(menu, relief='flat', bg='white', anchor='w')
-        self.men1_agre_nomb = Label(menu, relief='flat', bg='white', anchor='w')
-        self.men1_agre_naci = Entry(menu, relief='flat')
-        self.men1_agre_ingr = Entry(menu, relief='flat')
-        self.men1_agre_plan = Entry(menu, relief='flat')        
+        self.men1_agre_dni  = Label(menu, bg='white', anchor='w')        
+        self.men1_agre_apat = Label(menu, bg='white', anchor='w')
+        self.men1_agre_amat = Label(menu, bg='white', anchor='w')
+        self.men1_agre_nomb = Label(menu, bg='white', anchor='w')
+        self.men1_agre_naci = Entry(menu)
+        self.men1_agre_ingr = Entry(menu)
+        self.men1_agre_plan = Entry(menu)        
         self.men1_agre_asig = Combobox(menu, values=['SI','NO'], state='readonly')       
-        self.men1_agre_movi = Entry(menu, relief='flat')
+        self.men1_agre_movi = Entry(menu)
         self.men1_agre_carg = Combobox(menu, values=['INSPECTOR VIAL','OP. DE GRUA LIVIANA','OP. DE GRUA PESADA'], state='readonly')       
-        self.men1_agre_cuen = Entry(menu, relief='flat')
+        self.men1_agre_cuen = Entry(menu)
         self.men1_agre_apor = Combobox(menu, values=['ONP','HABITAT','INTEGRA','PRIMA','PROFUTURO',''], state='readonly')
         self.men1_agre_comi = Combobox(menu, values=['FLUJO','MIXTA'], state='disable')
-        self.men1_agre_cusp = Entry(menu, relief='flat', state='disable')
+        self.men1_agre_cusp = Entry(menu, state='disable')
         self.men1_agre_lice = Combobox(menu, values=['AI','AIIA','AIIB','AIIIA','AIIIB','AIIIC', ''], state='readonly')       
-        self.men1_agre_venc = Entry(menu, relief='flat', state='disable')
-        self.men1_agre_codi = Entry(menu, relief='flat', state='disable')
+        self.men1_agre_venc = Entry(menu, state='disable')
+        self.men1_agre_codi = Entry(menu, state='disable')
         self.men1_agre_area = Combobox(menu, values=['SUR','NORTE','TALLER','OFICINA'], state='readonly')       
-        self.men1_agre_celu = Entry(menu, relief='flat')
+        self.men1_agre_celu = Entry(menu)
         self.men1_agre_dist = Combobox(menu, values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS',
                                                     'COMAS', 'LOS OLIVOS', 'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO',
                                                     'SAN JUAN DE LURIGANCHO', 'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 'SANTA ANITA',
                                                     'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO'], state='readonly')      
-        self.men1_agre_cese = Entry(menu, relief='flat')
+        self.men1_agre_cese = Entry(menu)
                 
         # Agregamos evento al cambiar los items del combobox
         self.men1_agre_apor.bind('<<ComboboxSelected>>', self.Menu1ComboboxAporte) 
@@ -364,8 +370,8 @@ class App(Tk):
         self.men1_agre = menu
 
         # Creamos boton para grabar los datos
-        Button(menu, text='GRABAR', cursor='hand2', bd=0, bg='#88C7FF', takefocus=False, command=self.Menu1Guardar                ).place(x=438, y= 0, width=90, height=30)     
-        Button(menu, text='SALIR' , cursor='hand2', bd=0, bg='#88C7FF', takefocus=False, command= lambda: self.men1_agre.destroy()).place(x=438, y=35, width=90, height=30)
+        Button(menu, text='GRABAR', command=self.Menu1Guardar                ).place(x=438, y= 0, width=90, height=30)     
+        Button(menu, text='SALIR' , command= lambda: self.men1_agre.destroy()).place(x=438, y=35, width=90, height=30)
 
         # Superponemos la ventana actual y centramos el foco      
         menu.grab_set()
@@ -978,7 +984,7 @@ class App(Tk):
         Label(menu, text='XFUERA'            , font=('Segoe UI Semibold', 8)).place(x=881, y=15, width= 73, height=30)            
       
         # Crear treeview
-        self.tre2 = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', '#11', '#12'), takefocus=False)
+        self.tre2 = Treeview(menu, columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', '#11', '#12'))
         self.tre2.column('#0',  width=  0)
         self.tre2.column('#1',  width= 30)
         self.tre2.column('#2',  width=268)
@@ -1003,10 +1009,7 @@ class App(Tk):
         # Posicionamos treeview y scrollbar
         self.tre2.place(x= 15, y=45, height=520)
         scroll.place   (x=950, y=15, height=550)
-        
-        # Cambiar aspecto de treeview
-        Style().configure('Treeview', background='#F0F0F0', font=('Segoe UI Semibold', 10))         
-
+            
         self.Menu2CargarDatos()
 
         # Posicionamos la ventana
@@ -1100,35 +1103,35 @@ class App(Tk):
         self.calendario.place(x=15, y=15)
 
         # Creamos widgets del registro de apoyos
-        Button(menu, text='APOYO', command=lambda: self.Menu2DetallesGrabar('APOYO'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=275, y=15, width=94, height=22)
-        self.apoyo = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1'), takefocus=False)
+        Button(menu, text='APOYO', command=lambda: self.Menu2DetallesGrabar('APOYO')).place(x=275, y=15, width=94, height=22)
+        self.apoyo = Treeview(menu, columns=('#1'))
         self.apoyo.column('#0', width= 0)
         self.apoyo.column('#1', width=92)          
         self.apoyo.bind('<Button-1>', self.Menu2DetallesQuitarSeleccion)
         self.apoyo.place(x=275, y=42, height=160)
 
         # Creamos widgets del registro de faltas
-        Button(menu, text='FALTA', command=lambda: self.Menu2DetallesGrabar('FALTA'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=377, y=15, width=94, height=22)
-        self.falta = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1'), takefocus=False)
+        Button(menu, text='FALTA', command=lambda: self.Menu2DetallesGrabar('FALTA')).place(x=377, y=15, width=94, height=22)
+        self.falta = Treeview(menu, columns=('#1'))
         self.falta.column('#0', width= 0)
         self.falta.column('#1', width=92) 
         self.falta.bind('<Button-1>', self.Menu2DetallesQuitarSeleccion) # Evento de seleccion en treeview
         self.falta.place(x=377, y=42, height=160)
 
         # Creamos widgets del registro de feriado
-        Button(menu, text='FERIADO', command=lambda: self.Menu2DetallesGrabar('FERIADO'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=479, y=15, width=94, height=22)
-        self.feriado = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1'), takefocus=False)
+        Button(menu, text='FERIADO', command=lambda: self.Menu2DetallesGrabar('FERIADO')).place(x=479, y=15, width=94, height=22)
+        self.feriado = Treeview(menu, columns=('#1'))
         self.feriado.column('#0', width= 0)
         self.feriado.column('#1', width=92) 
         self.feriado.bind('<Button-1>', self.Menu2DetallesQuitarSeleccion)
         self.feriado.place(x=479, y=42, height=160)
 
         # Creamos widgets del registro de adelanto
-        Button(menu, text='ADELANTO', command=lambda: self.Menu2DetallesGrabar('ADELANTO'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=581, y=15, width=153, height=22)
+        Button(menu, text='ADELANTO', command=lambda: self.Menu2DetallesGrabar('ADELANTO')).place(x=581, y=15, width=153, height=22)
         Label(menu, text='Importe', bg='white', anchor='w').place(x=609, y=41, height=16)        
-        self.adelantoImporte = Entry(menu, relief='flat', bg='#F0F0F0', justify='right')
+        self.adelantoImporte = Entry(menu, bg='#F0F0F0', justify='right')
         self.adelantoImporte.place(x=671, y=42, width=60, height=17)
-        self.adelanto = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1', '#2'), takefocus=False)
+        self.adelanto = Treeview(menu, columns=('#1', '#2'))
         self.adelanto.column('#0', width= 0)
         self.adelanto.column('#1', width=80, anchor='w') 
         self.adelanto.column('#2', width=70, anchor='e')
@@ -1136,14 +1139,14 @@ class App(Tk):
         self.adelanto.place(x=581, y=62, height=140)        
 
         # Creamos widgets del registro de ingreso
-        Button(menu, text='INGRESO', command=lambda: self.Menu2DetallesGrabar('INGRESO'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=15, y=240, width=255, height=22)
+        Button(menu, text='INGRESO', command=lambda: self.Menu2DetallesGrabar('INGRESO')).place(x=15, y=240, width=255, height=22)
         Label(menu, text='Detalle', bg='white', anchor='w').place(x=15, y=266, height=16)
         Label(menu, text='Monto', bg='white', anchor='w').place(x=217, y=266, height=16)
-        self.ingresoDetalle = Entry(menu, relief='flat', bg='#F0F0F0')
+        self.ingresoDetalle = Entry(menu, bg='#F0F0F0')
         self.ingresoDetalle.place(x=15, y=284, width=198, height=17)
-        self.ingresoImporte = Entry(menu, relief='flat', bg='#F0F0F0', justify='right')
+        self.ingresoImporte = Entry(menu, bg='#F0F0F0', justify='right')
         self.ingresoImporte.place(x=217, y=284, width=50, height=17)
-        self.ingreso = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1', '#2'), takefocus=False)
+        self.ingreso = Treeview(menu, columns=('#1', '#2'))
         self.ingreso.column('#0', width= 0)
         self.ingreso.column('#1', width=182, anchor='w') 
         self.ingreso.column('#2', width=70, anchor='e') 
@@ -1151,14 +1154,14 @@ class App(Tk):
         self.ingreso.place(x=15, y=304, height=60)
 
         # Creamos widgets del registro de descuento
-        Button(menu, text='DESCUENTO', command=lambda: self.Menu2DetallesGrabar('DESCUENTO'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=277, y=240, width=255, height=22)
+        Button(menu, text='DESCUENTO', command=lambda: self.Menu2DetallesGrabar('DESCUENTO')).place(x=277, y=240, width=255, height=22)
         Label(menu, text='Detalle', bg='white', anchor='w').place(x=277, y=266, height=16)
         Label(menu, text='Monto', bg='white', anchor='w').place(x=479, y=266, height=16)
-        self.descuentoDetalle = Entry(menu, relief='flat', bg='#F0F0F0')
+        self.descuentoDetalle = Entry(menu, bg='#F0F0F0')
         self.descuentoDetalle.place(x=277, y=284, width=198, height=17)
-        self.descuentoImporte = Entry(menu, relief='flat', bg='#F0F0F0', justify='right')
+        self.descuentoImporte = Entry(menu, bg='#F0F0F0', justify='right')
         self.descuentoImporte.place(x=479, y=284, width=50, height=17)
-        self.descuento = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1', '#2'), takefocus=False)
+        self.descuento = Treeview(menu, columns=('#1', '#2'))
         self.descuento.column('#0', width= 0)
         self.descuento.column('#1', width=182, anchor='w') 
         self.descuento.column('#2', width=70, anchor='e') 
@@ -1166,19 +1169,19 @@ class App(Tk):
         self.descuento.place(x=277, y=304, height=60)
 
         # Creamos widgets del registro de vacaciones
-        Button(menu, text='VACACIONES', command=lambda: self.Menu2DetallesGrabar('VACACIONES'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=539, y=240, width=194, height=22)
-        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('fivacaciones'), bg='red', cursor='hand2', bd=0, takefocus=False).place(x=621, y=268, width=10, height=14)
-        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('ffvacaciones'), bg='red', cursor='hand2', bd=0, takefocus=False).place(x=696, y=268, width=10, height=14)
+        Button(menu, text='VACACIONES', command=lambda: self.Menu2DetallesGrabar('VACACIONES')).place(x=539, y=240, width=194, height=22)
+        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('fivacaciones')).place(x=621, y=268, width=10, height=14)
+        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('ffvacaciones')).place(x=696, y=268, width=10, height=14)
         Label(menu, text='Inicio', bg='white', anchor='w').place(x=539, y=266, height=16)
         Label(menu, text='Final', bg='white', anchor='w').place(x=633, y=266, height=16)
         Label(menu, text='Dias', bg='white', anchor='w').place(x=708, y=266, height=16)
-        self.vacacionesInicial = Entry(menu, relief='flat', bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
+        self.vacacionesInicial = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
         self.vacacionesInicial.place(x=539, y=284, width=92, height=17)
-        self.vacacionesFinal = Entry(menu, relief='flat', bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
+        self.vacacionesFinal = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
         self.vacacionesFinal.place(x=633, y=284, width=73, height=17)
-        self.vacacionesTotal = Entry(menu, relief='flat', bg='#F0F0F0', justify='right')
+        self.vacacionesTotal = Entry(menu, bg='#F0F0F0', justify='right')
         self.vacacionesTotal.place(x=708, y=284, width=24, height=17)
-        self.vacaciones = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1', '#2', '#3'), takefocus=False)
+        self.vacaciones = Treeview(menu, columns=('#1', '#2', '#3'))
         self.vacaciones.column('#0', width= 0)
         self.vacaciones.column('#1', width=74, anchor='w') 
         self.vacaciones.column('#2', width=74, anchor='e') 
@@ -1187,22 +1190,22 @@ class App(Tk):
         self.vacaciones.place(x=539, y=304, height=60)
 
         # Creamos widgets del registro de descanso medico
-        Button(menu, text='DESCANSO MEDICO', command=lambda: self.Menu2DetallesGrabar('DMEDICO'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=15, y=402, width=516, height=22)
-        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('fidmedico'), bg='red', cursor='hand2', bd=0, takefocus=False).place(x=97, y=430, width=10, height=14)
-        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('ffdmedico'), bg='red', cursor='hand2', bd=0, takefocus=False).place(x=172, y=430, width=10, height=14)
+        Button(menu, text='DESCANSO MEDICO', command=lambda: self.Menu2DetallesGrabar('DMEDICO')).place(x=15, y=402, width=516, height=22)
+        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('fidmedico')).place(x=97, y=430, width=10, height=14)
+        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('ffdmedico')).place(x=172, y=430, width=10, height=14)
         Label(menu, text='Inicio', bg='white', anchor='w').place(x=15, y=428, height=16)
         Label(menu, text='Final', bg='white', anchor='w').place(x=109, y=428, height=16)
         Label(menu, text='Detalle', bg='white', anchor='w').place(x=186, y=428, height=16)
         Label(menu, text='Dias', bg='white', anchor='w').place(x=505, y=428, width=60, height=16)
         self.dmedicoInicial = Entry(menu, relief='flat', bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
         self.dmedicoInicial.place(x=15, y=446, width=92, height=17)
-        self.dmedicoFinal = Entry(menu, relief='flat', bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
+        self.dmedicoFinal = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
         self.dmedicoFinal.place(x=109, y=446, width=73, height=17)
-        self.dmedicoDetalle = Entry(menu, relief='flat', bg='#F0F0F0')
+        self.dmedicoDetalle = Entry(menu, bg='#F0F0F0')
         self.dmedicoDetalle.place(x=186, y=446, width=317, height=17)
-        self.dmedicoTotal = Entry(menu, relief='flat', bg='#F0F0F0', justify='right')
+        self.dmedicoTotal = Entry(menu, bg='#F0F0F0', justify='right')
         self.dmedicoTotal.place(x=505, y=446, width=25, height=17)
-        self.dmedico = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1', '#2', '#3', '#4'), takefocus=False)
+        self.dmedico = Treeview(menu, columns=('#1', '#2', '#3', '#4'))
         self.dmedico.column('#0', width= 0)
         self.dmedico.column('#1', width=74, anchor='w') 
         self.dmedico.column('#2', width=75, anchor='e') 
@@ -1212,35 +1215,32 @@ class App(Tk):
         self.dmedico.place(x=15, y=466, height=60)
 
         # Creamos widgets del registro de compra de vacaciones
-        Button(menu, text='COMPRA DE VACACIONES', command=lambda: self.Menu2DetallesGrabar('CVACACIONES'), cursor='hand2', bd=0, bg='#88C7FF', takefocus=False).place(x=539, y=402, width=194, height=22)
-        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('ficvacaciones'), bg='red', cursor='hand2', bd=0, takefocus=False).place(x=621, y=430, width=10, height=14)
-        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('ffcvacaciones'), bg='red', cursor='hand2', bd=0, takefocus=False).place(x=696, y=430, width=10, height=14)
+        Button(menu, text='COMPRA DE VACACIONES', command=lambda: self.Menu2DetallesGrabar('CVACACIONES')).place(x=539, y=402, width=194, height=22)
+        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('ficvacaciones')).place(x=621, y=430, width=10, height=14)
+        Button(menu, command=lambda: self.Menu2DetallesSeleccionarFecha('ffcvacaciones')).place(x=696, y=430, width=10, height=14)
         Label(menu, text='Inicio', bg='white', anchor='w').place(x=539, y=428, height=16)
         Label(menu, text='Final', bg='white', anchor='w').place(x=633, y=428, height=16)
         Label(menu, text='Dias', bg='white', anchor='w').place(x=708, y=428, height=16)
-        self.cvacacionesInicial = Entry(menu, relief='flat', bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
+        self.cvacacionesInicial = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
         self.cvacacionesInicial.place(x=539, y=446, width=92, height=17)
-        self.cvacacionesFinal = Entry(menu, relief='flat', bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
+        self.cvacacionesFinal = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
         self.cvacacionesFinal.place(x=633, y=446, width=73, height=17)
-        self.cvacacionesTotal = Entry(menu, relief='flat', bg='#F0F0F0', justify='right')
+        self.cvacacionesTotal = Entry(menu, bg='#F0F0F0', justify='right')
         self.cvacacionesTotal.place(x=708, y=446, width=24, height=17)
-        self.cvacaciones = Treeview(menu, show='tree', selectmode='browse', padding=-1, columns=('#1', '#2', '#3'), takefocus=False)
+        self.cvacaciones = Treeview(menu, columns=('#1', '#2', '#3'))
         self.cvacaciones.column('#0', width= 0)
         self.cvacaciones.column('#1', width=74, anchor='w') 
         self.cvacaciones.column('#2', width=74, anchor='e') 
         self.cvacaciones.column('#3', width=45, anchor='e') 
         self.cvacaciones.bind('<Button-1>', self.Menu2DetallesQuitarSeleccion)
         self.cvacaciones.place(x=539, y=466, height=60)
-            
-        # Cambiar aspecto de treeview
-        Style().configure('Treeview', background='#F0F0F0', font=('Segoe UI Semibold', 10)) 
-                  
+                    
         # Asignamos variable a la ventana para poder destruirlo
         self.men2_detalles = menu
 
         # Creamos los botones
-        Button(menu, text='ELIMINAR', cursor='hand2', bd=0, bg='#88C7FF', takefocus=False, command=self.Menu2DetallesEliminar).place(x=875, y= 15, width=90, height=30)     
-        Button(menu, text='SALIR', cursor='hand2', bd=0, bg='#88C7FF', takefocus=False, command=self.Menu2DetallesOcultar).place(x=875, y= 50, width=90, height=30)
+        Button(menu, text='ELIMINAR', command=self.Menu2DetallesEliminar).place(x=875, y= 15, width=90, height=30)     
+        Button(menu, text='SALIR', command=self.Menu2DetallesOcultar).place(x=875, y= 50, width=90, height=30)
 
         # Posicionamos la ventana
         menu.place(x=0, y=0, width=980, height=580) 
