@@ -1,3 +1,4 @@
+from pickle import TRUE
 from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, messagebox
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
@@ -6,63 +7,8 @@ import sqlite3
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 from tkcalendar import Calendar
-
-import logging
-import requests
-
-class ApisNetPe:
-
-    BASE_URL = 'https://api.apis.net.pe'
-
-    def __init__(self, token: str = None):
-        self.token = token
-
-    def _get(self, path: str, params: dict):
-
-        url = f'{self.BASE_URL}{path}'
-
-        headers = {
-            'Authorization': self.token, 
-            'Referer': 'https://apis.net.pe/api-tipo-cambio.html'
-        }
-
-        response = requests.get(url, headers=headers, params=params)
-        
-        if response.status_code == 200:
-            return response.json()
-        elif response.status_code == 422:
-            logging.warning(f'{response.url} - invalida parameter')
-            logging.warning(response.text)
-        elif response.status_code == 403:
-            logging.warning(f'{response.url} - IP blocked')
-        elif response.status_code == 429:
-            logging.warning(f'{response.url} - Many requests add delay')
-        elif response.status_code == 401:
-            logging.warning(f'{response.url} - Invalid token or limited')
-        else:
-            logging.warning(f'{response.url} - Server Error status_code={response.status_code}')
-        return None
-
-    def get_person(self, dni: str):
-        return self._get('/v1/dni', {'numero': dni})
-
-    def get_company(self, ruc: str):
-        return self._get('/v1/ruc', {'numero': ruc})
-
-    def get_exchange_rate(self, date: str):
-        return self._get('/v1/tipo-cambio-sunat', {'fecha': date})
-
-    def get_exchange_rate_today(self):
-        return self._get('/v1/tipo-cambio-sunat', {})
-
-    def get_exchange_rate_for_month(self, month: int, year: int):
-        return self._get('/v1/tipo-cambio-sunat', {'month': month, 'year': year})
-
-
-    ''' #print(ApisNetPe().get_company('20511466629'))
-    #print(ApisNetPe().get_person('48555618'))
-    #print(ApisNetPe().get_exchange_rate('2020-01-01'))
-    #print(ApisNetPe().get_exchange_rate_for_month(1, 2020)) '''
+from dni import search
+from sql import select, insert, update, delete
 
 class App(Tk):
 
@@ -118,9 +64,6 @@ class App(Tk):
         # Remuneracion minima vital RVM
         self.rmv = 1025
 
-        # Cargamos base de datos    
-        self.CargarDatos()  
-        
         # Variable global de menu DesactivarMenu
         self.menu = 0
             
@@ -128,14 +71,6 @@ class App(Tk):
         self.mainloop()  
          
 
-         
-    def CargarDatos(self):
-        
-        # Cargamos base de datos en dataframe de pandas      
-        conexion = sqlite3.connect('PlaniPRO.db')        
-        self.datos = pd.read_sql_query('SELECT * FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC', conexion) 
-        conexion.close()    
-              
     def DesactivarMenu(self):
         
         # Activar y desactivar botones del menu
@@ -394,92 +329,85 @@ class App(Tk):
             respuesta = messagebox.askyesno('MODIFICAR','Estas seguro de modificar los datos de este trabajador ?', icon = 'warning', default='no')       
             if respuesta: 
                 
-                # Obtener id del trabajador seleccionado
-                seleccion = self.tre1.focus()
-                id = int(self.tre1.item(seleccion).get('text'))
-                datos = self.datos[self.datos['ID'] == id]  
-                
+                # Obtener id del trabajador seleccionado              
+                id = int(self.tre1.item(self.tre1.focus()).get('text'))
+
+                # Buscamos datos en la base de datos
+                datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
+
                 # Llamamos a la ventana de agregar trabajador nuevo
-                self.Menu1Agregar('modificar')                
-                
-                # Desactivamos la opcion de buscar dni
+                self.Menu1Agregar('modificar')     
+
+                 # Desactivamos la opcion de buscar dni
                 self.men1_agregar_buscar_dni.configure(state='disabled')
                 self.men1_agre_btn1.configure(state='disabled')
 
                 # Cargamos datos del trabajador selecionado para actualizar
-                self.men1_agre_dni ['text'] = datos['NDNI' ].item()
-                self.men1_agre_apat['text'] = datos['APAT'].item()
-                self.men1_agre_amat['text'] = datos['AMAT'].item()
-                self.men1_agre_nomb['text'] = datos['NOMB'].item()
-                self.men1_agre_naci.insert(0, datos['FNAC'].item())
-                self.men1_agre_ingr.insert(0, datos['FING'].item())
-                self.men1_agre_plan.insert(0, datos['SPLA'].item())
+                self.men1_agre_dni ['text'] = datos[1]
+                self.men1_agre_apat['text'] = datos[2]
+                self.men1_agre_amat['text'] = datos[3]
+                self.men1_agre_nomb['text'] = datos[4]
+                self.men1_agre_naci.insert(0, datos[5])
+                self.men1_agre_ingr.insert(0, datos[6])
+                self.men1_agre_plan.insert(0, datos[7])
 
-                if datos['AFAM'].item() == 0:
+                if datos[8] == 0:
                     self.men1_agre_asig.set('NO')
                 else:
                     self.men1_agre_asig.set('SI')
 
-                if datos['SMOV'].item() > 0:
-                    self.men1_agre_movi.insert(0, datos['SMOV'].item())                
+                if datos[9] > 0:
+                    self.men1_agre_movi.insert(0, datos[9])                
 
-                self.men1_agre_carg.set(datos['PLAB'].item())
-                self.men1_agre_cuen.insert(0, datos['NCUE'].item())
-                self.men1_agre_apor.set(datos['EAPO'].item())
+                self.men1_agre_carg.set(datos[13])
+                self.men1_agre_cuen.insert(0, datos[14])
+                self.men1_agre_apor.set(datos[10])
                 
-                if len(datos['EAPO'].item()) > 3:                
+                if len(datos[10]) > 3:                
                     self.men1_agre_comi.configure(state='readonly')
-                    self.men1_agre_comi.set(datos['TCOM'].item())
+                    self.men1_agre_comi.set(datos[11])
                     self.men1_agre_cusp.configure(state='normal')                     
-                    self.men1_agre_cusp.insert(0, datos['NCUS'].item())
+                    self.men1_agre_cusp.insert(0, datos[12])
                 
-                if datos['NLIC'].item() != '':
-                    self.men1_agre_lice.set(datos['CLIC'].item())
+                if datos[16] != '':
+                    self.men1_agre_lice.set(datos[18])
                     self.men1_agre_venc.configure(state='normal')
-                    self.men1_agre_venc.insert(0, datos['VLIC'].item())
+                    self.men1_agre_venc.insert(0, datos[17])
                     self.men1_agre_codi.configure(state='normal')
-                    self.men1_agre_codi.insert(0, datos['NLIC'].item()[:1])
+                    self.men1_agre_codi.insert(0, datos[16][:1])
                     
-                self.men1_agre_area.set(datos['ALAB'].item())
-                self.men1_agre_celu.insert(0, datos['NCEL'].item())
-                self.men1_agre_dist.set(datos['DRES'].item())
-                self.men1_agre_cese.insert(0, datos['FCES'].item())
+                self.men1_agre_area.set(datos[15])
+                self.men1_agre_celu.insert(0, datos[19])
+                self.men1_agre_dist.set(datos[20])
+                self.men1_agre_cese.insert(0, datos[21])
 
         else:
             messagebox.showinfo('Modificar', 'Debes Seleccionar un Trabajador !', icon = 'warning')  
         
     def Menu1Eliminar(self):  
 
+
+        for row in self.tre1.get_children():
+            print(row)
+
+        
+        return
+
+
         # Ejecutar codigo si hay seleccion y se acepta el cuadro de dialogo
         if self.tre1.selection():
             respuesta = messagebox.askyesno('ELIMINAR','Estas seguro de eliminar a este trabajador ?', icon = 'warning', default='no')       
             if respuesta: 
                 
-                # Tomamos la seleccion del treeview para capturar el ID del trabajador
-                seleccion = self.tre1.focus()     
-                id = int(self.tre1.item(seleccion).get('text')) 
-                
-                # Tomamos el index del trabajador para poder eliminarlo del dataframe                  
-                index = self.datos[self.datos['ID'] == id].index
-                self.datos.drop(index, inplace=True)                
-                
-                # Limpiamos el treeview y los cuadros de informacion
-                self.tre1.delete(*self.tre1.get_children())
-                
-                # Creamos conexion a la base de datos activando el eliminado en cascada
-                conexion = sqlite3.connect('PlaniPRO.db')     
-                conexion.execute('PRAGMA foreign_keys = 1')
-                cursor = conexion.cursor()  
+                # Tomamos la seleccion del treeview para capturar el ID del trabajador                
+                id = int(self.tre1.item(self.tre1.focus()).get('text'))    
 
                 # Si hay fecha de cese copiar datos a tabla de cesados
                 if self.men1_renu['text'] != '':
-                    cursor.execute(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}') 
-                    conexion.commit()      
+                    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')                   
 
                 # Ejecutamos la consulta sql de eliminacion
-                cursor.execute(f'DELETE FROM ACTIVO WHERE ID = {id}') 
-                conexion.commit()
-                conexion.close()                  
+                delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)   
                 
                 # Llamamos a la funcion de limpiar datos de informacion
                 self.Menu1LimpiarDatos()             
@@ -492,21 +420,17 @@ class App(Tk):
         
     def Menu1CargarDatos(self):
         
-        # Limpiamos el treeview del menu 1
+        # Limpiamos el treeview
         self.tre1.delete(*self.tre1.get_children())
         
-        # Recorremos datos del dataframe
-        orden = 0       
-        for fila in self.datos.index:            
-            orden+=1     
-            
-            # Extramos datos para insertar en treeview
-            id = self.datos['ID'][fila] 
-            dni = self.datos['NDNI'][fila] 
-            nombre = self.datos['APAT'][fila] + ' ' + self.datos['AMAT'][fila] + ' ' +self.datos['NOMB'][fila]     
-            
-            # Insertamos datos al treeview
-            self.tre1.insert('',END, text=id, values=(orden, nombre, dni))   
+        # Buscamos datos en la base de datos
+        datos = select('SELECT * FROM ACTIVO', True)
+
+        # Registramos datos en el treeview
+        for index, dato in enumerate(datos, 1):
+
+            nombre = f'{dato[2]} {dato[3]} {dato[4]}'    
+            self.tre1.insert('', END, text=dato[0], values=(index, nombre, dato[1]))   
     
     def Menu1LimpiarDatos(self):
 
@@ -545,13 +469,10 @@ class App(Tk):
             messagebox.showinfo('BUSCAR', 'Registra correctamente el dni del trabajador !', icon = 'warning') 
             self.men1_agregar_buscar_dni.focus()
         else:
-            
-            # Buscamos el dni en la api de buscar dni
-            APIS_TOKEN = 'apis-token-1.aTSI1U7KEuT-6bbbCguH-4Y8TI6KS73N'
-            api_consultas = ApisNetPe(APIS_TOKEN)    
+
             dni = self.men1_agregar_buscar_dni.get()
-            persona = api_consultas.get_person(dni)
-            
+            persona = search(dni)
+
             # Si encuentra datos extraer a los textbox
             if persona != None:
                 self.men1_agre_dni['text'] = persona['numeroDocumento']
@@ -599,33 +520,34 @@ class App(Tk):
             # Limpiamos los cuadros
             self.Menu1LimpiarDatos()
             
-            # Tomamos la seleccion del treeview para capturar el ID del trabajador
-            seleccion = self.tre1.focus()     
-            id = int(self.tre1.item(seleccion).get('text'))
+            # Obtenemos el id del trabajador          
+            id = int(self.tre1.item(self.tre1.focus()).get('text'))
             
             # Tomamos los datos del trabajador
-            datos = self.datos[self.datos['ID'] == id]  
-            
+            datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
+
             # Extraemos datos del trabajador
-            nacimiento  = datos['FNAC'].item()
-            ingreso     = datos['FING'].item()
-            planilla    = datos['SPLA'].item()  
-            asignacion  = datos['AFAM'].item()  
-            movilidad   = datos['SMOV'].item()
-            total       = planilla + asignacion + movilidad
-            cargo       = datos['PLAB'].item()       
-            cuenta      = datos['NCUE'].item()
-            pension     = datos['EAPO'].item()     
-            comision    = datos['TCOM'].item()                          
-            licencia    = datos['CLIC'].item() 
-            vencimiento = datos['VLIC'].item() 
-            area        = datos['ALAB'].item()   
-            celular     = datos['NCEL'].item() 
-            distrito    = datos['DRES'].item() 
+            nacimiento  = datos[ 5]
+            ingreso     = datos[ 6]
+            planilla    = datos[ 7]
+            asignacion  = datos[ 8]
+            movilidad   = datos[ 9]
+            pension     = datos[10]   
+            comision    = datos[11]
+            cusp        = datos[12]
+            cargo       = datos[13]  
+            cuenta      = datos[14]
+            area        = datos[15]  
+            vencimiento = datos[17] 
+            licencia    = datos[18]             
+            celular     = datos[19]
+            distrito    = datos[20]
+            baja        = datos[21]
             edad        = relativedelta(datetime.now(), datetime.strptime(nacimiento, '%d/%m/%Y'))
-            tiempo      = relativedelta(datetime.now(), datetime.strptime(ingreso, '%d/%m/%Y'))        
-            
-            banco = ''
+            tiempo      = relativedelta(datetime.now(), datetime.strptime(ingreso, '%d/%m/%Y'))   
+            total       = planilla + asignacion + movilidad        
+            banco       = ''
+
             if len(cuenta) == 14:                
                 banco       = 'BANCO DE CREDITO'
             elif len(cuenta) == 20:                 
@@ -637,10 +559,7 @@ class App(Tk):
                     banco = 'SCOTIABANK' 
                 elif cuenta[:3] == '011':
                     banco = 'BBVA CONTINENTAL' 
-                
-            cusp        = datos['NCUS'].item()    
-            baja        = datos['FCES'].item() 
-                           
+
             # Mostramos datos del trabajador en los cuadros
             self.men1_fnac['text'] = nacimiento
             self.men1_fing['text'] = ingreso
@@ -662,7 +581,7 @@ class App(Tk):
             self.men1_banc['text'] = banco
             self.men1_cusp['text'] = cusp            
             self.men1_renu['text'] = baja 
-        
+            
     def Menu1Guardar(self):                
         
         # Validacion de dni
@@ -875,9 +794,12 @@ class App(Tk):
 
                         # Verificacion de dni ya registrado      
                         if self.men1_agre_btn1['state'] == 'normal':
-                            if self.men1_agre_dni['text'] in self.datos['NDNI'].values:                                                    
-                                messagebox.showinfo('GRABAR', 'El trabajador ya esta registrado !', icon = 'warning')    
-                                return
+                            for index in self.tre1.get_children():
+                                if self.tre1.item(index).get('values')[1] == self.men1_agre_dni['text']:
+                                    print(self.tre1.item(index).get('values')[1])
+                                    print(self.men1_agre_dni['text'])
+                                    messagebox.showinfo('GRABAR', 'El trabajador ya esta registrado !', icon = 'warning')    
+                                    return
 
                         # Guardar datos registrados en variables                                                                                                                                                                   
                         dni  = self.men1_agre_dni.cget('text')
@@ -937,8 +859,7 @@ class App(Tk):
                         conexion.commit()
                         conexion.close()   
 
-                        # Llamar a funciones para actualizar lista                                                  
-                        self.CargarDatos()
+                        # Llamar a funciones para actualizar lista    
                         self.Menu1CargarDatos()
                         self.Menu1LimpiarDatos()                        
                         
