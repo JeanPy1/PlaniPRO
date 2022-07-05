@@ -1,10 +1,8 @@
-from pickle import TRUE
+
 from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, messagebox
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
 from datetime import datetime
-import sqlite3
-import pandas as pd
 from dateutil.relativedelta import relativedelta
 from tkcalendar import Calendar
 from dni import search
@@ -21,7 +19,7 @@ class App(Tk):
         self.resizable (0,0)     
         self.iconbitmap('./img/0.ico')  
 
-        # Modificamos estilos de los diferentes widgets
+        # Modificamos estilo de los diferentes widgets
         self.option_add('*Font', ('Segoe UI Semibold', '10'))   
         self.option_add('*Button*Font', ('Segoe UI Semibold', '8'))  
         self.option_add('*Button*BorderWidth', 0)  
@@ -45,15 +43,15 @@ class App(Tk):
         img5 = PhotoImage(file='./img/5.png')        
         img6 = PhotoImage(file='./img/6.png')
 
-        # Creamos los botones de los menus  
+        # Creamos los botones del menu  
         self.btn1 = Button(self, image=img1, command=self.Menu1)
         self.btn2 = Button(self, image=img2, command=self.Menu2)
         self.btn3 = Button(self, image=img3, )
         self.btn4 = Button(self, image=img4, )
         self.btn5 = Button(self, image=img5, )
         self.btn6 = Button(self, image=img6, )
-        
-        # Pocisionamos los botones de los menus  
+
+        # Posicionamos los botones
         self.btn1.place(       width=100, height=100)        
         self.btn2.place(y=100, width=100, height=100)       
         self.btn3.place(y=200, width=100, height=100)          
@@ -61,17 +59,17 @@ class App(Tk):
         self.btn5.place(y=400, width=100, height=100)         
         self.btn6.place(y=500, width=100, height=100)
 
-        # Remuneracion minima vital RVM
+        # Remuneracion minima vital RMV
         self.rmv = 1025
 
-        # Variable global de menu DesactivarMenu
+        # Variable global para el control de los menus
         self.menu = 0
             
         # Corremos programa
         self.mainloop()  
          
 
-    def DesactivarMenu(self):
+    def BloquearBotones(self):
         
         # Activar y desactivar botones del menu
         if self.menu == 0:
@@ -80,7 +78,8 @@ class App(Tk):
             self.btn3.configure(state='disabled')
             self.btn4.configure(state='disabled')
             self.btn5.configure(state='disabled')
-            self.btn6.configure(state='disabled')             
+            self.btn6.configure(state='disabled') 
+
         else:
             self.btn1.configure(state='normal')
             self.btn2.configure(state='normal')
@@ -89,29 +88,30 @@ class App(Tk):
             self.btn5.configure(state='normal')
             self.btn6.configure(state='normal')                     
 
-
                  
     def Menu1(self):  
         
         # desactivamos los botones
-        self.DesactivarMenu()
+        self.BloquearBotones()
         
-        # activamos el boton 1
+        # activamos el boton
         self.btn1.configure(state='normal')
         
-        # Validacion para destruir el menu 1 si esta activo
+        # Validacion para destruir el menu si esta activo
         if self.menu == 1: 
+
             self.men1.destroy()      
             self.menu = 0
+
             return
         
         # Asignamos el numero de menu activo
         self.menu = 1
                
-        # Creamos el frame 
+        # Creamos la ventana principal
         menu = Frame(self, bg='#FFFFFF')  
         
-        # Creamos y posicionamos encabezados de treeview
+        # Creamos encabezados de treeview
         Label(menu, text='N°'                ).place(x= 15, y=15, width= 30, height=30)
         Label(menu, text='APELLIDOS Y NOMBRE').place(x= 45, y=15, width=280, height=30)
         Label(menu, text='DNI'               ).place(x=325, y=15, width= 82, height=30)
@@ -124,17 +124,17 @@ class App(Tk):
         self.tre1.column('#3', width= 90)  
             
         # Creamos el scrollbar              
-        self.scroll1 = Scrollbar(menu, orient='vertical', command=self.tre1.yview)
-        self.tre1.configure(yscrollcommand=self.scroll1.set)  
+        scroll = Scrollbar(menu, orient='vertical', command=self.tre1.yview)
+        self.tre1.configure(yscrollcommand=scroll.set)  
         
         # Posicionamos el treeview y scrollbar
         self.tre1.place(x= 15, y=45, height=520)
-        self.scroll1.place   (x=409, y=15, height=550)  
+        scroll.place   (x=409, y=15, height=550)  
         
         # Evento de seleccion en treeview
-        self.tre1.bind('<<TreeviewSelect>>', self.Menu1SeleccionarTreeview)
+        self.tre1.bind('<<TreeviewSelect>>', self.MostrarDetalles)
     
-        # Creamos cuadros para mostar detalles del treeview al seleccionar
+        # Creamos cuadros para mostar detalles de los trabajadores
         Label(menu, text=' Fecha de Nacimiento'    , anchor='nw').place(x=437, y= 15, width=200, height=54)
         Label(menu, text=' Fecha de Ingreso'       , anchor='nw').place(x=437, y= 70, width=200, height=54)
         Label(menu, text=' Planilla'               , anchor='nw').place(x=437, y=125, width=200, height=54)
@@ -157,75 +157,78 @@ class App(Tk):
         Label(menu, text=' Fecha de Baja'          , anchor='nw').place(x=638, y=510, width=200, height=55)
             
         # Creamos los textos que mostraran los detalles
-        self.men1_fnac = Label(menu, fg='#000000', anchor='e')
-        self.men1_fing = Label(menu, fg='#000000', anchor='e')
-        self.men1_rem1 = Label(menu, fg='#000000', anchor='e')
-        self.men1_rem2 = Label(menu, fg='#000000', anchor='e')
-        self.men1_rem3 = Label(menu, fg='#000000', anchor='e')
-        self.men1_rem4 = Label(menu, fg='#000000', anchor='e')
-        self.men1_plab = Label(menu, fg='#000000', anchor='e')
-        self.men1_cban = Label(menu, fg='#000000', anchor='e')
-        self.men1_apo1 = Label(menu, fg='#000000', anchor='e')        
-        self.men1_apo2 = Label(menu, fg='#000000', anchor='e')
-        self.men1_lice = Label(menu, fg='#000000', anchor='e')
-        self.men1_venc = Label(menu, fg='#000000', anchor='e')
-        self.men1_area = Label(menu, fg='#000000', anchor='e')
-        self.men1_celu = Label(menu, fg='#000000', anchor='e')
-        self.men1_dist = Label(menu, fg='#000000', anchor='e')
-        self.men1_edad = Label(menu, fg='#000000', anchor='e')
-        self.men1_tiem = Label(menu, fg='#000000', anchor='e')
-        self.men1_banc = Label(menu, fg='#000000', anchor='e')
-        self.men1_cusp = Label(menu, fg='#000000', anchor='e')
-        self.men1_renu = Label(menu, fg='#000000', anchor='e')       
+        self.naci = Label(menu, fg='#000000', anchor='e')
+        self.ingr = Label(menu, fg='#000000', anchor='e')
+        self.plan = Label(menu, fg='#000000', anchor='e')
+        self.asig = Label(menu, fg='#000000', anchor='e')
+        self.movi = Label(menu, fg='#000000', anchor='e')
+        self.suel = Label(menu, fg='#000000', anchor='e')
+        self.carg = Label(menu, fg='#000000', anchor='e')
+        self.cuen = Label(menu, fg='#000000', anchor='e')
+        self.apor = Label(menu, fg='#000000', anchor='e')        
+        self.comi = Label(menu, fg='#000000', anchor='e')
+        self.lice = Label(menu, fg='#000000', anchor='e')
+        self.venc = Label(menu, fg='#000000', anchor='e')
+        self.area = Label(menu, fg='#000000', anchor='e')
+        self.celu = Label(menu, fg='#000000', anchor='e')
+        self.dist = Label(menu, fg='#000000', anchor='e')
+        self.edad = Label(menu, fg='#000000', anchor='e')
+        self.tiem = Label(menu, fg='#000000', anchor='e')
+        self.banc = Label(menu, fg='#000000', anchor='e')
+        self.cusp = Label(menu, fg='#000000', anchor='e')
+        self.cese = Label(menu, fg='#000000', anchor='e')       
         
         # Posicionamos los textos de los detalles
-        self.men1_fnac.place(x=448, y= 40, width=184) 
-        self.men1_fing.place(x=448, y= 95, width=184)
-        self.men1_rem1.place(x=448, y=150, width=184)
-        self.men1_rem2.place(x=448, y=205, width=184)    
-        self.men1_rem3.place(x=448, y=260, width=184)
-        self.men1_rem4.place(x=448, y=315, width=184)
-        self.men1_plab.place(x=448, y=370, width=184)
-        self.men1_cban.place(x=448, y=425, width=184) 
-        self.men1_apo1.place(x=448, y=480, width=184)        
-        self.men1_apo2.place(x=448, y=535, width=184)
-        self.men1_lice.place(x=649, y= 40, width=184)
-        self.men1_venc.place(x=649, y= 95, width=184)    
-        self.men1_area.place(x=649, y=150, width=184)
-        self.men1_celu.place(x=649, y=205, width=184)
-        self.men1_dist.place(x=649, y=260, width=184)
-        self.men1_edad.place(x=649, y=315, width=184) 
-        self.men1_tiem.place(x=649, y=370, width=184)
-        self.men1_banc.place(x=649, y=425, width=184)
-        self.men1_cusp.place(x=649, y=480, width=184) 
-        self.men1_renu.place(x=649, y=535, width=184)   
+        self.naci.place(x=448, y= 40, width=184) 
+        self.ingr.place(x=448, y= 95, width=184)
+        self.plan.place(x=448, y=150, width=184)
+        self.asig.place(x=448, y=205, width=184)    
+        self.movi.place(x=448, y=260, width=184)
+        self.suel.place(x=448, y=315, width=184)
+        self.carg.place(x=448, y=370, width=184)
+        self.cuen.place(x=448, y=425, width=184) 
+        self.apor.place(x=448, y=480, width=184)        
+        self.comi.place(x=448, y=535, width=184)
+        self.lice.place(x=649, y= 40, width=184)
+        self.venc.place(x=649, y= 95, width=184)    
+        self.area.place(x=649, y=150, width=184)
+        self.celu.place(x=649, y=205, width=184)
+        self.dist.place(x=649, y=260, width=184)
+        self.edad.place(x=649, y=315, width=184) 
+        self.tiem.place(x=649, y=370, width=184)
+        self.banc.place(x=649, y=425, width=184)
+        self.cusp.place(x=649, y=480, width=184) 
+        self.cese.place(x=649, y=535, width=184)   
                   
-        # Creamos los botones
-        Button(menu, text='AGREGAR'  , command= lambda: self.Menu1Agregar('agregar')).place(x=875, y= 15, width=90, height=30)     
-        Button(menu, text='MODIFICAR', command=self.Menu1Modificar                  ).place(x=875, y= 50, width=90, height=30)
-        Button(menu, text='ELIMINAR' , command=self.Menu1Eliminar                   ).place(x=875, y= 85, width=90, height=30)        
+        # Creamos los botones principales
+        Button(menu, text='AGREGAR'  , command= lambda: self.Agregar('agregar')).place(x=875, y= 15, width=90, height=30)     
+        Button(menu, text='MODIFICAR', command=self.Modificar                  ).place(x=875, y= 50, width=90, height=30)
+        Button(menu, text='ELIMINAR' , command=self.Eliminar                   ).place(x=875, y= 85, width=90, height=30)        
         
         # Cargamos datos al treeview
-        self.Menu1CargarDatos()
+        self.MostrarDatos()
         
         # Posicionamos la ventana principal
         menu.place(x=110, y=10, width=980, height=578) 
         
-        # Asignamos variable para poder destruir el menu 1
+        # Asignamos variable para poder destruir la ventana
         self.men1 = menu
        
-    def Menu1Agregar(self, accion):   
+    def Agregar(self, accion):   
 
-        # Ejecutar codigo si se acepta el cuadro de dialogo       
+        # Preguntamos si desea agregar un nuevo trabajador
         if accion == 'agregar':
+
             respuesta = messagebox.askyesno('AGREGAR','Estas seguro de agregar un trabajador ?', icon = 'warning', default='no')       
+            
             if not respuesta:
+                
                 return 
 
-        # Creamos el frame 
+        # Creamos la ventana principal
         menu = Frame(self.men1, background='#FFFFFF')  
         
-        # Creamos los titulos de cada campo 
+        # Creamos los campos de cada detalle
         Label(menu, text='  Buscar Dni'         , anchor='nw').place(x=  0, y=  0, width=200, height=54)
         Label(menu, text='  Numero Dni'         , anchor='nw').place(x=  0, y= 55, width=200, height=54)
         Label(menu, text='  Apellido Paterno'   , anchor='nw').place(x=  0, y=110, width=200, height=54)
@@ -249,176 +252,168 @@ class App(Tk):
         Label(menu, text='  Distrito'           , anchor='nw').place(x=201, y=220, width=200, height=54)
         Label(menu, text='  Fecha de Baja'      , anchor='nw').place(x=201, y=275, width=200, height=54)
                 
-        # Creamos los widges a interactuar} 
-        self.men1_agregar_buscar_dni = Entry(menu)       
-        self.men1_agre_btn1 = Button(menu, text='BUSCAR', bg='#88C7FF', command=self.Menu1ValidarDni)
-        self.men1_agre_btn1.place(x=136, y=23, width=54, height=24)         
-        self.men1_agre_dni  = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')        
-        self.men1_agre_apat = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.men1_agre_amat = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.men1_agre_nomb = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.men1_agre_naci = Entry(menu)
-        self.men1_agre_ingr = Entry(menu)
-        self.men1_agre_plan = Entry(menu)        
-        self.men1_agre_asig = Combobox(menu, values=['SI','NO'], state='readonly')       
-        self.men1_agre_movi = Entry(menu)
-        self.men1_agre_carg = Combobox(menu, values=['INSPECTOR VIAL','OP. DE GRUA LIVIANA','OP. DE GRUA PESADA'], state='readonly')       
-        self.men1_agre_cuen = Entry(menu)
-        self.men1_agre_apor = Combobox(menu, values=['ONP','HABITAT','INTEGRA','PRIMA','PROFUTURO',''], state='readonly')
-        self.men1_agre_comi = Combobox(menu, values=['FLUJO','MIXTA'], state='disable')
-        self.men1_agre_cusp = Entry(menu, state='disable')
-        self.men1_agre_lice = Combobox(menu, values=['AI','AIIA','AIIB','AIIIA','AIIIB','AIIIC', ''], state='readonly')       
-        self.men1_agre_venc = Entry(menu, state='disable')
-        self.men1_agre_codi = Entry(menu, state='disable')
-        self.men1_agre_area = Combobox(menu, values=['SUR','NORTE','TALLER','OFICINA'], state='readonly')       
-        self.men1_agre_celu = Entry(menu)
-        self.men1_agre_dist = Combobox(menu, values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS',
-                                                    'COMAS', 'LOS OLIVOS', 'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO',
-                                                    'SAN JUAN DE LURIGANCHO', 'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 'SANTA ANITA',
-                                                    'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO'], state='readonly')      
-        self.men1_agre_cese = Entry(menu)
+        # Creamos los cuadros para escribir los detalles
+        self.busc = Button(menu, text='BUSCAR', bg='#88C7FF', command=self.BuscarDni)
+        self.bdni = Entry(menu)     
+        self.ndni = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')        
+        self.apat = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
+        self.amat = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
+        self.nomb = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
+        self.fnac = Entry(menu)
+        self.fing = Entry(menu)
+        self.spla = Entry(menu)        
+        self.afam = Combobox(menu, state='readonly', values=['SI', 'NO'])       
+        self.smov = Entry(menu)
+        self.plab = Combobox(menu, state='readonly', values=['INSPECTOR VIAL', 'OP. DE GRUA LIVIANA', 'OP. DE GRUA PESADA'])       
+        self.ncue = Entry(menu)
+        self.eapo = Combobox(menu, state='readonly', values=['ONP', 'HABITAT', 'INTEGRA', 'PRIMA', 'PROFUTURO',''])
+        self.ecom = Combobox(menu, state='disable' , values=['FLUJO', 'MIXTA'])
+        self.ecus = Entry(menu, state='disable')
+        self.cate = Combobox(menu, state='readonly', values=['AI', 'AIIA', 'AIIB', 'AIIIA', 'AIIIB', 'AIIIC', ''])       
+        self.fven = Entry(menu, state='disable')
+        self.codi = Entry(menu, state='disable')
+        self.alab = Combobox(menu, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA'])       
+        self.ncel = Entry(menu)
+        self.dres = Combobox(menu, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS', 'LOS OLIVOS', 
+                                                            'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO',
+                                                            'SAN JUAN DE LURIGANCHO', 'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 
+                                                            'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO'])      
+        self.fces = Entry(menu)
                 
-        # Agregamos evento al cambiar los items del combobox
-        self.men1_agre_apor.bind('<<ComboboxSelected>>', self.Menu1ComboboxAporte) 
-        self.men1_agre_lice.bind('<<ComboboxSelected>>', self.Menu1ComboboxLicencia)    
+        # Evento al seleccionar item del combobox
+        self.eapo.bind('<<ComboboxSelected>>', self.CambioAporte) 
+        self.cate.bind('<<ComboboxSelected>>', self.CambioLicencia)    
 
-        # Posicionamos los widgets
-        self.men1_agregar_buscar_dni.place(x= 10, y= 23, width=120, height=24)    
-        self.men1_agre_dni.place (x= 10, y= 78, width=180, height=24)
-        self.men1_agre_apat.place(x= 10, y=133, width=180, height=24)
-        self.men1_agre_amat.place(x= 10, y=188, width=180, height=24)
-        self.men1_agre_nomb.place(x= 10, y=243, width=180, height=24)        
-        self.men1_agre_naci.place(x= 10, y=298, width=180, height=24)        
-        self.men1_agre_ingr.place(x= 10, y=353, width=180, height=24)
-        self.men1_agre_plan.place(x= 10, y=408, width= 56, height=24)  
-        self.men1_agre_asig.place(x= 72, y=408, width= 56, height=24)      
-        self.men1_agre_movi.place(x=134, y=408, width= 56, height=24) 
-        self.men1_agre_carg.place(x= 10, y=463, width=180, height=24)        
-        self.men1_agre_cuen.place(x= 10, y=518, width=180, height=24)
-        self.men1_agre_apor.place(x=211, y= 23, width=105, height=24) 
-        self.men1_agre_comi.place(x=322, y= 23, width= 69, height=24) 
-        self.men1_agre_cusp.place(x=211, y= 78, width=180, height=24)
-        self.men1_agre_lice.place(x=211, y=133, width= 58, height=24)
-        self.men1_agre_venc.place(x=275, y=133, width= 80, height=24)
-        self.men1_agre_codi.place(x=361, y=133, width= 30, height=24)
-        self.men1_agre_area.place(x=211, y=188, width= 90, height=24)
-        self.men1_agre_celu.place(x=307, y=188, width= 84, height=24)
-        self.men1_agre_dist.place(x=211, y=243, width=180, height=24)
-        self.men1_agre_cese.place(x=211, y=298, width=180, height=24)         
+        # Posicionamos los cuadros de los detalles
+        self.busc.place(x=136, y= 23, width= 54, height=24)    
+        self.bdni.place(x= 10, y= 23, width=120, height=24)    
+        self.ndni.place(x= 10, y= 78, width=180, height=24)
+        self.apat.place(x= 10, y=133, width=180, height=24)
+        self.amat.place(x= 10, y=188, width=180, height=24)
+        self.nomb.place(x= 10, y=243, width=180, height=24)        
+        self.fnac.place(x= 10, y=298, width=180, height=24)        
+        self.fing.place(x= 10, y=353, width=180, height=24)
+        self.spla.place(x= 10, y=408, width= 56, height=24)  
+        self.afam.place(x= 72, y=408, width= 56, height=24)      
+        self.smov.place(x=134, y=408, width= 56, height=24) 
+        self.plab.place(x= 10, y=463, width=180, height=24)        
+        self.ncue.place(x= 10, y=518, width=180, height=24)
+        self.eapo.place(x=211, y= 23, width=105, height=24) 
+        self.ecom.place(x=322, y= 23, width= 69, height=24) 
+        self.ecus.place(x=211, y= 78, width=180, height=24)
+        self.cate.place(x=211, y=133, width= 58, height=24)
+        self.fven.place(x=275, y=133, width= 80, height=24)
+        self.codi.place(x=361, y=133, width= 30, height=24)
+        self.alab.place(x=211, y=188, width= 90, height=24)
+        self.ncel.place(x=307, y=188, width= 84, height=24)
+        self.dres.place(x=211, y=243, width=180, height=24)
+        self.fces.place(x=211, y=298, width=180, height=24)         
             
-        # Asignamos ventana a variable para manipular
-        self.men1_agre = menu
-
-        # Creamos boton para grabar los datos
-        Button(menu, text='GRABAR', command=self.Menu1Guardar                ).place(x=438, y= 0, width=90, height=30)     
+        # Creamos los botones principales
+        Button(menu, text='GRABAR', command=self.Grabar                      ).place(x=438, y= 0, width=90, height=30)     
         Button(menu, text='SALIR' , command= lambda: self.men1_agre.destroy()).place(x=438, y=35, width=90, height=30)
 
-        # Superponemos la ventana actual y centramos el foco      
-        menu.grab_set()
-
-        # Asignamos el foco al boton de registro del dni
-        self.men1_agregar_buscar_dni.focus_set()
-        
         # Posicionamos la ventana principal
         menu.place(x=437, y=15, width=528, height=550)
-           
-    def Menu1Modificar(self):        
         
-        # Ejecutar codigo de actualizar informacion si se acepta el cuadro de dialogo
+        # Foco en cuadro de busqueda y Superponemos la ventana principal
+        self.bdni.focus_set()
+        menu.grab_set()
+
+        # Asignamos variable para poder destruir la ventana
+        self.men1_agre = menu
+           
+    def Modificar(self):        
+        
+        # Preguntamos si desea modificar los datos del trabajador
         if self.tre1.selection():
+
             respuesta = messagebox.askyesno('MODIFICAR','Estas seguro de modificar los datos de este trabajador ?', icon = 'warning', default='no')       
+            
             if respuesta: 
                 
-                # Obtener id del trabajador seleccionado              
+                # Obtener id del trabajador           
                 id = int(self.tre1.item(self.tre1.focus()).get('text'))
 
-                # Buscamos datos en la base de datos
+                # Obtenemos sus datos
                 datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
 
-                # Llamamos a la ventana de agregar trabajador nuevo
-                self.Menu1Agregar('modificar')     
+                # Abrimos el menu de registro
+                self.Agregar('modificar')     
 
-                 # Desactivamos la opcion de buscar dni
-                self.men1_agregar_buscar_dni.configure(state='disabled')
-                self.men1_agre_btn1.configure(state='disabled')
+                # Desactivamos la opcion de buscar dni
+                self.bdni.configure(state='disabled')
+                self.busc.configure(state='disabled')
 
-                # Cargamos datos del trabajador selecionado para actualizar
-                self.men1_agre_dni ['text'] = datos[1]
-                self.men1_agre_apat['text'] = datos[2]
-                self.men1_agre_amat['text'] = datos[3]
-                self.men1_agre_nomb['text'] = datos[4]
-                self.men1_agre_naci.insert(0, datos[5])
-                self.men1_agre_ingr.insert(0, datos[6])
-                self.men1_agre_plan.insert(0, datos[7])
+                # Ingresamos los datos del trabajador en los cuadros
+                self.ndni['text'] = datos[1]
+                self.apat['text'] = datos[2]
+                self.amat['text'] = datos[3]
+                self.nomb['text'] = datos[4]
+                self.fnac.insert(0, datos[5])
+                self.fing.insert(0, datos[6])
+                self.spla.insert(0, datos[7])
+                self.eapo.set(datos[10])
+                self.plab.set(datos[13])
+                self.ncue.insert(0, datos[14])                
+                self.alab.set(datos[15])
+                self.ncel.insert(0, datos[19])
+                self.dres.set(datos[20])
+                self.fces.insert(0, datos[21])
 
                 if datos[8] == 0:
-                    self.men1_agre_asig.set('NO')
+                    self.afam.set('NO')
                 else:
-                    self.men1_agre_asig.set('SI')
+                    self.afam.set('SI')
 
                 if datos[9] > 0:
-                    self.men1_agre_movi.insert(0, datos[9])                
-
-                self.men1_agre_carg.set(datos[13])
-                self.men1_agre_cuen.insert(0, datos[14])
-                self.men1_agre_apor.set(datos[10])
+                    self.smov.insert(0, datos[9])      
                 
                 if len(datos[10]) > 3:                
-                    self.men1_agre_comi.configure(state='readonly')
-                    self.men1_agre_comi.set(datos[11])
-                    self.men1_agre_cusp.configure(state='normal')                     
-                    self.men1_agre_cusp.insert(0, datos[12])
+                    self.ecom.configure(state='readonly')
+                    self.ecom.set(datos[11])
+                    self.ecus.configure(state='normal')                     
+                    self.ecus.insert(0, datos[12])
                 
                 if datos[16] != '':
-                    self.men1_agre_lice.set(datos[18])
-                    self.men1_agre_venc.configure(state='normal')
-                    self.men1_agre_venc.insert(0, datos[17])
-                    self.men1_agre_codi.configure(state='normal')
-                    self.men1_agre_codi.insert(0, datos[16][:1])
-                    
-                self.men1_agre_area.set(datos[15])
-                self.men1_agre_celu.insert(0, datos[19])
-                self.men1_agre_dist.set(datos[20])
-                self.men1_agre_cese.insert(0, datos[21])
+                    self.codi.configure(state='normal')
+                    self.codi.insert(0, datos[16][:1])
+                    self.fven.configure(state='normal')
+                    self.fven.insert(0, datos[17])
+                    self.cate.set(datos[18])
 
         else:
             messagebox.showinfo('Modificar', 'Debes Seleccionar un Trabajador !', icon = 'warning')  
         
-    def Menu1Eliminar(self):  
-
-
-        for row in self.tre1.get_children():
-            print(row)
-
-        
-        return
-
+    def Eliminar(self):  
 
         # Ejecutar codigo si hay seleccion y se acepta el cuadro de dialogo
         if self.tre1.selection():
+
             respuesta = messagebox.askyesno('ELIMINAR','Estas seguro de eliminar a este trabajador ?', icon = 'warning', default='no')       
+            
             if respuesta: 
                 
                 # Tomamos la seleccion del treeview para capturar el ID del trabajador                
                 id = int(self.tre1.item(self.tre1.focus()).get('text'))    
 
                 # Si hay fecha de cese copiar datos a tabla de cesados
-                if self.men1_renu['text'] != '':
+                if self.cese['text'] != '':
                     insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')                   
 
                 # Ejecutamos la consulta sql de eliminacion
                 delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)   
                 
                 # Llamamos a la funcion de limpiar datos de informacion
-                self.Menu1LimpiarDatos()             
+                self.BorrarDetalles()             
                 
                 # Cargamos nuevamente los datos al treeview
-                self.Menu1CargarDatos()   
+                self.MostrarDatos()   
 
         else:
             messagebox.showinfo('Eliminar', 'Debes Seleccionar un Trabajador !', icon = 'warning')                      
         
-    def Menu1CargarDatos(self):
+    def MostrarDatos(self):
         
         # Limpiamos el treeview
         self.tre1.delete(*self.tre1.get_children())
@@ -432,410 +427,314 @@ class App(Tk):
             nombre = f'{dato[2]} {dato[3]} {dato[4]}'    
             self.tre1.insert('', END, text=dato[0], values=(index, nombre, dato[1]))   
     
-    def Menu1LimpiarDatos(self):
+    def BorrarDetalles(self):
 
             # Limpiamos los cuadros de informacion del menu1
-            self.men1_fnac['text'] = ''
-            self.men1_fing['text'] = ''
-            self.men1_rem1['text'] = ''
-            self.men1_rem2['text'] = ''
-            self.men1_rem3['text'] = ''
-            self.men1_rem4['text'] = ''
-            self.men1_plab['text'] = ''
-            self.men1_cban['text'] = ''
-            self.men1_apo1['text'] = ''            
-            self.men1_apo2['text'] = ''
-            self.men1_lice['text'] = ''
-            self.men1_venc['text'] = ''
-            self.men1_area['text'] = ''
-            self.men1_celu['text'] = ''
-            self.men1_dist['text'] = ''
-            self.men1_edad['text'] = ''
-            self.men1_tiem['text'] = ''
-            self.men1_banc['text'] = ''
-            self.men1_cusp['text'] = ''
-            self.men1_renu['text'] = ''
+            self.naci['text'] = ''
+            self.ingr['text'] = ''
+            self.plan['text'] = ''
+            self.asig['text'] = ''
+            self.movi['text'] = ''
+            self.suel['text'] = ''
+            self.carg['text'] = ''
+            self.cuen['text'] = ''
+            self.apor['text'] = ''            
+            self.comi['text'] = ''
+            self.lice['text'] = ''
+            self.venc['text'] = ''
+            self.area['text'] = ''
+            self.celu['text'] = ''
+            self.dist['text'] = ''
+            self.edad['text'] = ''
+            self.tiem['text'] = ''
+            self.banc['text'] = ''
+            self.cusp['text'] = ''
+            self.cese['text'] = ''
      
-    def Menu1ValidarDni(self):
+    def BuscarDni(self):
       
         # Validamos el dni ingresado
-        if self.men1_agregar_buscar_dni.get() == '':
+        if self.bdni.get() == '':
             messagebox.showinfo('BUSCAR', 'Registra el dni del trabajador !', icon = 'warning')    
-            self.men1_agregar_buscar_dni.focus()       
-        elif len(self.men1_agregar_buscar_dni.get()) != 8: 
+            self.bdni.focus()       
+        elif len(self.bdni.get()) != 8: 
             messagebox.showinfo('BUSCAR', 'Registra correctamente el dni del trabajador !', icon = 'warning') 
-            self.men1_agregar_buscar_dni.focus()
-        elif not self.men1_agregar_buscar_dni.get().isdigit(): 
+            self.bdni.focus()
+        elif not self.bdni.get().isdigit(): 
             messagebox.showinfo('BUSCAR', 'Registra correctamente el dni del trabajador !', icon = 'warning') 
-            self.men1_agregar_buscar_dni.focus()
+            self.bdni.focus()
         else:
 
-            dni = self.men1_agregar_buscar_dni.get()
+            dni = self.bdni.get()
             persona = search(dni)
 
             # Si encuentra datos extraer a los textbox
             if persona != None:
-                self.men1_agre_dni['text'] = persona['numeroDocumento']
-                self.men1_agre_apat['text'] = persona['apellidoPaterno']
-                self.men1_agre_amat['text'] = persona['apellidoMaterno']
-                self.men1_agre_nomb['text'] = persona['nombres']
+                self.ndni['text'] = persona['numeroDocumento']
+                self.apat['text'] = persona['apellidoPaterno']
+                self.amat['text'] = persona['apellidoMaterno']
+                self.nomb['text'] = persona['nombres']
                 
-                self.men1_agregar_buscar_dni.delete(0, END)   
-                self.men1_agre_naci.focus_set()                
+                self.bdni.delete(0, END)   
+                self.fnac.focus_set()                
                 
             # Si no encuentra enviar mensaje de aviso
             else:                
                 messagebox.showinfo('BUSCAR', 'El numero de Dni ingresado no existe !', icon = 'warning')           
-                self.men1_agregar_buscar_dni.focus()   
+                self.bdni.focus()   
         
-    def Menu1ComboboxAporte(self, e):
-        
-        # Desactivamos y activamos los elementos del combobox
-        if self.men1_agre_apor.get() == 'ONP' or self.men1_agre_apor.get() == '':
-            self.men1_agre_comi.set('')
-            self.men1_agre_comi['state'] = 'disable'
-            self.men1_agre_cusp.delete(0, END)
-            self.men1_agre_cusp['state'] = 'disable'            
-        else:                 
-            self.men1_agre_comi['state'] = 'readonly'
-            self.men1_agre_cusp['state'] = 'normal'
-
-    def Menu1ComboboxLicencia(self, e):
-        
-        # Activamos demas detalles si tiene licencia
-        if self.men1_agre_lice.get() == '':  
-            self.men1_agre_venc.delete(0, END)   
-            self.men1_agre_codi.delete(0, END)           
-            self.men1_agre_venc['state'] = 'disable' 
-            self.men1_agre_codi['state'] = 'disable'                            
-        else: 
-            self.men1_agre_venc['state'] = 'normal'
-            self.men1_agre_codi['state'] = 'normal' 
-
-    def Menu1SeleccionarTreeview(self, e):
-                
-        # Si seleccionamos un item se ejecutara el codigo
-        if self.tre1.selection():
-            
-            # Limpiamos los cuadros
-            self.Menu1LimpiarDatos()
-            
-            # Obtenemos el id del trabajador          
-            id = int(self.tre1.item(self.tre1.focus()).get('text'))
-            
-            # Tomamos los datos del trabajador
-            datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
-
-            # Extraemos datos del trabajador
-            nacimiento  = datos[ 5]
-            ingreso     = datos[ 6]
-            planilla    = datos[ 7]
-            asignacion  = datos[ 8]
-            movilidad   = datos[ 9]
-            pension     = datos[10]   
-            comision    = datos[11]
-            cusp        = datos[12]
-            cargo       = datos[13]  
-            cuenta      = datos[14]
-            area        = datos[15]  
-            vencimiento = datos[17] 
-            licencia    = datos[18]             
-            celular     = datos[19]
-            distrito    = datos[20]
-            baja        = datos[21]
-            edad        = relativedelta(datetime.now(), datetime.strptime(nacimiento, '%d/%m/%Y'))
-            tiempo      = relativedelta(datetime.now(), datetime.strptime(ingreso, '%d/%m/%Y'))   
-            total       = planilla + asignacion + movilidad        
-            banco       = ''
-
-            if len(cuenta) == 14:                
-                banco       = 'BANCO DE CREDITO'
-            elif len(cuenta) == 20:                 
-                if cuenta[:3] == '018':
-                    banco = 'BANCO DE LA NACION' 
-                elif cuenta[:3] == '003':
-                    banco = 'INTERBANK' 
-                elif cuenta[:3] == '009':
-                    banco = 'SCOTIABANK' 
-                elif cuenta[:3] == '011':
-                    banco = 'BBVA CONTINENTAL' 
-
-            # Mostramos datos del trabajador en los cuadros
-            self.men1_fnac['text'] = nacimiento
-            self.men1_fing['text'] = ingreso
-            self.men1_rem1['text'] = f'{planilla:,.2f}'
-            self.men1_rem2['text'] = f'{asignacion:,.2f}'
-            self.men1_rem3['text'] = f'{movilidad:,.2f}'
-            self.men1_rem4['text'] = f'{total:,.2f}'
-            self.men1_plab['text'] = cargo
-            self.men1_cban['text'] = cuenta       
-            self.men1_apo1['text'] = pension   
-            self.men1_apo2['text'] = comision             
-            self.men1_lice['text'] = licencia
-            self.men1_venc['text'] = vencimiento       
-            self.men1_area['text'] = area 
-            self.men1_celu['text'] = celular 
-            self.men1_dist['text'] = distrito 
-            self.men1_edad['text'] = edad.years
-            self.men1_tiem['text'] = f'{tiempo.years} - {tiempo.months} - {tiempo.days}'
-            self.men1_banc['text'] = banco
-            self.men1_cusp['text'] = cusp            
-            self.men1_renu['text'] = baja 
-            
-    def Menu1Guardar(self):                
+    def Grabar(self):                
         
         # Validacion de dni
-        if self.men1_agre_dni['text'] == '':    
+        if self.ndni['text'] == '':    
             messagebox.showinfo('GRABAR', 'Busca los datos del trabajador !', icon = 'warning')            
-            self.men1_agregar_buscar_dni.focus()                      
+            self.bdni.focus()                      
 
         # Validacion de fecha de nacimiento
-        elif self.men1_agre_naci.get() == '':
+        elif self.fnac.get() == '':
             messagebox.showinfo('GRABAR', 'Registra la fecha de nacimiento !', icon = 'warning')  
-            self.men1_agre_naci.focus()
-        elif len(self.men1_agre_naci.get()) != 10:
+            self.fnac.focus()
+        elif len(self.fnac.get()) != 10:
             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !', icon = 'warning')  
-            self.men1_agre_naci.focus()
-        elif not self.men1_agre_naci.get().replace('/','').isdigit() or len(self.men1_agre_naci.get().replace('/','')) != 8:
+            self.fnac.focus()
+        elif not self.fnac.get().replace('/','').isdigit() or len(self.fnac.get().replace('/','')) != 8:
             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !', icon = 'warning')                     
-            self.men1_agre_naci.focus()
-        elif self.men1_agre_naci.get()[2] != '/' or self.men1_agre_naci.get()[5] != '/':
+            self.fnac.focus()
+        elif self.fnac.get()[2] != '/' or self.fnac.get()[5] != '/':
             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !', icon = 'warning')                      
-            self.men1_agre_naci.focus()
-        elif int(self.men1_agre_naci.get()[6:10]) < (datetime.today().year - 100):                               
+            self.fnac.focus()
+        elif int(self.fnac.get()[6:10]) < (datetime.today().year - 100):                               
             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !', icon = 'warning')                         
-            self.men1_agre_naci.focus()    
-        elif int(self.men1_agre_naci.get()[6:10]) > (datetime.today().year - 18):                               
+            self.fnac.focus()    
+        elif int(self.fnac.get()[6:10]) > (datetime.today().year - 18):                               
             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !', icon = 'warning')                            
-            self.men1_agre_naci.focus()  
+            self.fnac.focus()  
         else:            
             try:                  
-                datetime.strptime(self.men1_agre_naci.get() , '%d/%m/%Y')                                                                                             
+                datetime.strptime(self.fnac.get() , '%d/%m/%Y')                                                                                             
             except ValueError:
                 messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !', icon = 'warning')                                 
-                self.men1_agre_naci.focus()        
+                self.fnac.focus()        
                 return
 
             # Validacion de fecha de ingreso                          
-            if self.men1_agre_ingr.get() == '':
+            if self.fing.get() == '':
                 messagebox.showinfo('GRABAR', 'Registra la fecha de ingreso !', icon = 'warning') 
-                self.men1_agre_ingr.focus()
-            elif len(self.men1_agre_ingr.get()) != 10:
+                self.fing.focus()
+            elif len(self.fing.get()) != 10:
                 messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !', icon = 'warning')  
-                self.men1_agre_ingr.focus()
-            elif not self.men1_agre_ingr.get().replace('/','').isdigit() or len(self.men1_agre_ingr.get().replace('/','')) != 8:
+                self.fing.focus()
+            elif not self.fing.get().replace('/','').isdigit() or len(self.fing.get().replace('/','')) != 8:
                 messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !', icon = 'warning')                             
-                self.men1_agre_ingr.focus()
-            elif self.men1_agre_ingr.get()[2] != '/' or self.men1_agre_ingr.get()[5] != '/':
+                self.fing.focus()
+            elif self.fing.get()[2] != '/' or self.fing.get()[5] != '/':
                 messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !', icon = 'warning')                          
-                self.men1_agre_ingr.focus()
-            elif int(self.men1_agre_ingr.get()[6:10]) < (datetime.today().year - 50):                                
+                self.fing.focus()
+            elif int(self.fing.get()[6:10]) < (datetime.today().year - 50):                                
                 messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !', icon = 'warning')                              
-                self.men1_agre_ingr.focus()                                                          
+                self.fing.focus()                                                          
             else:                
                 try:                  
-                    datetime.strptime(self.men1_agre_ingr.get() , '%d/%m/%Y')                                                                                             
+                    datetime.strptime(self.fing.get() , '%d/%m/%Y')                                                                                             
                 except ValueError:
                     messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !', icon = 'warning')                             
-                    self.men1_agre_naci.focus()        
+                    self.fnac.focus()        
                     return
 
                 # Validacion de sueldo planilla   
-                if self.men1_agre_plan.get() == '':
+                if self.spla.get() == '':
                     messagebox.showinfo('GRABAR', 'Registra la remuneracion de la planilla !', icon = 'warning')  
-                    self.men1_agre_plan.focus()
-                elif not self.men1_agre_plan.get().isdigit(): 
+                    self.spla.focus()
+                elif not self.spla.get().isdigit(): 
                     messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la planilla !', icon = 'warning')   
-                    self.men1_agre_plan.focus()
-                elif int(self.men1_agre_plan.get()) <=0: 
+                    self.spla.focus()
+                elif int(self.spla.get()) <=0: 
                     messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la planilla !', icon = 'warning')  
-                    self.men1_agre_plan.focus()
+                    self.spla.focus()
                     
                 # Validacion de asignacion familiar
-                elif self.men1_agre_asig.get() == '':
+                elif self.afam.get() == '':
                     messagebox.showinfo('GRABAR', 'Registra la asignacion familiar !', icon = 'warning')  
-                    self.men1_agre_asig.focus()
+                    self.afam.focus()
                     
                 # Validacion de movilidad
-                elif self.men1_agre_movi.get() != '' and not self.men1_agre_movi.get().isdigit():
+                elif self.smov.get() != '' and not self.smov.get().isdigit():
                     messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la movilidad !', icon = 'warning')  
-                    self.men1_agre_movi.focus()
-                elif self.men1_agre_movi.get() != '' and int(self.men1_agre_movi.get()) <=0: 
+                    self.smov.focus()
+                elif self.smov.get() != '' and int(self.smov.get()) <=0: 
                     messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la movilidad !', icon = 'warning')  
-                    self.men1_agre_movi.focus()
+                    self.smov.focus()
                     
                 # Validacion de cargo laboral
-                elif self.men1_agre_carg.get() == '':
+                elif self.plab.get() == '':
                     messagebox.showinfo('GRABAR', 'Registra el cargo laboral !', icon = 'warning')  
-                    self.men1_agre_carg.focus()  
+                    self.plab.focus()  
 
                 # Validacion de cuenta bancaria                              
-                elif self.men1_agre_cuen.get() == '':
+                elif self.ncue.get() == '':
                     messagebox.showinfo('GRABAR', 'Registra la cuenta bancaria !', icon = 'warning')  
-                    self.men1_agre_cuen.focus()
-                elif len(self.men1_agre_cuen.get()) != 14 and len(self.men1_agre_cuen.get()) != 20: 
+                    self.ncue.focus()
+                elif len(self.ncue.get()) != 14 and len(self.ncue.get()) != 20: 
                     messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !', icon = 'warning')  
-                    self.men1_agre_cuen.focus()
-                elif not self.men1_agre_cuen.get().isdigit(): 
+                    self.ncue.focus()
+                elif not self.ncue.get().isdigit(): 
                     messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !', icon = 'warning')  
-                    self.men1_agre_cuen.focus()
+                    self.ncue.focus()
                     
                 # Validacion de entidad de aportacion
-                elif self.men1_agre_apor.get() == '':
+                elif self.eapo.get() == '':
                     messagebox.showinfo('GRABAR', 'Registra la entidad pensionaria !', icon = 'warning')  
-                    self.men1_agre_apor.focus()
+                    self.eapo.focus()
 
                 # Validacion de comision de la entidad de aportacion     
-                elif self.men1_agre_comi.state()[0] == 'readonly' and self.men1_agre_comi.get() == '':
+                elif self.ecom.state()[0] == 'readonly' and self.ecom.get() == '':
                     messagebox.showinfo('GRABAR', 'Registra la comision de la entidad pensionaria !', icon = 'warning')                                          
-                    self.men1_agre_comi.focus()
-                elif self.men1_agre_comi.state()[0] == 'focus' and self.men1_agre_comi.get() == '':
+                    self.ecom.focus()
+                elif self.ecom.state()[0] == 'focus' and self.ecom.get() == '':
                     messagebox.showinfo('GRABAR', 'Registra la comision de la entidad pensionaria !', icon = 'warning')                                            
-                    self.men1_agre_comi.focus()                                            
+                    self.ecom.focus()                                            
                
                 # Validacion del cusp de la entidad de aportacion     
-                elif self.men1_agre_cusp.get() != '' and len(self.men1_agre_cusp.get()) != 12:
+                elif self.ecus.get() != '' and len(self.ecus.get()) != 12:
                     messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !', icon = 'warning')                                           
-                    self.men1_agre_cusp.focus()
-                elif self.men1_agre_cusp.get() != '' and not self.men1_agre_cusp.get().isalnum():
+                    self.ecus.focus()
+                elif self.ecus.get() != '' and not self.ecus.get().isalnum():
                     messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !', icon = 'warning')                                      
-                    self.men1_agre_cusp.focus()               
+                    self.ecus.focus()               
                                      
                 # Validacion de vencimiento de la licencia de conducir
-                elif self.men1_agre_lice.get() != '' and self.men1_agre_venc.get() == '':
+                elif self.cate.get() != '' and self.fven.get() == '':
                     messagebox.showinfo('GRABAR', 'Registra la fecha de revalidacion de la licencia !', icon = 'warning')                                          
-                    self.men1_agre_venc.focus()    
-                elif self.men1_agre_venc.get() != '' and len(self.men1_agre_venc.get()) != 10:
+                    self.fven.focus()    
+                elif self.fven.get() != '' and len(self.fven.get()) != 10:
                     messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !', icon = 'warning')                                    
-                    self.men1_agre_venc.focus()  
-                elif self.men1_agre_venc.get() != '' and not self.men1_agre_venc.get().replace('/','').isdigit():
+                    self.fven.focus()  
+                elif self.fven.get() != '' and not self.fven.get().replace('/','').isdigit():
                     messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !', icon = 'warning')                        
-                    self.men1_agre_venc.focus()
-                elif self.men1_agre_venc.get() != '' and len(self.men1_agre_venc.get().replace('/','')) != 8:
+                    self.fven.focus()
+                elif self.fven.get() != '' and len(self.fven.get().replace('/','')) != 8:
                     messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !', icon = 'warning')                       
-                    self.men1_agre_venc.focus()    
-                elif self.men1_agre_venc.get() != '' and self.men1_agre_venc.get()[2] != '/':
+                    self.fven.focus()    
+                elif self.fven.get() != '' and self.fven.get()[2] != '/':
                     messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !', icon = 'warning')                         
-                    self.men1_agre_venc.focus()
-                elif self.men1_agre_venc.get() != '' and self.men1_agre_venc.get()[5] != '/':
+                    self.fven.focus()
+                elif self.fven.get() != '' and self.fven.get()[5] != '/':
                     messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !', icon = 'warning')                        
-                    self.men1_agre_venc.focus()
-                elif self.men1_agre_venc.get() != '' and int(self.men1_agre_venc.get()[6:10]) < (datetime.today().year - 100):                               
+                    self.fven.focus()
+                elif self.fven.get() != '' and int(self.fven.get()[6:10]) < (datetime.today().year - 100):                               
                     messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !', icon = 'warning')                           
-                    self.men1_agre_venc.focus()    
+                    self.fven.focus()    
                 else:
-                    if self.men1_agre_lice.get() != '':
+                    if self.cate.get() != '':
                         try:                  
-                            datetime.strptime(self.men1_agre_venc.get() , '%d/%m/%Y')                                                                                             
+                            datetime.strptime(self.fven.get() , '%d/%m/%Y')                                                                                             
                         except ValueError:
                             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !', icon = 'warning')                               
-                            self.men1_agre_venc.focus()        
+                            self.fven.focus()        
                             return
                         
                     # Validacion del codigo de la licencia de conducir
-                    if self.men1_agre_lice.get() != '' and self.men1_agre_codi.get() == '':   
+                    if self.cate.get() != '' and self.codi.get() == '':   
                         messagebox.showinfo('GRABAR', 'Registra el codigo de la licencia !', icon = 'warning')                           
-                        self.men1_agre_codi.focus()  
-                    elif self.men1_agre_lice.get() != '' and len(self.men1_agre_codi.get()) != 1:   
+                        self.codi.focus()  
+                    elif self.cate.get() != '' and len(self.codi.get()) != 1:   
                         messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !', icon = 'warning')                            
-                        self.men1_agre_codi.focus()   
-                    elif self.men1_agre_lice.get() != '' and not self.men1_agre_codi.get().isalpha():   
+                        self.codi.focus()   
+                    elif self.cate.get() != '' and not self.codi.get().isalpha():   
                         messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !', icon = 'warning')                             
-                        self.men1_agre_codi.focus()           
+                        self.codi.focus()           
 
                     # Validacion del area de labor 
-                    elif self.men1_agre_area.get() == '':
+                    elif self.alab.get() == '':
                         messagebox.showinfo('GRABAR', 'Registra el area de labor !', icon = 'warning')                                          
-                        self.men1_agre_area.focus()
+                        self.alab.focus()
 
                     # Validacion del numero celular             
-                    elif self.men1_agre_celu.get() == '':
+                    elif self.ncel.get() == '':
                         messagebox.showinfo('GRABAR', 'Registra el numero de celular !', icon = 'warning')                                              
-                        self.men1_agre_celu.focus()
-                    elif len(self.men1_agre_celu.get()) != 9:
+                        self.ncel.focus()
+                    elif len(self.ncel.get()) != 9:
                         messagebox.showinfo('GRABAR', 'Registra correctamente el numero de celular !', icon = 'warning')                                        
-                        self.men1_agre_celu.focus()
-                    elif not self.men1_agre_celu.get().isdigit():
+                        self.ncel.focus()
+                    elif not self.ncel.get().isdigit():
                         messagebox.showinfo('GRABAR', 'Registra correctamente el numero de celular !', icon = 'warning')                                       
-                        self.men1_agre_celu.focus()
+                        self.ncel.focus()
                     
                     # Validacion del distrito de residencia
-                    elif self.men1_agre_dist.get() == '':                                                    
+                    elif self.dres.get() == '':                                                    
                         messagebox.showinfo('GRABAR', 'Registra el distrito de residencia !', icon = 'warning')
-                        self.men1_agre_dist.focus()
+                        self.dres.focus()
                       
                     # Validacion de fecha del cese
-                    elif self.men1_agre_cese.get() != '' and len(self.men1_agre_cese.get()) != 10:
+                    elif self.fces.get() != '' and len(self.fces.get()) != 10:
                         messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !', icon = 'warning')                                        
-                        self.men1_agre_cese.focus()
-                    elif self.men1_agre_cese.get() != '' and not self.men1_agre_cese.get().replace('/','').isdigit():
+                        self.fces.focus()
+                    elif self.fces.get() != '' and not self.fces.get().replace('/','').isdigit():
                         messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !', icon = 'warning')                            
-                        self.men1_agre_cese.focus()
-                    elif self.men1_agre_cese.get() != '' and len(self.men1_agre_cese.get().replace('/','')) != 8:
+                        self.fces.focus()
+                    elif self.fces.get() != '' and len(self.fces.get().replace('/','')) != 8:
                         messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !', icon = 'warning')                             
-                        self.men1_agre_cese.focus()    
-                    elif self.men1_agre_cese.get() != '' and self.men1_agre_cese.get()[2] != '/':
+                        self.fces.focus()    
+                    elif self.fces.get() != '' and self.fces.get()[2] != '/':
                         messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !', icon = 'warning')                          
-                        self.men1_agre_cese.focus()
-                    elif self.men1_agre_cese.get() != '' and self.men1_agre_cese.get()[5] != '/':
+                        self.fces.focus()
+                    elif self.fces.get() != '' and self.fces.get()[5] != '/':
                         messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !', icon = 'warning')                              
-                        self.men1_agre_cese.focus()  
-                    elif self.men1_agre_cese.get() != '' and int(self.men1_agre_cese.get()[6:10]) != datetime.today().year: 
+                        self.fces.focus()  
+                    elif self.fces.get() != '' and int(self.fces.get()[6:10]) != datetime.today().year: 
                         messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !', icon = 'warning')                              
-                        self.men1_agre_cese.focus() 
+                        self.fces.focus() 
                     else:              
-                        if self.men1_agre_cese.get() != '':
+                        if self.fces.get() != '':
                             try:                  
-                                datetime.strptime(self.men1_agre_cese.get() , '%d/%m/%Y')                                                                                             
+                                datetime.strptime(self.fces.get() , '%d/%m/%Y')                                                                                             
                             except ValueError:
                                 messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !', icon = 'warning')                               
-                                self.men1_agre_cese.focus()        
+                                self.fces.focus()        
                                 return     
 
                         # Verificacion de dni ya registrado      
-                        if self.men1_agre_btn1['state'] == 'normal':
+                        if self.busc['state'] == 'normal':
                             for index in self.tre1.get_children():
-                                if self.tre1.item(index).get('values')[1] == self.men1_agre_dni['text']:
-                                    print(self.tre1.item(index).get('values')[1])
-                                    print(self.men1_agre_dni['text'])
+                                if f'''{self.tre1.item(index).get('values')[2]:0>8}''' == self.ndni['text']:                                    
                                     messagebox.showinfo('GRABAR', 'El trabajador ya esta registrado !', icon = 'warning')    
                                     return
 
                         # Guardar datos registrados en variables                                                                                                                                                                   
-                        dni  = self.men1_agre_dni.cget('text')
-                        apat = self.men1_agre_apat.cget('text')
-                        amat = self.men1_agre_amat.cget('text')
-                        nomb = self.men1_agre_nomb.cget('text')
-                        naci = self.men1_agre_naci.get()
-                        ingr = self.men1_agre_ingr.get()
-                        plan = int(self.men1_agre_plan.get())      
+                        dni  = self.ndni.cget('text')
+                        apat = self.apat.cget('text')
+                        amat = self.amat.cget('text')
+                        nomb = self.nomb.cget('text')
+                        naci = self.fnac.get()
+                        ingr = self.fing.get()
+                        plan = int(self.spla.get())      
 
-                        if self.men1_agre_asig.get() == 'NO':
+                        if self.afam.get() == 'NO':
                             asig = 0
                         else:
                             asig = self.rmv * 0.1
 
-                        if self.men1_agre_movi.get() == '':
+                        if self.smov.get() == '':
                             movi = 0  
                         else:                            
-                            movi = int(self.men1_agre_movi.get())   
+                            movi = int(self.smov.get())   
 
-                        carg = self.men1_agre_carg.get()
-                        cuen = self.men1_agre_cuen.get()
-                        apor = self.men1_agre_apor.get()
-                        comi = self.men1_agre_comi.get()
-                        cusp = self.men1_agre_cusp.get().upper()
-                        lice = self.men1_agre_lice.get()
-                        venc = self.men1_agre_venc.get()
-                        codi = self.men1_agre_codi.get().upper()
+                        carg = self.plab.get()
+                        cuen = self.ncue.get()
+                        apor = self.eapo.get()
+                        comi = self.ecom.get()
+                        cusp = self.ecus.get().upper()
+                        lice = self.cate.get()
+                        venc = self.fven.get()
+                        codi = self.codi.get().upper()
                         
-                        if self.men1_agre_lice.get() != '':
-                            codi = self.men1_agre_codi.get().upper() + dni                       
+                        if self.cate.get() != '':
+                            codi = self.codi.get().upper() + dni                       
 
-                        area = self.men1_agre_area.get()
-                        celu = self.men1_agre_celu.get()
-                        dist = self.men1_agre_dist.get()              
-                        cese = self.men1_agre_cese.get()                         
+                        area = self.alab.get()
+                        celu = self.ncel.get()
+                        dist = self.dres.get()              
+                        cese = self.fces.get()                         
                         
                         # Obtener el id del trabajador seleccionado
                         seleccion = self.tre1.focus()                        
@@ -843,25 +742,21 @@ class App(Tk):
                             id = int(self.tre1.item(seleccion).get('text'))   
 
                         # Si esta activo boton de dni, nuevo registro (consulta sql)
-                        if self.men1_agre_btn1['state'] == 'normal':                                            
+                        if self.busc['state'] == 'normal':                                            
                             query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, EAPO, TCOM, NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES (
                                 '{dni}','{apat}','{amat}','{nomb}','{naci}','{ingr}',{plan},'{asig}',{movi},'{apor}','{comi}','{cusp}','{carg}','{cuen}','{area}','{codi}','{venc}','{lice}','{celu}','{dist}','{cese}')'''
-                        
+                            insert(query)
                         # Si no esta activo boton de dni, actualizar registro (consulta sql)               
                         else:                            
                             query = f'''UPDATE ACTIVO SET FNAC = '{naci}', FING = '{ingr}', SPLA = {plan}, AFAM = '{asig}', SMOV = {movi}, EAPO = '{apor}' , TCOM = '{comi}', NCUS = '{cusp}', 
                                     PLAB = '{carg}', NCUE = '{cuen}', ALAB = '{area}', NLIC = '{codi}', VLIC = '{venc}', CLIC = '{lice}', NCEL = '{celu}', DRES = '{dist}', FCES = '{cese}' WHERE ID = {id}'''           
-
+                            update(query)
                         # Crear conexion con la base de datos y ejecutar sql                                                                                         
-                        conexion = sqlite3.connect('PlaniPRO.db')    
-                        cursor = conexion.cursor()
-                        cursor.execute(query) 
-                        conexion.commit()
-                        conexion.close()   
+                        
 
                         # Llamar a funciones para actualizar lista    
-                        self.Menu1CargarDatos()
-                        self.Menu1LimpiarDatos()                        
+                        self.MostrarDatos()
+                        self.BorrarDetalles()                        
                         
                         # Volver a poner el selector del treview en el mismo lugar
                         if seleccion !='':
@@ -872,24 +767,101 @@ class App(Tk):
 
                         # Cerrar ventana                           
                         self.men1_agre.destroy()
-                                                   
-                                                   
+    
+    def CambioAporte(self, e):
+        
+        # Desactivamos y activamos los elementos del combobox
+        if self.eapo.get() == 'ONP' or self.eapo.get() == '':
+            self.ecom.set('')
+            self.ecom['state'] = 'disable'
+            self.ecus.delete(0, END)
+            self.ecus['state'] = 'disable'            
+        else:                 
+            self.ecom['state'] = 'readonly'
+            self.ecus['state'] = 'normal'
+
+    def CambioLicencia(self, e):
+        
+        # Activamos demas detalles si tiene licencia
+        if self.cate.get() == '':  
+            self.fven.delete(0, END)   
+            self.codi.delete(0, END)           
+            self.fven['state'] = 'disable' 
+            self.codi['state'] = 'disable'                            
+        else: 
+            self.fven['state'] = 'normal'
+            self.codi['state'] = 'normal' 
+
+    def MostrarDetalles(self, e):
+                
+        # Si seleccionamos un item se ejecutara el codigo
+        if self.tre1.selection():
+            
+            # Limpiamos los cuadros
+            self.BorrarDetalles()
+            
+            # Obtenemos el id del trabajador          
+            id = int(self.tre1.item(self.tre1.focus()).get('text'))
+            
+            # Tomamos los datos del trabajador
+            datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
+
+            # Extraemos datos del trabajador           
+            edad        = relativedelta(datetime.now(), datetime.strptime(datos[5], '%d/%m/%Y'))
+            tiempo      = relativedelta(datetime.now(), datetime.strptime(datos[6], '%d/%m/%Y'))   
+            #total       = planilla + asignacion + movilidad        
+            
+            banco       = ''
+            if len(datos[14]) == 14:                
+                banco = 'BANCO DE CREDITO'
+            elif len(datos[14]) == 20:                 
+                if datos[14][:3] == '018':
+                    banco = 'BANCO DE LA NACION' 
+                elif datos[14][:3] == '003':
+                    banco = 'INTERBANK' 
+                elif datos[14][:3] == '009':
+                    banco = 'SCOTIABANK' 
+                elif datos[14][:3] == '011':
+                    banco = 'BBVA CONTINENTAL' 
+
+            # Mostramos datos del trabajador en los cuadros
+            self.naci['text'] = datos[5]
+            self.ingr['text'] = datos[6]
+            self.plan['text'] = f'{datos[7]:,.2f}'
+            self.asig['text'] = f'{datos[8]:,.2f}'
+            self.movi['text'] = f'{datos[9]:,.2f}'
+            self.suel['text'] = f'{datos[7] + datos[8] + datos[9]:,.2f}'
+            self.carg['text'] = datos[13]
+            self.cuen['text'] = datos[14]
+            self.apor['text'] = datos[10]
+            self.comi['text'] = datos[11]
+            self.lice['text'] = datos[18]
+            self.venc['text'] = datos[17]
+            self.area['text'] = datos[15]
+            self.celu['text'] = datos[19]
+            self.dist['text'] = datos[20]
+            self.edad['text'] = edad.years
+            self.tiem['text'] = f'{tiempo.years} - {tiempo.months} - {tiempo.days}'
+            self.banc['text'] = banco
+            self.cusp['text'] = datos[12]
+            self.cese['text'] = datos[21]
+                                                
 
     def Menu2(self):  
 
         # Activamos o desactivamos los botones
-        self.DesactivarMenu()
+        self.BloquearBotones()
         
-        # Dejamos DesactivarMenu el boton 1
+        # Dejamos BloquearBotones el boton 1
         self.btn2.configure(state='normal')
         
-        # Validacion para destruir el menu 1 si esta DesactivarMenu y detener la ejecucion
+        # Validacion para destruir el menu 1 si esta BloquearBotones y detener la ejecucion
         if self.menu == 2: 
             self.men2.destroy()      
             self.menu = 0
             return
         
-        # Asignamos el numero de menu DesactivarMenu
+        # Asignamos el numero de menu BloquearBotones
         self.menu = 2
                
         # Creamos el frame       
@@ -1833,6 +1805,5 @@ class App(Tk):
 
 
 
-if __name__ == '__main__':   
-    #Mi nombre es Jean
+if __name__ == '__main__':       
     aplicacion = App()
