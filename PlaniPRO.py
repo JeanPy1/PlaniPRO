@@ -800,7 +800,7 @@ class App(Tk):
 
         # Bloqueamos los botones
         self.BloquearBotones()
-        self.btn1.configure(state='normal')
+        self.btn2.configure(state='normal')
         
         # Validacion para destruir el menu si esta activo
         if self.menu == 2: 
@@ -821,8 +821,8 @@ class App(Tk):
         Label(menu, text='D. ME.', font=('Segoe UI Semibold', 8)).place(x=647, y=15, width=51, height=30)        
         Label(menu, text='VACA.', font=('Segoe UI Semibold', 8)).place(x=698, y=15, width=51, height=30)     
         Label(menu, text='C. VA.', font=('Segoe UI Semibold', 8)).place(x=749, y=15, width=51, height=30)
-        Label(menu, text='ADELANTO', font=('Segoe UI Semibold', 8)).place(x=800, y=15, width=81, height=30)    
-        Label(menu, text='XFUERA', font=('Segoe UI Semibold', 8)).place(x=881, y=15, width=73, height=30)            
+        Label(menu, text='ADELANTO', font=('Segoe UI Semibold', 8)).place(x=800, y=15, width=78, height=30)    
+        Label(menu, text='XFUERA', font=('Segoe UI Semibold', 8)).place(x=878, y=15, width=70, height=30)            
       
         self.tre2 = Treeview(menu, columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', '#11', '#12'))
         self.tre2.column('#0', width=0)
@@ -836,8 +836,8 @@ class App(Tk):
         self.tre2.column('#8', width=52, anchor='center')
         self.tre2.column('#9', width=50, anchor='center') 
         self.tre2.column('#10', width=50, anchor='center') 
-        self.tre2.column('#11', width=87, anchor='center')     
-        self.tre2.column('#12', width=87, anchor='center') 
+        self.tre2.column('#11', width=85, anchor='center')     
+        self.tre2.column('#12', width=85, anchor='center') 
 
         scroll = Scrollbar(menu, orient='vertical', command=self.tre2.yview)
         self.tre2.configure(yscrollcommand=scroll.set)  
@@ -1075,51 +1075,45 @@ class App(Tk):
             
             id = int(self.tre2.item(self.tre2.focus()).get('text'))
 
-            # Crear conexion a base de datos
-            conexion = sqlite3.connect('PlaniPRO.db')    
-            cursor = conexion.cursor()
-
             # Ejecutamos consultas de los detalles de cada trabajador en base de datos
-            apoyo       = cursor.execute(F'SELECT ID, FECH                      FROM APOYO       WHERE IDAC = {id}').fetchall() 
-            falta       = cursor.execute(F'SELECT ID, FECH                      FROM FALTA       WHERE IDAC = {id}').fetchall()  
-            feriado     = cursor.execute(F'SELECT ID, FECH                      FROM FERIADO     WHERE IDAC = {id}').fetchall()  
-            adelanto    = cursor.execute(F'SELECT ID, FECH, MONT                FROM ADELANTO    WHERE IDAC = {id}').fetchall()  
-            ingreso     = cursor.execute(F'SELECT ID, DETA, MONT                FROM INGRESO     WHERE IDAC = {id}').fetchall() 
-            descuento   = cursor.execute(F'SELECT ID, DETA, MONT                FROM DESCUENTO   WHERE IDAC = {id}').fetchall()  
-            vacaciones  = cursor.execute(F'SELECT ID, FINI, FFIN, DTOT          FROM VACACIONES  WHERE IDAC = {id}').fetchall()  
-            dmedico     = cursor.execute(F'SELECT ID, FINI, FFIN, DETA, DTOT    FROM DMEDICO     WHERE IDAC = {id}').fetchall() 
-            cvacaciones = cursor.execute(F'SELECT ID, FINI, FFIN, DTOT          FROM CVACACIONES WHERE IDAC = {id}').fetchall()  
+            apoy = select(F'SELECT ID, FECH FROM APOYO WHERE IDAC = {id}', True)
+            falt = select(F'SELECT ID, FECH FROM FALTA WHERE IDAC = {id}', True) 
+            feri = select(F'SELECT ID, FECH FROM FERIADO WHERE IDAC = {id}', True) 
+            adel = select(F'SELECT ID, FECH, MONT FROM ADELANTO WHERE IDAC = {id}', True) 
+            ingr = select(F'SELECT ID, DETA, MONT FROM INGRESO WHERE IDAC = {id}', True)
+            desc = select(F'SELECT ID, DETA, MONT FROM DESCUENTO WHERE IDAC = {id}', True) 
+            vaca = select(F'SELECT ID, FINI, FFIN, DTOT FROM VACACIONES WHERE IDAC = {id}', True) 
+            dmed = select(F'SELECT ID, FINI, FFIN, DETA, DTOT FROM DMEDICO WHERE IDAC = {id}', True)
+            cvac = select(F'SELECT ID, FINI, FFIN, DTOT FROM CVACACIONES WHERE IDAC = {id}', True) 
 
-            for dato in apoyo:
+            for dato in apoy:
                 self.apoyo.insert('', END, text=dato[0], values=(dato[1])) 
 
-            for dato in falta:
+            for dato in falt:
                 self.falta.insert('', END, text=dato[0], values=(dato[1]))
 
-            for dato in feriado:
+            for dato in feri:
                 self.feriado.insert('', END, text=dato[0], values=(dato[1]))    
 
-            for dato in adelanto:
+            for dato in adel:
                 self.adelanto.insert('', END, text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))      
 
-            for dato in ingreso:
+            for dato in ingr:
                 self.ingreso.insert('', END, text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))    
 
-            for dato in descuento:
+            for dato in desc:
                 self.descuento.insert('', END, text=dato[0], values=(dato[1], f'{dato[2]:.2f}')) 
 
-            for dato in vacaciones:
+            for dato in vaca:
                 self.vacaciones.insert('', END, text=dato[0], values=(dato[1], dato[2], dato[3])) 
 
-            for dato in dmedico:
+            for dato in dmed:
                 self.dmedico.insert('', END, text=dato[0], values=(dato[1], dato[2], dato[3], dato[4])) 
 
-            for dato in cvacaciones:
+            for dato in cvac:
                 self.cvacaciones.insert('', END, text=dato[0], values=(dato[1], dato[2], dato[3]))     
           
-            conexion.close()
-
-            self.men2_detalles.place(x=0, y=0, width=980, height=580) 
+            self.men2_detalles.place(width=980, height=580) 
             self.men2_detalles.grab_set()
 
     def Menu2DetallesOcultar(self):
@@ -1144,10 +1138,6 @@ class App(Tk):
         # Actualizamos la fila seleccionada y aunmentamos +1 apoyo
         valores = self.tre2.item(self.tre2.focus())['values'] 
 
-        # Crear conexion a base de datos
-        conexion = sqlite3.connect('PlaniPRO.db')    
-        cursor = conexion.cursor()    
-
         # Obtener id de trabajador
         id = int(self.tre2.item(self.tre2.focus()).get('text'))
 
@@ -1162,9 +1152,9 @@ class App(Tk):
             valores[2] = int(valores[2]) + 1           
         
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'INSERT INTO APOYO (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
+            insert(f'INSERT INTO APOYO (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
 
-            idRegistro = cursor.execute(F'SELECT ID FROM APOYO ORDER BY ID DESC').fetchone()  
+            idRegistro = select(f'SELECT ID FROM APOYO ORDER BY ID DESC', False)
             
             # Si no esta registrado la fecha agregamos al treeview
             self.apoyo.insert('',END, text=idRegistro[0] ,values=self.calendario.get_date())
@@ -1180,9 +1170,10 @@ class App(Tk):
             valores[3] = int(valores[3]) + 1           
         
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'INSERT INTO FALTA (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
+            insert(f'INSERT INTO FALTA (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
 
-            idRegistro = cursor.execute(F'SELECT ID FROM FALTA ORDER BY ID DESC').fetchone()  
+            idRegistro = select(f'SELECT ID FROM FALTA ORDER BY ID DESC', False)
+
             # Si no esta registrado la fecha agregamos al treeview
             self.falta.insert('',END, text=idRegistro[0], values=self.calendario.get_date())
 
@@ -1197,8 +1188,10 @@ class App(Tk):
             valores[4] = int(valores[4]) + 1           
         
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'INSERT INTO FERIADO (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
-            idRegistro = cursor.execute(F'SELECT ID FROM FERIADO ORDER BY ID DESC').fetchone()
+            insert(f'INSERT INTO FERIADO (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
+
+            idRegistro = select(f'SELECT ID FROM FERIADO ORDER BY ID DESC', False)
+
             # Si no esta registrado la fecha agregamos al treeview
             self.feriado.insert('',END,text=idRegistro[0], values=self.calendario.get_date())
 
@@ -1226,10 +1219,12 @@ class App(Tk):
                         valores[10] = f'{float(valores[10]) + monto:.2f}'             
         
                         # Ejecutamos la query de grabar dia de apoyo
-                        cursor.execute(F'INSERT INTO ADELANTO (IDAC, FECH, MONT) VALUES ({id}, "{self.calendario.get_date()}", {monto})')
+                        insert(f'INSERT INTO ADELANTO (IDAC, FECH, MONT) VALUES ({id}, "{self.calendario.get_date()}", {monto})')
 
-                        idRegistro = cursor.execute(F'SELECT ID FROM ADELANTO ORDER BY ID DESC').fetchone()
+                        idRegistro = select(f'SELECT ID FROM ADELANTO ORDER BY ID DESC', False)
+
                         self.adelanto.insert('',END ,text=idRegistro[0], values=(self.calendario.get_date(), f'{monto:.2f}'))
+
                         self.adelantoImporte.delete(0, END)                    
                 
                 # Si esta mal la validacion del importe o esta vacio enviamos el foco al cuadro
@@ -1261,9 +1256,9 @@ class App(Tk):
                         valores[5] = f'{float(valores[5]) + monto:.2f}' 
 
                         # Ejecutamos la query de grabar dia de apoyo
-                        cursor.execute(F'INSERT INTO INGRESO (IDAC, DETA, MONT) VALUES ({id}, "{self.ingresoDetalle.get()}", {monto})')
+                        insert(f'INSERT INTO INGRESO (IDAC, DETA, MONT) VALUES ({id}, "{self.ingresoDetalle.get()}", {monto})')
 
-                        idRegistro = cursor.execute(F'SELECT ID FROM INGRESO ORDER BY ID DESC').fetchone()
+                        idRegistro = select(f'SELECT ID FROM INGRESO ORDER BY ID DESC', False)
                         self.ingreso.insert('', END,text=idRegistro[0], values=(self.ingresoDetalle.get(), f'{monto:.2f}'))
 
                         self.ingresoDetalle.delete(0, END)
@@ -1298,9 +1293,9 @@ class App(Tk):
                         valores[6] = f'{float(valores[6]) + monto:.2f}' 
 
                         # Ejecutamos la query de grabar dia de apoyo
-                        cursor.execute(F'INSERT INTO DESCUENTO (IDAC, DETA, MONT) VALUES ({id}, "{self.descuentoDetalle.get()}", {monto})')
+                        insert(f'INSERT INTO DESCUENTO (IDAC, DETA, MONT) VALUES ({id}, "{self.descuentoDetalle.get()}", {monto})')
 
-                        idRegistro = cursor.execute(F'SELECT ID FROM DESCUENTO ORDER BY ID DESC').fetchone()
+                        idRegistro = select(f'SELECT ID FROM DESCUENTO ORDER BY ID DESC', False)
                         self.descuento.insert('', END,text=idRegistro[0], values=(self.descuentoDetalle.get(), f'{monto:.2f}'))
 
                         self.descuentoDetalle.delete(0, END)
@@ -1337,9 +1332,9 @@ class App(Tk):
                     valores[8] = int(valores[8]) + total
 
                     # Ejecutamos la query de grabar dia de apoyo
-                    cursor.execute(F'INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{self.vacacionesInicial.get()}", "{self.vacacionesFinal.get()}",  {total})')
+                    insert(F'INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{self.vacacionesInicial.get()}", "{self.vacacionesFinal.get()}",  {total})')
 
-                    idRegistro = cursor.execute(F'SELECT ID FROM VACACIONES ORDER BY ID DESC').fetchone()
+                    idRegistro = select(F'SELECT ID FROM VACACIONES ORDER BY ID DESC', False)
                     self.vacaciones.insert('', END,text=idRegistro[0], values=(self.vacacionesInicial.get(), self.vacacionesFinal.get(), total))
 
                     self.vacacionesInicial.configure(state='normal')
@@ -1381,9 +1376,9 @@ class App(Tk):
                     valores[7] = int(valores[7]) + total
 
                     # Ejecutamos la query de grabar dia de apoyo
-                    cursor.execute(F'INSERT INTO DMEDICO (IDAC, FINI, FFIN, DETA, DTOT) VALUES ({id}, "{self.dmedicoInicial.get()}", "{self.dmedicoFinal.get()}", "{self.dmedicoDetalle.get()}",  {total})')
+                    insert(f'INSERT INTO DMEDICO (IDAC, FINI, FFIN, DETA, DTOT) VALUES ({id}, "{self.dmedicoInicial.get()}", "{self.dmedicoFinal.get()}", "{self.dmedicoDetalle.get()}",  {total})')
 
-                    idRegistro = cursor.execute(F'SELECT ID FROM DMEDICO ORDER BY ID DESC').fetchone()
+                    idRegistro = select(f'SELECT ID FROM DMEDICO ORDER BY ID DESC', False)
                     self.dmedico.insert('', END,text=idRegistro[0], values=(self.dmedicoInicial.get(), self.dmedicoFinal.get(), self.dmedicoDetalle.get(), total))
 
                     self.dmedicoInicial.configure(state='normal')
@@ -1423,9 +1418,9 @@ class App(Tk):
                     valores[9] = int(valores[9]) + total
 
                     # Ejecutamos la query de grabar dia de apoyo
-                    cursor.execute(F'INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{self.cvacacionesInicial.get()}", "{self.cvacacionesFinal.get()}",  {total})')
+                    insert(f'INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{self.cvacacionesInicial.get()}", "{self.cvacacionesFinal.get()}",  {total})')
 
-                    idRegistro = cursor.execute(F'SELECT ID FROM CVACACIONES ORDER BY ID DESC').fetchone()
+                    idRegistro = select(f'SELECT ID FROM CVACACIONES ORDER BY ID DESC', False)
                     self.cvacaciones.insert('', END,text=idRegistro[0], values=(self.cvacacionesInicial.get(), self.cvacacionesFinal.get(), total))
 
                     self.cvacacionesInicial.configure(state='normal')
@@ -1441,29 +1436,21 @@ class App(Tk):
                     self.cvacacionesTotal.focus_set()
                     messagebox.showinfo('COMPRA DE VACACIONES', 'Registra correctamente el total de dias de la compra de vacaciones !')
 
-        # Grabamos cambios en base de datos y cerramos conexion
-        conexion.commit()
-        conexion.close()
-
         self.tre2.item(self.tre2.focus(), values=valores)
  
     def Menu2DetallesEliminar(self):
 
         valores = self.tre2.item(self.tre2.focus())['values'] 
-
-        # Crear conexion a base de datos
-        conexion = sqlite3.connect('PlaniPRO.db')    
-        cursor = conexion.cursor()    
                 
         if self.apoyo.selection():
             
             valores[2] = int(valores[2]) - 1            
 
             # Obtener id de trabajador
-            id = int(self.apoyo.item(self.apoyo.focus())['text'] )                
+            id = int(self.apoyo.item(self.apoyo.focus())['text'])                
             
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM APOYO WHERE ID = {id}')
+            delete(F'DELETE FROM APOYO WHERE ID = {id}', False)
             
             # Grabamos cambios en base de datos y cerramos conexion     
             self.apoyo.delete(self.apoyo.focus())          
@@ -1476,7 +1463,7 @@ class App(Tk):
             id = int(self.falta.item(self.falta.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM FALTA WHERE ID = {id}')
+            delete(F'DELETE FROM FALTA WHERE ID = {id}', False)
             
             self.falta.delete(self.falta.focus())      
 
@@ -1488,7 +1475,7 @@ class App(Tk):
             id = int(self.feriado.item(self.feriado.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM FERIADO WHERE ID = {id}')
+            delete(F'DELETE FROM FERIADO WHERE ID = {id}', False)
             
             self.feriado.delete(self.feriado.focus())     
 
@@ -1502,7 +1489,7 @@ class App(Tk):
             id = int(self.adelanto.item(self.adelanto.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM ADELANTO WHERE ID = {id}')
+            delete(F'DELETE FROM ADELANTO WHERE ID = {id}', False)
             
             self.adelanto.delete(self.adelanto.focus())     
             
@@ -1516,7 +1503,7 @@ class App(Tk):
             id = int(self.ingreso.item(self.ingreso.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM INGRESO WHERE ID = {id}')
+            delete(F'DELETE FROM INGRESO WHERE ID = {id}', False)
             
             self.ingreso.delete(self.ingreso.focus())     
 
@@ -1530,7 +1517,7 @@ class App(Tk):
             id = int(self.descuento.item(self.descuento.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM DESCUENTO WHERE ID = {id}')
+            delete(F'DELETE FROM DESCUENTO WHERE ID = {id}', False)
             
             self.descuento.delete(self.descuento.focus())     
 
@@ -1544,7 +1531,7 @@ class App(Tk):
             id = int(self.vacaciones.item(self.vacaciones.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM VACACIONES WHERE ID = {id}')
+            delete(F'DELETE FROM VACACIONES WHERE ID = {id}', False)
             
             self.vacaciones.delete(self.vacaciones.focus())     
 
@@ -1558,7 +1545,7 @@ class App(Tk):
             id = int(self.dmedico.item(self.dmedico.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM DMEDICO WHERE ID = {id}')
+            delete(F'DELETE FROM DMEDICO WHERE ID = {id}', False)
             
             self.dmedico.delete(self.dmedico.focus())       
 
@@ -1572,15 +1559,11 @@ class App(Tk):
             id = int(self.cvacaciones.item(self.cvacaciones.focus())['text'] )
            
             # Ejecutamos la query de grabar dia de apoyo
-            cursor.execute(F'DELETE FROM CVACACIONES WHERE ID = {id}')
+            delete(F'DELETE FROM CVACACIONES WHERE ID = {id}', False)
             
             self.cvacaciones.delete(self.cvacaciones.focus())       
 
-
-        self.tre2.item(self.tre2.focus(), values=valores)
-
-        conexion.commit()
-        conexion.close()
+        self.tre2.item(self.tre2.focus(), values=valores)        
 
     def Menu2DetallesQuitarSeleccion(self, e):
 
