@@ -12,8 +12,12 @@ from dni import search
   
 #print(search('48555618'))
 
+ingreso = None
 
-seleccion = ''                       
+if ingreso:
+    ingreso = f'{ingreso:.2f}'
+else:
+    ingreso = '0.00'
 
-if seleccion:
-    print('hola')
+
+print(ingreso)
