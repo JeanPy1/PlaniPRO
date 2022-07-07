@@ -1,4 +1,5 @@
 
+from re import I
 from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, messagebox
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
@@ -1060,7 +1061,7 @@ class App(Tk):
                     
         # Creamos los botones principales
         Button(menu, text='ELIMINAR', command=self.Menu2DetallesEliminar).place(x=875, y=15, width=90, height=30)     
-        Button(menu, text='SALIR', command=self.Menu2DetallesOcultar ).place(x=875, y=50, width=90, height=30)
+        Button(menu, text='SALIR', command=self.Menu2DetallesOcultar).place(x=875, y=50, width=90, height=30)
 
         # Posicionamos la ventana principal
         menu.place(width=980, height=580) 
@@ -1567,8 +1568,41 @@ class App(Tk):
 
     def Menu2DetallesQuitarSeleccion(self, e):
 
+        
+        self.apoyo.selection_set('') 
+        self.falta.selection_set('')      
+        self.feriado.selection_set('')       
+        self.adelanto.selection_set('')        
+        self.ingreso.selection_set('')
+        self.descuento.selection_set('')
+        self.vacaciones.selection_set('')
+        self.dmedico.selection_set('')
+        self.cvacaciones.selection_set('')
+
+        
+        #e.widget.focus()
+        #print(e.widget.item(e.widget.focus())['text'])
+
+        
         # Obtener el widget que activo el evento, esta en orden de creacion
-        widget = str(e.widget).split(".")[-1][1:]   
+        #if e.widget.focus():
+            #widget = str(e.widget).split(".")[-1][1:]   
+            #id = e.widget.item(e.widget.focus())['text']  
+            #print(id)
+
+
+        #e.widget.selection_set(e.widget.focus())
+        #e.widget.focus(e.widget.focus()) 
+        return    
+
+          
+           
+        for index in e.widget.get_children():
+            if e.widget.item(index).get('text') == id:
+                e.widget.selection_set(index)
+                e.widget.focus(index)    
+
+       
 
         # Desactivar foco de los demas treeview
         if widget == 'treeview':                
