@@ -1135,106 +1135,62 @@ class App(Tk):
         self.men2_detalles.grab_release()   
         
     def Menu2DetallesGrabar(self, widget):  
-
-        # Actualizamos la fila seleccionada y aunmentamos +1 apoyo
-        valores = self.tre2.item(self.tre2.focus())['values'] 
-
-        # Obtener id de trabajador
+        
+        valores = self.tre2.item(self.tre2.focus())['values']
         id = int(self.tre2.item(self.tre2.focus()).get('text'))
+        fecha = self.calendario.get_date()
 
         if widget == 'APOYO':
-            
-         # Verificamos si se repite la fecha para anular registro       
             for row in self.apoyo.get_children():
-                fecha = self.apoyo.item(row)['values'][0]            
-                if fecha == self.calendario.get_date():
-                    return                   
+                if self.apoyo.item(row)['values'][0] == fecha:
+                    return
         
-            valores[2] = int(valores[2]) + 1           
-        
-            # Ejecutamos la query de grabar dia de apoyo
-            insert(f'INSERT INTO APOYO (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
-
+            valores[2] = int(valores[2]) + 1
+            insert(f'INSERT INTO APOYO (IDAC, FECH) VALUES ({id}, "{fecha}")')
             idRegistro = select(f'SELECT ID FROM APOYO ORDER BY ID DESC', False)
-            
-            # Si no esta registrado la fecha agregamos al treeview
-            self.apoyo.insert('',END, text=idRegistro[0] ,values=self.calendario.get_date())
+            self.apoyo.insert('',END, text=idRegistro[0] ,values=fecha)
                    
         elif widget == 'FALTA':
-
-            # Verificamos si se repite la fecha para anular registro       
             for row in self.falta.get_children():
-                fecha = self.falta.item(row)['values'][0]            
-                if fecha == self.calendario.get_date():
-                    return                   
+                if self.falta.item(row)['values'][0] == fecha:
+                    return
         
-            valores[3] = int(valores[3]) + 1           
-        
-            # Ejecutamos la query de grabar dia de apoyo
-            insert(f'INSERT INTO FALTA (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
-
+            valores[3] = int(valores[3]) + 1
+            insert(f'INSERT INTO FALTA (IDAC, FECH) VALUES ({id}, "{fecha}")')
             idRegistro = select(f'SELECT ID FROM FALTA ORDER BY ID DESC', False)
-
-            # Si no esta registrado la fecha agregamos al treeview
-            self.falta.insert('',END, text=idRegistro[0], values=self.calendario.get_date())
+            self.falta.insert('',END, text=idRegistro[0], values=fecha)
 
         elif widget == 'FERIADO':
-
-            # Verificamos si se repite la fecha para anular registro       
             for row in self.feriado.get_children():
-                fecha = self.feriado.item(row)['values'][0]            
-                if fecha == self.calendario.get_date():
-                    return                   
+                if self.feriado.item(row)['values'][0] == fecha:
+                    return
         
-            valores[4] = int(valores[4]) + 1           
-        
-            # Ejecutamos la query de grabar dia de apoyo
-            insert(f'INSERT INTO FERIADO (IDAC, FECH) VALUES ({id}, "{self.calendario.get_date()}")')
-
+            valores[4] = int(valores[4]) + 1
+            insert(f'INSERT INTO FERIADO (IDAC, FECH) VALUES ({id}, "{fecha}")')
             idRegistro = select(f'SELECT ID FROM FERIADO ORDER BY ID DESC', False)
+            self.feriado.insert('',END,text=idRegistro[0], values=fecha)
 
-            # Si no esta registrado la fecha agregamos al treeview
-            self.feriado.insert('',END,text=idRegistro[0], values=self.calendario.get_date())
-
-        elif widget == 'ADELANTO':
-
-            # Verificamos si esta vacio el cuadro de registro de importe
+        elif widget == 'ADELANTO': # Aca me quede
             if self.adelantoImporte.get() == '':
+                self.adelantoImporte.focus_set()
+                messagebox.showinfo('ADELANTO', 'Registra el importe del adelanto !')
+            elif self.adelantoImporte.get().count('.') > 1: 
                 self.adelantoImporte.focus_set()   
-                messagebox.showinfo('ADELANTO', 'Registra el importe del adelanto !')    
+                messagebox.showinfo('ADELANTO', 'Registra correctamente el importe del adelanto !') 
+            elif not self.adelantoImporte.get().replace('.','').isnumeric():
+                self.adelantoImporte.focus_set()
+                messagebox.showinfo('ADELANTO', 'Registra correctamente el importe del adelanto !')  
             else:
-
-                # Verificamos si se repite la fecha para anular registro
-                for row in self.adelanto.get_children():         
-                    fecha = self.adelanto.item(row)['values'][0]               
-                    if fecha == self.calendario.get_date():                
+                for row in self.adelanto.get_children():
+                    if self.adelanto.item(row)['values'][0] == fecha:
                         return
 
-                # Si no se repite la fecha verificamos que el importe este correctamente escrito 
-                if self.adelantoImporte.get().count('.') == 1 or self.adelantoImporte.get().count('.') == 0:          
-                    if self.adelantoImporte.get().replace('.','').isnumeric():
-
-                        # Si todo esta ok, registramos en el treeview
-                        monto = float(self.adelantoImporte.get())  
-
-                        valores[10] = f'{float(valores[10]) + monto:.2f}'             
-        
-                        # Ejecutamos la query de grabar dia de apoyo
-                        insert(f'INSERT INTO ADELANTO (IDAC, FECH, MONT) VALUES ({id}, "{self.calendario.get_date()}", {monto})')
-
-                        idRegistro = select(f'SELECT ID FROM ADELANTO ORDER BY ID DESC', False)
-
-                        self.adelanto.insert('',END ,text=idRegistro[0], values=(self.calendario.get_date(), f'{monto:.2f}'))
-
-                        self.adelantoImporte.delete(0, END)                    
-                
-                # Si esta mal la validacion del importe o esta vacio enviamos el foco al cuadro
-                    else:
-                        self.adelantoImporte.focus_set()   
-                        messagebox.showinfo('ADELANTO', 'Registra correctamente el importe del adelanto !')                          
-                else:
-                    self.adelantoImporte.focus_set()
-                    messagebox.showinfo('ADELANTO', 'Registra correctamente el importe del adelanto !')    
+                monto = float(self.adelantoImporte.get())  
+                valores[10] = f'{float(valores[10]) + monto:.2f}'    
+                insert(f'INSERT INTO ADELANTO (IDAC, FECH, MONT) VALUES ({id}, "{fecha}", {monto})')
+                idRegistro = select(f'SELECT ID FROM ADELANTO ORDER BY ID DESC', False)
+                self.adelanto.insert('',END ,text=idRegistro[0], values=(fecha, f'{monto:.2f}'))
+                self.adelantoImporte.delete(0, END)                     
 
         elif widget == 'INGRESO':
 
@@ -1441,133 +1397,71 @@ class App(Tk):
  
     def Menu2DetallesEliminar(self):
 
-        valores = self.tre2.item(self.tre2.focus())['values'] 
+        valores = self.tre2.item(self.tre2.focus())['values']
                 
         if self.apoyo.selection():
-            
-            valores[2] = int(valores[2]) - 1            
-
-            # Obtener id de trabajador
-            id = int(self.apoyo.item(self.apoyo.focus())['text'])                
-            
-            # Ejecutamos la query de grabar dia de apoyo
+            valores[2] = int(valores[2]) - 1
+            id = int(self.apoyo.item(self.apoyo.focus())['text'])
             delete(F'DELETE FROM APOYO WHERE ID = {id}', False)
-            
-            # Grabamos cambios en base de datos y cerramos conexion     
-            self.apoyo.delete(self.apoyo.focus())          
+            self.apoyo.delete(self.apoyo.focus())
   
         if self.falta.selection():
-            
-            valores[3] = int(valores[3]) - 1            
-
-            # Obtener id de trabajador
-            id = int(self.falta.item(self.falta.focus())['text'] )
-           
-            # Ejecutamos la query de grabar dia de apoyo
+            valores[3] = int(valores[3]) - 1
+            id = int(self.falta.item(self.falta.focus())['text'])
             delete(F'DELETE FROM FALTA WHERE ID = {id}', False)
-            
             self.falta.delete(self.falta.focus())      
 
         if self.feriado.selection():
-
-            valores[4] = int(valores[4]) - 1            
-
-            # Obtener id de trabajador
-            id = int(self.feriado.item(self.feriado.focus())['text'] )
-           
-            # Ejecutamos la query de grabar dia de apoyo
+            valores[4] = int(valores[4]) - 1
+            id = int(self.feriado.item(self.feriado.focus())['text'])
             delete(F'DELETE FROM FERIADO WHERE ID = {id}', False)
-            
-            self.feriado.delete(self.feriado.focus())     
+            self.feriado.delete(self.feriado.focus())
 
         if self.adelanto.selection():
-            
-            monto = float(self.adelanto.item(self.adelanto.focus())['values'][1])    
-            saldo = float(valores[10]) - monto    
-            valores[10] = f'{saldo:.2f}'      
-
-            # Obtener id de trabajador
-            id = int(self.adelanto.item(self.adelanto.focus())['text'] )
-           
-            # Ejecutamos la query de grabar dia de apoyo
+            saldo = float(valores[10]) - float(self.adelanto.item(self.adelanto.focus())['values'][1])
+            valores[10] = f'{saldo:.2f}'
+            id = int(self.adelanto.item(self.adelanto.focus())['text'])
             delete(F'DELETE FROM ADELANTO WHERE ID = {id}', False)
-            
-            self.adelanto.delete(self.adelanto.focus())     
+            self.adelanto.delete(self.adelanto.focus())
             
         if self.ingreso.selection():
-
-            monto = float(self.ingreso.item(self.ingreso.focus())['values'][1])    
-            saldo = float(valores[5]) - monto    
-            valores[5] = f'{saldo:.2f}'      
-
-            # Obtener id de trabajador
-            id = int(self.ingreso.item(self.ingreso.focus())['text'] )
-           
-            # Ejecutamos la query de grabar dia de apoyo
+            saldo = float(valores[5]) - float(self.ingreso.item(self.ingreso.focus())['values'][1])
+            valores[5] = f'{saldo:.2f}'
+            id = int(self.ingreso.item(self.ingreso.focus())['text'])
             delete(F'DELETE FROM INGRESO WHERE ID = {id}', False)
-            
-            self.ingreso.delete(self.ingreso.focus())     
+            self.ingreso.delete(self.ingreso.focus())
 
         if self.descuento.selection():
-
-            monto = float(self.descuento.item(self.descuento.focus())['values'][1])    
-            saldo = float(valores[6]) - monto    
-            valores[6] = f'{saldo:.2f}'      
-
-            # Obtener id de trabajador
-            id = int(self.descuento.item(self.descuento.focus())['text'] )
-           
-            # Ejecutamos la query de grabar dia de apoyo
+            saldo = float(valores[6]) - float(self.descuento.item(self.descuento.focus())['values'][1])
+            valores[6] = f'{saldo:.2f}'
+            id = int(self.descuento.item(self.descuento.focus())['text'])
             delete(F'DELETE FROM DESCUENTO WHERE ID = {id}', False)
-            
-            self.descuento.delete(self.descuento.focus())     
+            self.descuento.delete(self.descuento.focus())
 
         if self.vacaciones.selection():
-            
-            total = int(self.vacaciones.item(self.vacaciones.focus())['values'][2])    
-            dias = int(valores[8]) - total    
-            valores[8] = dias     
-
-            # Obtener id de trabajador
-            id = int(self.vacaciones.item(self.vacaciones.focus())['text'] )
-           
-            # Ejecutamos la query de grabar dia de apoyo
+            dias = int(valores[8]) - int(self.vacaciones.item(self.vacaciones.focus())['values'][2])
+            valores[8] = dias
+            id = int(self.vacaciones.item(self.vacaciones.focus())['text'])
             delete(F'DELETE FROM VACACIONES WHERE ID = {id}', False)
-            
-            self.vacaciones.delete(self.vacaciones.focus())     
+            self.vacaciones.delete(self.vacaciones.focus())
 
         if self.dmedico.selection():
-
-            total = int(self.dmedico.item(self.dmedico.focus())['values'][3])    
-            dias = int(valores[7]) - total    
-            valores[7] = dias     
-
-            # Obtener id de trabajador
-            id = int(self.dmedico.item(self.dmedico.focus())['text'] )
-           
-            # Ejecutamos la query de grabar dia de apoyo
+            dias = int(valores[7]) - int(self.dmedico.item(self.dmedico.focus())['values'][3])
+            valores[7] = dias
+            id = int(self.dmedico.item(self.dmedico.focus())['text'])
             delete(F'DELETE FROM DMEDICO WHERE ID = {id}', False)
-            
-            self.dmedico.delete(self.dmedico.focus())       
+            self.dmedico.delete(self.dmedico.focus())
 
         if self.cvacaciones.selection():
-
-            total = int(self.cvacaciones.item(self.cvacaciones.focus())['values'][2])    
-            dias = int(valores[9]) - total    
-            valores[9] = dias     
-
-            # Obtener id de trabajador
-            id = int(self.cvacaciones.item(self.cvacaciones.focus())['text'] )
-           
-            # Ejecutamos la query de grabar dia de apoyo
+            dias = int(valores[9]) - int(self.cvacaciones.item(self.cvacaciones.focus())['values'][2])
+            valores[9] = dias
+            id = int(self.cvacaciones.item(self.cvacaciones.focus())['text'])
             delete(F'DELETE FROM CVACACIONES WHERE ID = {id}', False)
-            
-            self.cvacaciones.delete(self.cvacaciones.focus())       
+            self.cvacaciones.delete(self.cvacaciones.focus())
 
         self.tre2.item(self.tre2.focus(), values=valores)        
 
     def Menu2DetallesQuitarSeleccion(self, e):
-
         
         self.apoyo.selection_set('') 
         self.falta.selection_set('')      
@@ -1578,131 +1472,6 @@ class App(Tk):
         self.vacaciones.selection_set('')
         self.dmedico.selection_set('')
         self.cvacaciones.selection_set('')
-
-        
-        #e.widget.focus()
-        #print(e.widget.item(e.widget.focus())['text'])
-
-        
-        # Obtener el widget que activo el evento, esta en orden de creacion
-        #if e.widget.focus():
-            #widget = str(e.widget).split(".")[-1][1:]   
-            #id = e.widget.item(e.widget.focus())['text']  
-            #print(id)
-
-
-        #e.widget.selection_set(e.widget.focus())
-        #e.widget.focus(e.widget.focus()) 
-        return    
-
-          
-           
-        for index in e.widget.get_children():
-            if e.widget.item(index).get('text') == id:
-                e.widget.selection_set(index)
-                e.widget.focus(index)    
-
-       
-
-        # Desactivar foco de los demas treeview
-        if widget == 'treeview':                
-            print(self.apoyo.item(self.apoyo.focus())['text'])
-            self.falta.selection_set('')      
-            self.feriado.selection_set('')       
-            self.adelanto.selection_set('')        
-            self.ingreso.selection_set('')
-            self.descuento.selection_set('')
-            self.vacaciones.selection_set('')
-            self.dmedico.selection_set('')
-            self.cvacaciones.selection_set('')
-
-        elif widget == 'treeview2':
-            print(self.falta.item(self.falta.focus())['text'])
-            self.apoyo.selection_set('')      
-            self.feriado.selection_set('')       
-            self.adelanto.selection_set('')        
-            self.ingreso.selection_set('')
-            self.descuento.selection_set('')
-            self.vacaciones.selection_set('')
-            self.dmedico.selection_set('')
-            self.cvacaciones.selection_set('')
-
-        elif widget == 'treeview3':
-            print(self.feriado.item(self.feriado.focus())['text'])
-            self.apoyo.selection_set('')      
-            self.falta.selection_set('')       
-            self.adelanto.selection_set('')        
-            self.ingreso.selection_set('')
-            self.descuento.selection_set('')
-            self.vacaciones.selection_set('')
-            self.dmedico.selection_set('')
-            self.cvacaciones.selection_set('')
-
-        elif widget == 'treeview4':
-            print(self.adelanto.item(self.adelanto.focus())['text'])
-            self.apoyo.selection_set('')      
-            self.falta.selection_set('')       
-            self.feriado.selection_set('')        
-            self.ingreso.selection_set('')
-            self.descuento.selection_set('')
-            self.vacaciones.selection_set('')
-            self.dmedico.selection_set('')
-            self.cvacaciones.selection_set('')
-
-        elif widget == 'treeview5':
-            print(self.ingreso.item(self.ingreso.focus())['text'])
-            self.apoyo.selection_set('')      
-            self.falta.selection_set('')       
-            self.feriado.selection_set('')        
-            self.adelanto.selection_set('')
-            self.descuento.selection_set('')
-            self.vacaciones.selection_set('')
-            self.dmedico.selection_set('')
-            self.cvacaciones.selection_set('')
-
-        elif widget == 'treeview6':
-            print(self.descuento.item(self.descuento.focus())['text'])
-            self.apoyo.selection_set('')      
-            self.falta.selection_set('')       
-            self.feriado.selection_set('')        
-            self.adelanto.selection_set('')
-            self.ingreso.selection_set('')
-            self.vacaciones.selection_set('')
-            self.dmedico.selection_set('')
-            self.cvacaciones.selection_set('')
-
-        elif widget == 'treeview7':
-            print(self.vacaciones.item(self.vacaciones.focus())['text'])
-            self.apoyo.selection_set('')      
-            self.falta.selection_set('')       
-            self.feriado.selection_set('')        
-            self.adelanto.selection_set('')
-            self.ingreso.selection_set('')
-            self.descuento.selection_set('')
-            self.dmedico.selection_set('')
-            self.cvacaciones.selection_set('')
-
-        elif widget == 'treeview8':
-            print(self.dmedico.item(self.dmedico.focus())['text'])
-            self.apoyo.selection_set('')      
-            self.falta.selection_set('')       
-            self.feriado.selection_set('')        
-            self.adelanto.selection_set('')
-            self.ingreso.selection_set('')
-            self.descuento.selection_set('')
-            self.vacaciones.selection_set('')
-            self.cvacaciones.selection_set('')
-
-        elif widget == 'treeview9':
-            print(self.cvacaciones.item(self.cvacaciones.focus())['text'])
-            self.apoyo.selection_set('')      
-            self.falta.selection_set('')       
-            self.feriado.selection_set('')        
-            self.adelanto.selection_set('')
-            self.ingreso.selection_set('')
-            self.descuento.selection_set('')
-            self.vacaciones.selection_set('')
-            self.dmedico.selection_set('')        
           
     def Menu2DetallesSeleccionarFecha(self, boton):
 
@@ -1742,9 +1511,6 @@ class App(Tk):
             self.cvacacionesFinal.delete(0, END)
             self.cvacacionesFinal.insert(0, self.calendario.get_date())
             self.cvacacionesFinal.configure(state='readonly')
-
-
-
 
 
 
