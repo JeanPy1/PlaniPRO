@@ -4,8 +4,7 @@ from tkinter.ttk import Treeview, Style, Combobox
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from tkcalendar import Calendar
-from dni import search
-from sql import select, insert, update, delete
+from scripts import select, insert, update, delete, search
 
 class App(Tk):
 
@@ -16,7 +15,7 @@ class App(Tk):
         self.title('PlaniPRO')
         self.geometry('1100x600+-8+0')
         self.resizable(0,0)     
-        self.iconbitmap('./img/0.ico')  
+        self.iconbitmap('./img/ico.ico')  
 
         # Modificamos estilo de los diferentes widgets
         self.option_add('*Font', ('Segoe UI Semibold', '10'))   
@@ -35,12 +34,12 @@ class App(Tk):
         Style().configure('Treeview', background='#F0F0F0', font=('Segoe UI Semibold', 10)) 
 
         # Cargamos las imagenes de los botones
-        img1 = PhotoImage(file='./img/1.png')
-        img2 = PhotoImage(file='./img/2.png')
-        img3 = PhotoImage(file='./img/3.png')
-        img4 = PhotoImage(file='./img/4.png')
-        img5 = PhotoImage(file='./img/5.png')        
-        img6 = PhotoImage(file='./img/6.png')
+        img1 = PhotoImage(file='./img/menu1.png')
+        img2 = PhotoImage(file='./img/menu2.png')
+        img3 = PhotoImage(file='./img/menu3.png')
+        img4 = PhotoImage(file='./img/menu4.png')
+        img5 = PhotoImage(file='./img/menu5.png')        
+        img6 = PhotoImage(file='./img/menu6.png')
 
         # Creamos los botones del menu  
         self.btn1 = Button(self, image=img1, command=self.Menu1)

@@ -2,7 +2,7 @@ from sqlite3 import connect
 
 def __conexion(query:str, multiline:bool, foreignkey:bool):
 
-    database = 'PlaniPRO.db'
+    database = './data/data01.db'
     conexion = connect(database)  
     
     if foreignkey:

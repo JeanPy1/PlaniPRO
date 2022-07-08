@@ -1,5 +1,6 @@
-from sql import select, insert, update, delete
-from dni import search
+from scripts import select, insert, update, delete
+
+
 
 #insert('''INSERT INTO APOYO (IDAC, FECH) VALUES (1, '20/20/2022')''')
 #update('''UPDATE ACTIVO SET NDNI = '08555618' WHERE ID = 3''')
@@ -17,11 +18,3 @@ from dni import search
 #    print('ya existe')
 
 
-from datetime import date
- 
-def calculateAge(birthDate):
-    today = date.today()
-    return today.year - birthDate.year - ((today.month, today.day) < (birthDate.month, birthDate.day))
-
-
-print(calculateAge('28/12/1989'))
