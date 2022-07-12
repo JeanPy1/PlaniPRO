@@ -1,6 +1,6 @@
 from sqlite3 import connect
 
-def __conexion(query:str, multiline:bool, foreignkey:bool):
+def __conexion(query: str, multiline: bool, foreignkey: bool):
 
     database = './data/data01.db'
     conexion = connect(database)  
@@ -21,14 +21,14 @@ def __conexion(query:str, multiline:bool, foreignkey:bool):
         
     return respuesta
       
-def select(query:str, multiline:bool):
+def select(query: str, multiline: bool):
     return __conexion(query, multiline, False)
 
-def insert(query:str):
+def insert(query: str):
     __conexion(query, False, False)
 
-def update(query:str):
+def update(query: str):
     __conexion(query, False, False)    
 
-def delete(query:str, foreignkey:bool):
+def delete(query: str, foreignkey: bool):
     __conexion(query, False, foreignkey)  

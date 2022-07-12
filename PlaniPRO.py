@@ -2,9 +2,8 @@ from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, mess
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from tkcalendar import Calendar
-from scripts import select, insert, update, delete, search
+from scripts import select, insert, update, delete, search, Edad, Tiempo
 
 class App(Tk):
 
@@ -473,9 +472,9 @@ class App(Tk):
             # Obtener sus datos
             datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
 
-            # Mostramos detalles del trabajador en los cuadros        
-            edad        = relativedelta(datetime.now(), datetime.strptime(datos[5], '%d/%m/%Y'))
-            tiempo      = relativedelta(datetime.now(), datetime.strptime(datos[6], '%d/%m/%Y'))               
+            # Mostramos detalles del trabajador en los cuadros                    
+            edad        = Edad(datos[5])
+            tiempo      = Tiempo(datos[6])               
             banco       = 'NO REGISTRADO'
 
             if len(datos[14]) == 14:                
@@ -505,8 +504,8 @@ class App(Tk):
             self.area['text'] = datos[15]
             self.celu['text'] = datos[19]
             self.dist['text'] = datos[20]
-            self.edad['text'] = edad.years
-            self.tiem['text'] = f'{tiempo.years} - {tiempo.months} - {tiempo.days}'
+            self.edad['text'] = edad
+            self.tiem['text'] = f'{tiempo[0]} - {tiempo[1]} - {tiempo[2]}'
             self.banc['text'] = banco
             self.cusp['text'] = datos[12]
             self.cese['text'] = datos[21]
@@ -1142,7 +1141,7 @@ class App(Tk):
         self.dmedico.selection_set('')
         self.cvacaciones.selection_set('')
           
-    def SeleccionarFecha(self, boton:str):
+    def SeleccionarFecha(self, boton: str):
 
         fecha = self.cale.get_date()
 
@@ -1183,7 +1182,7 @@ class App(Tk):
             self.cvacacionesFinal.insert(0, fecha)
             self.cvacacionesFinal.configure(state='readonly')
 
-    def GrabarDetalles(self, widget:str):
+    def GrabarDetalles(self, widget: str):
         
         valores = self.tre2.item(self.tre2.focus())['values']
         id = int(self.tre2.item(self.tre2.focus()).get('text'))

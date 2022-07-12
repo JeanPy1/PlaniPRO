@@ -1,7 +1,7 @@
 from requests import get
 from logging import warning
 
-def __conexion(params:dict):
+def __conexion(params: dict):
 
     url = 'https://api.apis.net.pe/v1/dni'
 
@@ -31,5 +31,6 @@ def __conexion(params:dict):
             
     return None
 
-def search(dni:str):
+def search(dni: str):
+
     return __conexion({'numero': dni})
