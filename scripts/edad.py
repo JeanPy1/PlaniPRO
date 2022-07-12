@@ -1,33 +1,34 @@
 
 from datetime import datetime, timedelta
  
-def Edad(nacimiento:str):
+def Edad(nacimiento: str) -> int:
+    
     today = datetime.now()  
     fecha = datetime.strptime(nacimiento, '%d/%m/%Y')    
     return today.year - fecha.year - ((today.month, today.day) < (fecha.month, fecha.day))
 
 
-def es_bisiesto(anio:int) -> bool:
+def __Bisiesto(anio: int) -> bool:
+
     return anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0)
 
 def obtener_dias_del_mes(mes: int, anio: int) -> int:
-    # Abril, junio, septiembre y noviembre tienen 30
-    if mes in [4, 6, 9, 11]:
-        return 30
-    # Febrero depende de si es o no bisiesto
+    
+    if mes in [4, 6, 9, 11]: 
+        return 30 # Abril, junio, septiembre y noviembre tienen 30
+    
     if mes == 2:
-        if es_bisiesto(anio):
-            return 29
+        if __Bisiesto(anio): # Febrero depende de si es o no bisiesto
+            return 29 
         else:
             return 28
-    else:
-        # En caso contrario, tiene 31 días
-        return 31
+    else:        
+        return 31 # Todos los demas 
 
 
 
 
-def Tiempo(ingreso:str):    
+def Tiempo(ingreso: str):    
 
     hoy = datetime.today()
     fecha = f'{hoy.day}/{hoy.month}/{hoy.year}'
@@ -35,32 +36,31 @@ def Tiempo(ingreso:str):
     fechaIngreso = datetime.strptime(ingreso, '%d/%m/%Y')       
     fechaActual = datetime.strptime(fecha, '%d/%m/%Y')     
         
-    diferencia = fechaActual - fechaIngreso   
+    diasTranscurridos = fechaActual - fechaIngreso   
 
-    print(fechaIngreso + timedelta(days=365 * 4))
-
-    if diferencia.days > 364:
-        años = int(diferencia.days / 365)        
-        if (diferencia.days - (365 * años)) > 30:
-            meses = int(diferencia.days - (365 * años) /30)           
-            print(f'{años} y {meses}')    
-        else:
-            print(f'{años}')  
-    elif diferencia.days < 364:
-        if dias > 30:
-            meses = int(dias / 30)           
-            print(f'{meses}')
-        else:         
-            print('menos de 1 mes')
-    else:
+    if diasTranscurridos.days == 366:
         print('1 año')
+    elif diasTranscurridos.days > 366:
+        años = int(diasTranscurridos.days/365)
+        print(años)
+        if (diasTranscurridos.days - (años * 365)) > 30:
+            meses = int((diasTranscurridos.days - (años * 365))/30)
+            print(meses)
+        else:
+            meses = 0
+            print(meses)
+    else: 
+        años = 0
+        print(años)
+        if diasTranscurridos.days > 30:
+            meses = int(diasTranscurridos.days /30)
+            print(meses)
+        else:
+            meses = 0
+            print(meses)
+
+  
 
 
-       
-
-
-
-
-
-fecha = Tiempo('20/07/2018')
+fecha = Tiempo('10/03/2020')
 
