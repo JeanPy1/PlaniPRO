@@ -41,7 +41,7 @@ def __Bisiesto(anio: int) -> bool:
     return anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0)
 
 def __obtener_dias_del_mes(mes: int, anio: int) -> int:
-    
+        
     if mes in [4, 6, 9, 11]: 
         return 30 # Abril, junio, septiembre y noviembre tienen 30
     
@@ -52,3 +52,6 @@ def __obtener_dias_del_mes(mes: int, anio: int) -> int:
             return 28
     else:        
         return 31 # Todos los demas 
+
+def FechaValida(fecha: str) -> bool:
+    

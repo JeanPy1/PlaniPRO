@@ -60,8 +60,8 @@ class App(Tk):
         self.rmv = 1025
 
         # Variable global para el control de los menus
-        self.menu = 0
-            
+        self.menu = 0            
+
         # Corremos programa
         self.mainloop()  
          
