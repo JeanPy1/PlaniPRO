@@ -63,7 +63,7 @@ class App(Tk):
 
         # Corremos programa
         self.mainloop()  
-         
+
 
     def BloquearBotones(self):
         
@@ -85,8 +85,8 @@ class App(Tk):
             self.btn5.configure(state='normal')
             self.btn6.configure(state='normal')                     
 
-                 
-    def Menu1(self):  
+
+    def Menu1(self):
         
         # Bloqueamos los botones
         self.BloquearBotones()
@@ -121,18 +121,18 @@ class App(Tk):
         Label(menu, text=' Movilidad', anchor='nw').place(x=437, y=235, width=200, height=54)
         Label(menu, text=' Sueldo Total', anchor='nw').place(x=437, y=290, width=200, height=54)
         Label(menu, text=' Cargo Laboral', anchor='nw').place(x=437, y=345, width=200, height=54)
-        Label(menu, text=' Cuenta Bancaria', anchor='nw').place(x=437, y=400, width=200, height=54)
-        Label(menu, text=' Entidad Pensionaria', anchor='nw').place(x=437, y=455, width=200, height=54)
-        Label(menu, text=' Tipo de Comision S.P.P', anchor='nw').place(x=437, y=510, width=200, height=55)
-        Label(menu, text=' Categoria de Licencia', anchor='nw').place(x=638, y=15, width=200, height=54)
-        Label(menu, text=' Vencimiento de Licencia', anchor='nw').place(x=638, y=70, width=200, height=54)
-        Label(menu, text=' Area de Labor', anchor='nw').place(x=638, y=125, width=200, height=54)
-        Label(menu, text=' Numero de Celular', anchor='nw').place(x=638, y=180, width=200, height=54)
-        Label(menu, text=' Distrito', anchor='nw').place(x=638, y=235, width=200, height=54)
-        Label(menu, text=' Edad', anchor='nw').place(x=638, y=290, width=200, height=54)
-        Label(menu, text=' Tiempo', anchor='nw').place(x=638, y=345, width=200, height=54)
-        Label(menu, text=' Entidad Bancaria', anchor='nw').place(x=638, y=400, width=200, height=54)
-        Label(menu, text=' C.U.S.P.P.', anchor='nw').place(x=638, y=455, width=200, height=54)
+        Label(menu, text=' Entidad Pensionaria', anchor='nw').place(x=437, y=400, width=200, height=54)
+        Label(menu, text=' Tipo de Comision', anchor='nw').place(x=437, y=455, width=200, height=54)
+        Label(menu, text=' Cuspp', anchor='nw').place(x=437, y=510, width=200, height=55)        
+        Label(menu, text=' Cuenta Bancaria', anchor='nw').place(x=638, y=15, width=200, height=54)       
+        Label(menu, text=' Numero de Licencia', anchor='nw').place(x=638, y=70, width=200, height=54)
+        Label(menu, text=' Categoria de Licencia', anchor='nw').place(x=638, y=125, width=200, height=54)
+        Label(menu, text=' Vencimiento de Licencia', anchor='nw').place(x=638, y=180, width=200, height=54)        
+        Label(menu, text=' Area de Labor', anchor='nw').place(x=638, y=235, width=200, height=54)
+        Label(menu, text=' Numero de Celular', anchor='nw').place(x=638, y=290, width=200, height=54)
+        Label(menu, text=' Distrito', anchor='nw').place(x=638, y=345, width=200, height=54)
+        Label(menu, text=' Edad', anchor='nw').place(x=638, y=400, width=200, height=54)
+        Label(menu, text=' Tiempo', anchor='nw').place(x=638, y=455, width=200, height=54)
         Label(menu, text=' Fecha de Baja', anchor='nw').place(x=638, y=510, width=200, height=55)
 
         self.naci = Label(menu, fg='#000000', anchor='e')
@@ -142,18 +142,18 @@ class App(Tk):
         self.movi = Label(menu, fg='#000000', anchor='e')
         self.suel = Label(menu, fg='#000000', anchor='e')
         self.carg = Label(menu, fg='#000000', anchor='e')
+        self.apor = Label(menu, fg='#000000', anchor='e')
+        self.comi = Label(menu, fg='#000000', anchor='e')        
+        self.cusp = Label(menu, fg='#000000', anchor='e')
         self.cuen = Label(menu, fg='#000000', anchor='e')
-        self.apor = Label(menu, fg='#000000', anchor='e')        
-        self.comi = Label(menu, fg='#000000', anchor='e')
-        self.lice = Label(menu, fg='#000000', anchor='e')
-        self.venc = Label(menu, fg='#000000', anchor='e')
+        self.nlic = Label(menu, fg='#000000', anchor='e')
+        self.clic = Label(menu, fg='#000000', anchor='e')
+        self.vlic = Label(menu, fg='#000000', anchor='e')
         self.area = Label(menu, fg='#000000', anchor='e')
         self.celu = Label(menu, fg='#000000', anchor='e')
         self.dist = Label(menu, fg='#000000', anchor='e')
         self.edad = Label(menu, fg='#000000', anchor='e')
         self.tiem = Label(menu, fg='#000000', anchor='e')
-        self.banc = Label(menu, fg='#000000', anchor='e')
-        self.cusp = Label(menu, fg='#000000', anchor='e')
         self.cese = Label(menu, fg='#000000', anchor='e')      
 
         # Evento de seleccion en treeview
@@ -169,18 +169,18 @@ class App(Tk):
         self.movi.place(x=448, y=260, width=184)
         self.suel.place(x=448, y=315, width=184)
         self.carg.place(x=448, y=370, width=184)
-        self.cuen.place(x=448, y=425, width=184) 
-        self.apor.place(x=448, y=480, width=184)        
-        self.comi.place(x=448, y=535, width=184)
-        self.lice.place(x=649, y=40, width=184)
-        self.venc.place(x=649, y=95, width=184)    
-        self.area.place(x=649, y=150, width=184)
-        self.celu.place(x=649, y=205, width=184)
-        self.dist.place(x=649, y=260, width=184)
-        self.edad.place(x=649, y=315, width=184) 
-        self.tiem.place(x=649, y=370, width=184)
-        self.banc.place(x=649, y=425, width=184)
-        self.cusp.place(x=649, y=480, width=184) 
+        self.apor.place(x=448, y=425, width=184) 
+        self.comi.place(x=448, y=480, width=184)        
+        self.cusp.place(x=448, y=535, width=184)
+        self.cuen.place(x=649, y=40, width=184)
+        self.nlic.place(x=649, y=95, width=184)    
+        self.clic.place(x=649, y=150, width=184)
+        self.vlic.place(x=649, y=205, width=184)
+        self.area.place(x=649, y=260, width=184)
+        self.celu.place(x=649, y=315, width=184) 
+        self.dist.place(x=649, y=370, width=184)
+        self.edad.place(x=649, y=425, width=184)
+        self.tiem.place(x=649, y=480, width=184) 
         self.cese.place(x=649, y=535, width=184)   
                   
         # Botones de gestion
@@ -197,11 +197,11 @@ class App(Tk):
         # Asignamos ventana a variable y modificamos menu activo
         self.men1 = menu
         self.menu = 1
-       
-    def Agregar(self):   
+
+    def Agregar(self):
        
         # Creamos los elementos del menu 1 agregar
-        menu = Frame(self.men1, background='#FFFFFF')          
+        menu = Frame(self.men1, background='#FFFFFF')
         
         Label(menu, text='  Buscar Dni', anchor='nw').place(width=200, height=54)
         Label(menu, text='  Numero Dni', anchor='nw').place(y=55, width=200, height=54)
@@ -235,27 +235,23 @@ class App(Tk):
         self.fnac = Entry(menu)
         self.fing = Entry(menu)
         self.spla = Entry(menu)        
-        self.afam = Combobox(menu, state='readonly', values=['SI', 'NO'])       
+        self.afam = Combobox(menu, state='readonly', values=['SI', 'NO'])
         self.smov = Entry(menu)
-        self.plab = Combobox(menu, state='readonly', values=['INSPECTOR VIAL', 'OP. DE GRUA LIVIANA', 'OP. DE GRUA PESADA'])       
+        self.plab = Combobox(menu, state='readonly', values=['INSPECTOR VIAL', 'OP. DE GRUA LIVIANA', 'OP. DE GRUA PESADA', ''])       
         self.ncue = Entry(menu)
         self.eapo = Combobox(menu, state='readonly', values=['ONP', 'HABITAT', 'INTEGRA', 'PRIMA', 'PROFUTURO',''])
-        self.ecom = Combobox(menu, state='disable', values=['FLUJO', 'MIXTA'])
-        self.ecus = Entry(menu, state='disable')
+        self.ecom = Combobox(menu, state='readonly', values=['FLUJO', 'MIXTA', ''])
+        self.ecus = Entry(menu)
         self.cate = Combobox(menu, state='readonly', values=['AIIA', 'AIIB', 'AIIIA', 'AIIIB', 'AIIIC', ''])       
-        self.fven = Entry(menu, state='disable')
-        self.codi = Entry(menu, state='disable')
-        self.alab = Combobox(menu, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA'])       
+        self.fven = Entry(menu)
+        self.codi = Entry(menu)
+        self.alab = Combobox(menu, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA', ''])       
         self.ncel = Entry(menu)
         self.dres = Combobox(menu, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS', 'LOS OLIVOS', 
                                                             'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO',
                                                             'SAN JUAN DE LURIGANCHO', 'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 
-                                                            'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO'])      
-        self.fces = Entry(menu)
-                
-        # Evento al seleccionar item del combobox
-        self.eapo.bind('<<ComboboxSelected>>', self.CambioAporte) 
-        self.cate.bind('<<ComboboxSelected>>', self.CambioLicencia)    
+                                                            'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO', ''])      
+        self.fces = Entry(menu)                       
 
         # Posicionamiento de los elementos      
         self.busc.place(x=136, y=23, width=54, height=24)    
@@ -295,8 +291,8 @@ class App(Tk):
 
         # Asignamos variable para poder destruir la ventana
         self.men1_agre = menu
-           
-    def Modificar(self):        
+
+    def Modificar(self):
         
         # Cargamos datos del trabajador a la ventana agregar
         if self.tre1.selection():            
@@ -318,10 +314,16 @@ class App(Tk):
                 self.fnac.insert(0, datos[5])
                 self.fing.insert(0, datos[6])
                 self.spla.insert(0, datos[7])
+                self.smov.insert(0, datos[9])
                 self.eapo.set(datos[10])
+                self.ecom.set(datos[11])                                        
+                self.ecus.insert(0, datos[12])
                 self.plab.set(datos[13])
                 self.ncue.insert(0, datos[14])                
                 self.alab.set(datos[15])
+                self.codi.insert(0, datos[16][:1])                    
+                self.fven.insert(0, datos[17])
+                self.cate.set(datos[18])
                 self.ncel.insert(0, datos[19])
                 self.dres.set(datos[20])
                 self.fces.insert(0, datos[21])
@@ -331,23 +333,7 @@ class App(Tk):
                 else:
                     self.afam.set('SI')
 
-                if datos[9] > 0:
-                    self.smov.insert(0, datos[9])      
-                
-                if len(datos[10]) > 3:                
-                    self.ecom.configure(state='readonly')
-                    self.ecom.set(datos[11])
-                    self.ecus.configure(state='normal')                     
-                    self.ecus.insert(0, datos[12])
-                
-                if datos[16] != '':
-                    self.codi.configure(state='normal')
-                    self.codi.insert(0, datos[16][:1])
-                    self.fven.configure(state='normal')
-                    self.fven.insert(0, datos[17])
-                    self.cate.set(datos[18])
-       
-    def Eliminar(self):  
+    def Eliminar(self):
 
         # Consulta para eliminar registro
         if self.tre1.selection():
@@ -369,7 +355,7 @@ class App(Tk):
                 
                 # Cargamos nuevamente los datos al treeview
                 self.MostrarDatos()   
-        
+
     def MostrarDatos(self):
         
         # Limpiamos el treeview
@@ -382,7 +368,7 @@ class App(Tk):
         for index, dato in enumerate(datos, 1):
             nombre = f'{dato[2]} {dato[3]} {dato[4]}'    
             self.tre1.insert('', END, text=dato[0], values=(index, nombre, dato[1]))   
-    
+
     def BorrarDetalles(self):
 
             # Limpiamos los cuadros de detalles
@@ -393,20 +379,20 @@ class App(Tk):
             self.movi['text'] = ''
             self.suel['text'] = ''
             self.carg['text'] = ''
+            self.apor['text'] = ''
+            self.comi['text'] = ''            
+            self.cusp['text'] = ''
             self.cuen['text'] = ''
-            self.apor['text'] = ''            
-            self.comi['text'] = ''
-            self.lice['text'] = ''
-            self.venc['text'] = ''
+            self.nlic['text'] = ''
+            self.clic['text'] = ''
+            self.vlic['text'] = ''
             self.area['text'] = ''
             self.celu['text'] = ''
             self.dist['text'] = ''
             self.edad['text'] = ''
             self.tiem['text'] = ''
-            self.banc['text'] = ''
-            self.cusp['text'] = ''
             self.cese['text'] = ''
-     
+
     def BuscarDni(self):
       
         # Validamos el numero de dni ingresado
@@ -434,30 +420,6 @@ class App(Tk):
             else:                
                 messagebox.showinfo('BUSCAR', 'No se encontro el numero de Dni')           
                 self.bdni.focus()   
-          
-    def CambioAporte(self, e):
-        
-        # Desactivamos y activamos los otros elementos
-        if self.eapo.get() == 'ONP' or self.eapo.get() == '':
-            self.ecom.set('')
-            self.ecom['state'] = 'disable'
-            self.ecus.delete(0, END)
-            self.ecus['state'] = 'disable'            
-        else:                 
-            self.ecom['state'] = 'readonly'
-            self.ecus['state'] = 'normal'
-
-    def CambioLicencia(self, e):
-        
-        # Desactivamos y activamos los otros elementos
-        if self.cate.get() == '':  
-            self.fven.delete(0, END)   
-            self.codi.delete(0, END)           
-            self.fven['state'] = 'disable' 
-            self.codi['state'] = 'disable'                            
-        else: 
-            self.fven['state'] = 'normal'
-            self.codi['state'] = 'normal' 
 
     def MostrarDetalles(self, e):
                 
@@ -471,23 +433,8 @@ class App(Tk):
             # Obtener sus datos
             datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
 
-            # Mostramos detalles del trabajador en los cuadros                    
-            edad        = Edad(datos[5])
-            tiempo      = Tiempo(datos[6])               
-            banco       = 'NO REGISTRADO'
-
-            if len(datos[14]) == 14:                
-                banco = 'BANCO DE CREDITO'
-            elif len(datos[14]) == 20:                 
-                if datos[14][:3] == '018':
-                    banco = 'BANCO DE LA NACION' 
-                elif datos[14][:3] == '003':
-                    banco = 'INTERBANK' 
-                elif datos[14][:3] == '009':
-                    banco = 'SCOTIABANK' 
-                elif datos[14][:3] == '011':
-                    banco = 'BBVA CONTINENTAL' 
-
+            # Mostramos detalles del trabajador en los cuadros
+            tiempo = Tiempo(datos[6])
             self.naci['text'] = datos[5]
             self.ingr['text'] = datos[6]
             self.plan['text'] = f'{datos[7]:,.2f}'
@@ -495,21 +442,21 @@ class App(Tk):
             self.movi['text'] = f'{datos[9]:,.2f}'
             self.suel['text'] = f'{datos[7] + datos[8] + datos[9]:,.2f}'
             self.carg['text'] = datos[13]
-            self.cuen['text'] = datos[14]
             self.apor['text'] = datos[10]
             self.comi['text'] = datos[11]
-            self.lice['text'] = datos[18]
-            self.venc['text'] = datos[17]
+            self.cusp['text'] = datos[12]
+            self.cuen['text'] = datos[14]
+            self.nlic['text'] = datos[16]
+            self.clic['text'] = datos[18]
+            self.vlic['text'] = datos[17]
             self.area['text'] = datos[15]
             self.celu['text'] = datos[19]
             self.dist['text'] = datos[20]
-            self.edad['text'] = edad
+            self.edad['text'] = Edad(datos[5])
             self.tiem['text'] = f'{tiempo[0]} - {tiempo[1]} - {tiempo[2]}'
-            self.banc['text'] = banco
-            self.cusp['text'] = datos[12]
             self.cese['text'] = datos[21]
 
-    def Grabar(self):                
+    def Grabar(self):
         
         # Validacion de dni
         if self.ndni['text'] == '':    
@@ -553,25 +500,14 @@ class App(Tk):
         # Validacion de cuenta bancaria                              
         elif self.ncue.get() != '' and not self.ncue.get().isdigit():          
             messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !')  
-            self.ncue.focus()
-                    
-        # Validacion de comision de la entidad de aportacion     
-        elif self.ecom.state()[0] == 'readonly' and self.ecom.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la comision de la entidad pensionaria !')                                          
-            self.ecom.focus()
-        elif self.ecom.state()[0] == 'focus' and self.ecom.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la comision de la entidad pensionaria !')                                            
-            self.ecom.focus()                                            
-               
+            self.ncue.focus()                                                  
+
         # Validacion del cusp de la entidad de aportacion 
         elif self.ecus.get() != '' and not self.ecus.get().isalnum():
             messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !')                                      
             self.ecus.focus()               
                                      
-        # Validacion de vencimiento de la licencia de conducir
-        elif self.cate.get() != '' and self.fven.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la fecha de revalidacion de la licencia !')                                          
-            self.fven.focus()    
+        # Validacion de vencimiento de la licencia de conducir        
         elif self.fven.get() != '' and len(self.fven.get()) != 10:
             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                                    
             self.fven.focus()   
@@ -579,14 +515,11 @@ class App(Tk):
             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                                    
             self.fven.focus()    
                                
-        # Validacion del codigo de la licencia de conducir
-        elif self.cate.get() != '' and self.codi.get() == '':   
-            messagebox.showinfo('GRABAR', 'Registra el codigo de la licencia !')                           
-            self.codi.focus()  
-        elif self.cate.get() != '' and len(self.codi.get()) != 1:   
+        # Validacion del codigo de la licencia de conducir       
+        elif self.codi.get() != '' and len(self.codi.get()) != 1:   
             messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')                            
             self.codi.focus()   
-        elif self.cate.get() != '' and not self.codi.get().isalpha():   
+        elif self.codi.get() != '' and not self.codi.get().isalpha():   
             messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')                             
             self.codi.focus()           
 
@@ -676,9 +609,9 @@ class App(Tk):
 
             # Cerrar ventana                           
             self.men1_agre.destroy()
-                                          
 
-    def Menu2(self):  
+
+    def Menu2(self):
 
         # Bloqueamos los botones
         self.BloquearBotones()
@@ -744,13 +677,13 @@ class App(Tk):
         # Creamos ventana de detalles y lo ocultamos
         self.Detalles()
         self.OcultarDetalles()        
-   
-    def Detalles(self):                   
+
+    def Detalles(self):
         
         # Creamos los elementos del menu 2 detalles
         menu = Frame(self.men2, background='#FFFFFF')   
 
-        self.cale = Calendar(menu, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2', borderwidth=0)
+        self.cale = Calendar(menu, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2')
       
         Button(menu, text='APOYO', command=lambda:self.GrabarDetalles('APO')).place(x=275, y=15, width=94, height=22)
         Button(menu, text='FALTA', command=lambda:self.GrabarDetalles('FAL')).place(x=377, y=15, width=94, height=22)
@@ -948,7 +881,7 @@ class App(Tk):
                 xfue = '0.00'                
             
             self.tre2.insert('', END, text=id, values=(index, nombre, apoy[0], falt[0], feri[0], ingr, desc, dmed, vaca, cvac, adel, xfue)) 
- 
+
     def AbrirDetalles(self, e):
       
         # Mostramos la ventana detalles
@@ -1012,7 +945,7 @@ class App(Tk):
         # Ocultamos la ventana detalles
         self.men2_detalles.place_forget() 
         self.men2_detalles.grab_release()   
-        
+
     def QuitarSeleccion(self, e):
         
         # Quitar seleccion de otros treeview
@@ -1025,7 +958,7 @@ class App(Tk):
         self.vacaciones.selection_set('')
         self.dmedico.selection_set('')
         self.cvacaciones.selection_set('')
-          
+
     def SeleccionarFecha(self, boton: str):
 
         fecha = self.cale.get_date()
@@ -1270,7 +1203,7 @@ class App(Tk):
                 self.cvacacionesFinal.configure(state='readonly')
 
         self.tre2.item(self.tre2.focus(), values=valores)
- 
+
     def EliminarDetalles(self):
 
         valores = self.tre2.item(self.tre2.focus())['values']
@@ -1337,7 +1270,7 @@ class App(Tk):
 
         self.tre2.item(self.tre2.focus(), values=valores)        
 
-    
 
-if __name__ == '__main__':       
+
+if __name__ == '__main__':
     aplicacion = App()
