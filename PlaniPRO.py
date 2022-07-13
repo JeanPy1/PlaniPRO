@@ -1,9 +1,8 @@
 from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, messagebox
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
-from datetime import datetime
 from tkcalendar import Calendar
-from scripts import select, insert, update, delete, search, Edad, Tiempo
+from scripts import select, insert, update, delete, search, Edad, Tiempo, FechaValida
 
 class App(Tk):
 
@@ -521,276 +520,162 @@ class App(Tk):
         elif self.fnac.get() == '':
             messagebox.showinfo('GRABAR', 'Registra la fecha de nacimiento !')  
             self.fnac.focus()
-        elif len(self.fnac.get()) != 10:
+        elif len(self.fnac.get()) != 10 or not FechaValida(self.fnac.get(), False):
             messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')  
             self.fnac.focus()
-        elif not self.fnac.get().replace('/','').isdigit() or len(self.fnac.get().replace('/','')) != 8:
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')                     
-            self.fnac.focus()
-        elif self.fnac.get()[2] != '/' or self.fnac.get()[5] != '/':
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')                      
-            self.fnac.focus()
-        elif int(self.fnac.get()[6:10]) < (datetime.today().year - 100):                               
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')                         
-            self.fnac.focus()    
-        elif int(self.fnac.get()[6:10]) > (datetime.today().year - 18):                               
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')                            
-            self.fnac.focus()  
-        else:            
-            try:                  
-                datetime.strptime(self.fnac.get() , '%d/%m/%Y')                                                                                             
-            except ValueError:
-                messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')                                 
-                self.fnac.focus()        
-                return
 
-            # Validacion de fecha de ingreso                          
-            if self.fing.get() == '':
-                messagebox.showinfo('GRABAR', 'Registra la fecha de ingreso !') 
-                self.fing.focus()
-            elif len(self.fing.get()) != 10:
-                messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')  
-                self.fing.focus()
-            elif not self.fing.get().replace('/','').isdigit() or len(self.fing.get().replace('/','')) != 8:
-                messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')                             
-                self.fing.focus()
-            elif self.fing.get()[2] != '/' or self.fing.get()[5] != '/':
-                messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')                          
-                self.fing.focus()
-            elif int(self.fing.get()[6:10]) < (datetime.today().year - 50):                                
-                messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')                              
-                self.fing.focus()                                                          
-            else:                
-                try:                  
-                    datetime.strptime(self.fing.get() , '%d/%m/%Y')                                                                                             
-                except ValueError:
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')                             
-                    self.fnac.focus()        
-                    return
+        # Validacion de fecha de ingreso    
+        elif self.fing.get() == '':
+            messagebox.showinfo('GRABAR', 'Registra la fecha de ingreso !') 
+            self.fing.focus()
+        elif len(self.fing.get()) != 10 or not FechaValida(self.fing.get(), False):
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')  
+            self.fing.focus()
 
-                # Validacion de sueldo planilla   
-                if self.spla.get() == '':
-                    messagebox.showinfo('GRABAR', 'Registra la remuneracion de la planilla !')  
-                    self.spla.focus()
-                elif not self.spla.get().isdigit(): 
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la planilla !')   
-                    self.spla.focus()
-                elif int(self.spla.get()) <=0: 
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la planilla !')  
-                    self.spla.focus()
-                    
-                # Validacion de asignacion familiar
-                elif self.afam.get() == '':
-                    messagebox.showinfo('GRABAR', 'Registra la asignacion familiar !')  
-                    self.afam.focus()
-                    
-                # Validacion de movilidad
-                elif self.smov.get() != '' and not self.smov.get().isdigit():
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la movilidad !')  
-                    self.smov.focus()
-                elif self.smov.get() != '' and int(self.smov.get()) <=0: 
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la movilidad !')  
-                    self.smov.focus()
-                    
-                # Validacion de cargo laboral
-                elif self.plab.get() == '':
-                    messagebox.showinfo('GRABAR', 'Registra el cargo laboral !')  
-                    self.plab.focus()  
+        # Validacion de sueldo planilla
+        elif self.spla.get() == '':
+            messagebox.showinfo('GRABAR', 'Registra la remuneracion de la planilla !')  
+            self.spla.focus()
+        elif not self.spla.get().isdigit(): 
+            messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la planilla !')   
+            self.spla.focus()
 
-                # Validacion de cuenta bancaria                              
-                elif self.ncue.get() == '':
-                    messagebox.showinfo('GRABAR', 'Registra la cuenta bancaria !')  
-                    self.ncue.focus()
-                elif len(self.ncue.get()) != 14 and len(self.ncue.get()) != 20: 
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !')  
-                    self.ncue.focus()
-                elif not self.ncue.get().isdigit(): 
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !')  
-                    self.ncue.focus()
+        # Validacion de asignacion familiar
+        elif self.afam.get() == '':
+            messagebox.showinfo('GRABAR', 'Registra la asignacion familiar !')  
+            self.afam.focus()
                     
-                # Validacion de entidad de aportacion
-                elif self.eapo.get() == '':
-                    messagebox.showinfo('GRABAR', 'Registra la entidad pensionaria !')  
-                    self.eapo.focus()
+        # Validacion de movilidad
+        elif self.smov.get() != '' and not self.smov.get().isdigit():
+            messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la movilidad !')  
+            self.smov.focus()
 
-                # Validacion de comision de la entidad de aportacion     
-                elif self.ecom.state()[0] == 'readonly' and self.ecom.get() == '':
-                    messagebox.showinfo('GRABAR', 'Registra la comision de la entidad pensionaria !')                                          
-                    self.ecom.focus()
-                elif self.ecom.state()[0] == 'focus' and self.ecom.get() == '':
-                    messagebox.showinfo('GRABAR', 'Registra la comision de la entidad pensionaria !')                                            
-                    self.ecom.focus()                                            
+        # Validacion de cuenta bancaria                              
+        elif self.ncue.get() != '' and not self.ncue.get().isdigit():          
+            messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !')  
+            self.ncue.focus()
+                    
+        # Validacion de comision de la entidad de aportacion     
+        elif self.ecom.state()[0] == 'readonly' and self.ecom.get() == '':
+            messagebox.showinfo('GRABAR', 'Registra la comision de la entidad pensionaria !')                                          
+            self.ecom.focus()
+        elif self.ecom.state()[0] == 'focus' and self.ecom.get() == '':
+            messagebox.showinfo('GRABAR', 'Registra la comision de la entidad pensionaria !')                                            
+            self.ecom.focus()                                            
                
-                # Validacion del cusp de la entidad de aportacion     
-                elif self.ecus.get() != '' and len(self.ecus.get()) != 12:
-                    messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !')                                           
-                    self.ecus.focus()
-                elif self.ecus.get() != '' and not self.ecus.get().isalnum():
-                    messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !')                                      
-                    self.ecus.focus()               
+        # Validacion del cusp de la entidad de aportacion 
+        elif self.ecus.get() != '' and not self.ecus.get().isalnum():
+            messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !')                                      
+            self.ecus.focus()               
                                      
-                # Validacion de vencimiento de la licencia de conducir
-                elif self.cate.get() != '' and self.fven.get() == '':
-                    messagebox.showinfo('GRABAR', 'Registra la fecha de revalidacion de la licencia !')                                          
-                    self.fven.focus()    
-                elif self.fven.get() != '' and len(self.fven.get()) != 10:
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                                    
-                    self.fven.focus()  
-                elif self.fven.get() != '' and not self.fven.get().replace('/','').isdigit():
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                        
-                    self.fven.focus()
-                elif self.fven.get() != '' and len(self.fven.get().replace('/','')) != 8:
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                       
-                    self.fven.focus()    
-                elif self.fven.get() != '' and self.fven.get()[2] != '/':
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                         
-                    self.fven.focus()
-                elif self.fven.get() != '' and self.fven.get()[5] != '/':
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                        
-                    self.fven.focus()
-                elif self.fven.get() != '' and int(self.fven.get()[6:10]) < (datetime.today().year - 100):                               
-                    messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                           
-                    self.fven.focus()    
-                else:
-                    if self.cate.get() != '':
-                        try:                  
-                            datetime.strptime(self.fven.get() , '%d/%m/%Y')                                                                                             
-                        except ValueError:
-                            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                               
-                            self.fven.focus()        
-                            return
-                        
-                    # Validacion del codigo de la licencia de conducir
-                    if self.cate.get() != '' and self.codi.get() == '':   
-                        messagebox.showinfo('GRABAR', 'Registra el codigo de la licencia !')                           
-                        self.codi.focus()  
-                    elif self.cate.get() != '' and len(self.codi.get()) != 1:   
-                        messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')                            
-                        self.codi.focus()   
-                    elif self.cate.get() != '' and not self.codi.get().isalpha():   
-                        messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')                             
-                        self.codi.focus()           
+        # Validacion de vencimiento de la licencia de conducir
+        elif self.cate.get() != '' and self.fven.get() == '':
+            messagebox.showinfo('GRABAR', 'Registra la fecha de revalidacion de la licencia !')                                          
+            self.fven.focus()    
+        elif self.fven.get() != '' and len(self.fven.get()) != 10:
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                                    
+            self.fven.focus()   
+        elif self.fven.get() != '' and not FechaValida(self.fven.get(), True):
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                                    
+            self.fven.focus()    
+                               
+        # Validacion del codigo de la licencia de conducir
+        elif self.cate.get() != '' and self.codi.get() == '':   
+            messagebox.showinfo('GRABAR', 'Registra el codigo de la licencia !')                           
+            self.codi.focus()  
+        elif self.cate.get() != '' and len(self.codi.get()) != 1:   
+            messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')                            
+            self.codi.focus()   
+        elif self.cate.get() != '' and not self.codi.get().isalpha():   
+            messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')                             
+            self.codi.focus()           
 
-                    # Validacion del area de labor 
-                    elif self.alab.get() == '':
-                        messagebox.showinfo('GRABAR', 'Registra el area de labor !')                                          
-                        self.alab.focus()
-
-                    # Validacion del numero celular             
-                    elif self.ncel.get() == '':
-                        messagebox.showinfo('GRABAR', 'Registra el numero de celular !')                                              
-                        self.ncel.focus()
-                    elif len(self.ncel.get()) != 9:
-                        messagebox.showinfo('GRABAR', 'Registra correctamente el numero de celular !')                                        
-                        self.ncel.focus()
-                    elif not self.ncel.get().isdigit():
-                        messagebox.showinfo('GRABAR', 'Registra correctamente el numero de celular !')                                       
-                        self.ncel.focus()
-                    
-                    # Validacion del distrito de residencia
-                    elif self.dres.get() == '':                                                    
-                        messagebox.showinfo('GRABAR', 'Registra el distrito de residencia !')
-                        self.dres.focus()
+        # Validacion del numero celular          
+        elif self.ncel.get() != '' and not self.ncel.get().isdigit():
+            messagebox.showinfo('GRABAR', 'Registra correctamente el numero de celular !')                                       
+            self.ncel.focus()
                       
-                    # Validacion de fecha del cese
-                    elif self.fces.get() != '' and len(self.fces.get()) != 10:
-                        messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                                        
-                        self.fces.focus()
-                    elif self.fces.get() != '' and not self.fces.get().replace('/','').isdigit():
-                        messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                            
-                        self.fces.focus()
-                    elif self.fces.get() != '' and len(self.fces.get().replace('/','')) != 8:
-                        messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                             
-                        self.fces.focus()    
-                    elif self.fces.get() != '' and self.fces.get()[2] != '/':
-                        messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                          
-                        self.fces.focus()
-                    elif self.fces.get() != '' and self.fces.get()[5] != '/':
-                        messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                              
-                        self.fces.focus()  
-                    elif self.fces.get() != '' and int(self.fces.get()[6:10]) != datetime.today().year: 
-                        messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                              
-                        self.fces.focus() 
-                    else:              
-                        if self.fces.get():
-                            try:                  
-                                datetime.strptime(self.fces.get() , '%d/%m/%Y')                                                                                             
-                            except ValueError:
-                                messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                               
-                                self.fces.focus()        
-                                return     
+        # Validacion de fecha del cese
+        elif self.fces.get() != '' and len(self.fces.get()) != 10:
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                                        
+            self.fces.focus()
+        elif self.fces.get() != '' and not FechaValida(self.fces.get(), True):
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                            
+            self.fces.focus()       
+        else:
 
-                        # Verificacion de dni ya registrado      
-                        if self.busc['state'] == 'normal':
-                            for index in self.tre1.get_children():
-                                if f'''{self.tre1.item(index).get('values')[2]:0>8}''' == self.ndni['text']:                                    
-                                    messagebox.showinfo('GRABAR', 'El trabajador ya esta registrado !')    
-                                    return
+            # Verificacion de dni ya registrado      
+            if self.busc['state'] == 'normal':
+                for index in self.tre1.get_children():
+                    if f'''{self.tre1.item(index).get('values')[2]:0>8}''' == self.ndni['text']:                                    
+                        messagebox.showinfo('GRABAR', 'El trabajador ya esta registrado !')    
+                        return
 
-                        # Guardar datos registrados en variables                                                                                                                                                                   
-                        ndni = self.ndni.cget('text')
-                        apat = self.apat.cget('text')
-                        amat = self.amat.cget('text')
-                        nomb = self.nomb.cget('text')
-                        naci = self.fnac.get()
-                        ingr = self.fing.get()
-                        plan = int(self.spla.get())      
-                        carg = self.plab.get()
-                        cuen = self.ncue.get()
-                        apor = self.eapo.get()
-                        comi = self.ecom.get()
-                        cusp = self.ecus.get().upper()
-                        lice = self.cate.get()
-                        venc = self.fven.get()
-                        codi = self.codi.get().upper()
-                        area = self.alab.get()
-                        celu = self.ncel.get()
-                        dist = self.dres.get()              
-                        cese = self.fces.get()  
+            # Guardar datos registrados en variables                                                                                                                                                                   
+            ndni = self.ndni.cget('text')
+            apat = self.apat.cget('text')
+            amat = self.amat.cget('text')
+            nomb = self.nomb.cget('text')
+            naci = self.fnac.get()
+            ingr = self.fing.get()
+            plan = int(self.spla.get())      
+            carg = self.plab.get()
+            cuen = self.ncue.get()
+            apor = self.eapo.get()
+            comi = self.ecom.get()
+            cusp = self.ecus.get().upper()
+            lice = self.cate.get()
+            venc = self.fven.get()
+            codi = self.codi.get().upper()
+            area = self.alab.get()
+            celu = self.ncel.get()
+            dist = self.dres.get()              
+            cese = self.fces.get()  
 
-                        if codi: 
-                            codi = codi + ndni    
+            if codi: 
+                codi = codi + ndni    
 
-                        if self.afam.get() == 'SI':
-                            asig = self.rmv * 0.1                            
-                        else:
-                            asig = 0
+            if self.afam.get() == 'SI':
+                asig = self.rmv * 0.1                            
+            else:
+                asig = 0
 
-                        if self.smov.get():
-                            movi = int(self.smov.get())                                
-                        else:                            
-                            movi = 0      
+            if self.smov.get():
+                movi = int(self.smov.get())                                
+            else:                            
+                movi = 0      
 
-                        # Id del trabajador seleccionado
-                        seleccion = self.tre1.focus()                        
-                        if seleccion:
-                            id = int(self.tre1.item(seleccion).get('text'))   
+            # Id del trabajador seleccionado
+            seleccion = self.tre1.focus()    
 
-                        # Insertar nuevo trabajador
-                        if self.busc['state'] == 'normal':  
-                            query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, EAPO, TCOM, NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES (
-                                '{ndni}','{apat}','{amat}','{nomb}','{naci}','{ingr}',{plan},'{asig}',{movi},'{apor}','{comi}','{cusp}','{carg}','{cuen}','{area}','{codi}','{venc}','{lice}','{celu}','{dist}','{cese}')'''
-                            insert(query)
+            if seleccion:
+                id = int(self.tre1.item(seleccion).get('text'))   
 
-                        # Actualizar datos de trabajador     
-                        else:     
-                            query = f'''UPDATE ACTIVO SET FNAC = '{naci}', FING = '{ingr}', SPLA = {plan}, AFAM = '{asig}', SMOV = {movi}, EAPO = '{apor}' , TCOM = '{comi}', NCUS = '{cusp}', 
-                                    PLAB = '{carg}', NCUE = '{cuen}', ALAB = '{area}', NLIC = '{codi}', VLIC = '{venc}', CLIC = '{lice}', NCEL = '{celu}', DRES = '{dist}', FCES = '{cese}' WHERE ID = {id}'''           
-                            update(query)  
+            # Insertar nuevo trabajador
+            if self.busc['state'] == 'normal':  
+                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, EAPO, TCOM, NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES (
+                    '{ndni}','{apat}','{amat}','{nomb}','{naci}','{ingr}',{plan},'{asig}',{movi},'{apor}','{comi}','{cusp}','{carg}','{cuen}','{area}','{codi}','{venc}','{lice}','{celu}','{dist}','{cese}')'''
+                insert(query)
 
-                        # Ordenamos los datos con el nuevo registro
-                        self.MostrarDatos()
-                        self.BorrarDetalles()  
+            # Actualizar datos de trabajador     
+            else:     
+                query = f'''UPDATE ACTIVO SET FNAC = '{naci}', FING = '{ingr}', SPLA = {plan}, AFAM = '{asig}', SMOV = {movi}, EAPO = '{apor}' , TCOM = '{comi}', NCUS = '{cusp}', 
+                        PLAB = '{carg}', NCUE = '{cuen}', ALAB = '{area}', NLIC = '{codi}', VLIC = '{venc}', CLIC = '{lice}', NCEL = '{celu}', DRES = '{dist}', FCES = '{cese}' WHERE ID = {id}'''           
+                update(query)  
+
+            # Ordenamos los datos con el nuevo registro
+            self.MostrarDatos()
+            self.BorrarDetalles()  
                             
-                        # Devolvemos la seleccion del trabajador
-                        if seleccion:
-                            for index in self.tre1.get_children():
-                                if int(self.tre1.item(index).get('text')) == id:
-                                    self.tre1.selection_set(index)
-                                    self.tre1.focus(index)    
+            # Devolvemos la seleccion del trabajador
+            if seleccion:
+                for index in self.tre1.get_children():
+                    if int(self.tre1.item(index).get('text')) == id:
+                        self.tre1.selection_set(index)
+                        self.tre1.focus(index)    
 
-                        # Cerrar ventana                           
-                        self.men1_agre.destroy()
+            # Cerrar ventana                           
+            self.men1_agre.destroy()
                                           
 
     def Menu2(self):  

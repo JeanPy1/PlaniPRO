@@ -53,5 +53,19 @@ def __obtener_dias_del_mes(mes: int, anio: int) -> int:
     else:        
         return 31 # Todos los demas 
 
-def FechaValida(fecha: str) -> bool:
-    
+def FechaValida(fecha: str, posterior: bool) -> bool:
+
+    try:
+        validar = datetime.strptime(fecha, '%d/%m/%Y') 
+        if validar > datetime.today():
+            if posterior:
+                return True
+            else:
+                return False
+        else:
+            if validar.year < (datetime.today().year - 100):
+                return False
+            else:
+                return True
+    except:
+        return False
