@@ -42,10 +42,10 @@ class App(Tk):
         # Creamos los botones del menu  
         self.btn1 = Button(self, image=img1, command=self.Menu1)
         self.btn2 = Button(self, image=img2, command=self.Menu2)
-        self.btn3 = Button(self, image=img3, )
-        self.btn4 = Button(self, image=img4, )
-        self.btn5 = Button(self, image=img5, )
-        self.btn6 = Button(self, image=img6, )
+        self.btn3 = Button(self, image=img3, command=self.Menu3)
+        self.btn4 = Button(self, image=img4)
+        self.btn5 = Button(self, image=img5)
+        self.btn6 = Button(self, image=img6)
 
         # Posicionamos los botones
         self.btn1.place(width=100, height=100)        
@@ -280,7 +280,7 @@ class App(Tk):
             
         # Creamos los botones principales
         Button(menu, text='GRABAR', command=self.Grabar).place(x=438, width=90, height=30)     
-        Button(menu, text='SALIR', command=lambda:self.men1_agre.destroy()).place(x=438, y=35, width=90, height=30)
+        Button(menu, text='SALIR', bg='#DF2F2F', command=lambda:self.men1_agre.destroy()).place(x=438, y=35, width=90, height=30)
 
         # Posicionamos la ventana principal
         menu.place(x=437, y=15, width=528, height=550)
@@ -685,75 +685,75 @@ class App(Tk):
 
         self.cale = Calendar(menu, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2')
       
-        Button(menu, text='APOYO', command=lambda:self.GrabarDetalles('APO')).place(x=275, y=15, width=94, height=22)
-        Button(menu, text='FALTA', command=lambda:self.GrabarDetalles('FAL')).place(x=377, y=15, width=94, height=22)
-        Button(menu, text='FERIADO', command=lambda:self.GrabarDetalles('FER')).place(x=479, y=15, width=94, height=22)
-        Button(menu, text='ADELANTO', command=lambda:self.GrabarDetalles('ADE')).place(x=581, y=15, width=153, height=22)
-        Button(menu, text='INGRESO', command=lambda:self.GrabarDetalles('ING')).place(x=15, y=240, width=255, height=22)
-        Button(menu, text='DESCUENTO', command=lambda:self.GrabarDetalles('DES')).place(x=277, y=240, width=255, height=22)
-        Button(menu, text='VACACIONES', command=lambda:self.GrabarDetalles('VAC')).place(x=539, y=240, width=194, height=22)
-        Button(menu, text='DESCANSO MEDICO', command=lambda:self.GrabarDetalles('DME')).place(x=15, y=402, width=516, height=22)
-        Button(menu, text='COMPRA DE VACACIONES', command=lambda:self.GrabarDetalles('CVA')).place(x=539, y=402, width=194, height=22)
-        Button(menu, command=lambda:self.SeleccionarFecha('vaca1')).place(x=621, y=268, width=10, height=14)
-        Button(menu, command=lambda:self.SeleccionarFecha('vaca2')).place(x=696, y=268, width=10, height=14)
-        Button(menu, command=lambda:self.SeleccionarFecha('dmed1')).place(x=97, y=430, width=10, height=14)
-        Button(menu, command=lambda:self.SeleccionarFecha('dmed2')).place(x=172, y=430, width=10, height=14)
-        Button(menu, command=lambda:self.SeleccionarFecha('cvac1')).place(x=621, y=430, width=10, height=14)
-        Button(menu, command=lambda:self.SeleccionarFecha('cvac2')).place(x=696, y=430, width=10, height=14)
+        Button(menu, text='APOYO', command=lambda:self.GrabarDetalles('APO')).place(x=286, y=15, width=100, height=22)
+        Button(menu, text='FALTA', command=lambda:self.GrabarDetalles('FAL')).place(x=406, y=15, width=100, height=22)
+        Button(menu, text='FERIADO', command=lambda:self.GrabarDetalles('FER')).place(x=526, y=15, width=100, height=22)
+        Button(menu, text='ADELANTO', command=lambda:self.GrabarDetalles('ADE')).place(x=646, y=15, width=160, height=22)
+        Button(menu, text='INGRESO', command=lambda:self.GrabarDetalles('ING')).place(x=15, y=237, width=265, height=22)
+        Button(menu, text='DESCUENTO', command=lambda:self.GrabarDetalles('DES')).place(x=300, y=237, width=266, height=22)
+        Button(menu, text='VACACIONES', command=lambda:self.GrabarDetalles('VAC')).place(x=586, y=237, width=220, height=22)
+        Button(menu, text='DESCANSO MEDICO', command=lambda:self.GrabarDetalles('DME')).place(x=15, y=418, width=551, height=22)
+        Button(menu, text='COMPRA DE VACACIONES', command=lambda:self.GrabarDetalles('CVA')).place(x=586, y=418, width=220, height=22)
+        Button(menu, command=lambda:self.SeleccionarFecha('vaca1')).place(x=661, y=267, width=15, height=14)
+        Button(menu, command=lambda:self.SeleccionarFecha('vaca2')).place(x=746, y=267, width=15, height=14)
+        Button(menu, command=lambda:self.SeleccionarFecha('dmed1')).place(x=90, y=448, width=15, height=14)
+        Button(menu, command=lambda:self.SeleccionarFecha('dmed2')).place(x=175, y=448, width=15, height=14)
+        Button(menu, command=lambda:self.SeleccionarFecha('cvac1')).place(x=661, y=448, width=15, height=14)
+        Button(menu, command=lambda:self.SeleccionarFecha('cvac2')).place(x=746, y=448, width=15, height=14)
 
-        Label(menu, text='Importe', bg='#FFFFFF').place(x=609, y=41, height=16)     
-        Label(menu, text='Detalle', bg='#FFFFFF').place(x=15, y=266, height=16)
-        Label(menu, text='Monto', bg='#FFFFFF').place(x=217, y=266, height=16)
-        Label(menu, text='Detalle', bg='#FFFFFF').place(x=277, y=266, height=16)
-        Label(menu, text='Monto', bg='#FFFFFF').place(x=479, y=266, height=16)
-        Label(menu, text='Inicio', bg='#FFFFFF').place(x=539, y=266, height=16)
-        Label(menu, text='Final', bg='#FFFFFF').place(x=633, y=266, height=16)
-        Label(menu, text='Dias', bg='#FFFFFF').place(x=708, y=266, height=16)
-        Label(menu, text='Inicio', bg='#FFFFFF').place(x=539, y=428, height=16)
-        Label(menu, text='Final', bg='#FFFFFF').place(x=633, y=428, height=16)
-        Label(menu, text='Dias', bg='#FFFFFF').place(x=708, y=428, height=16)
-        Label(menu, text='Inicio', bg='#FFFFFF').place(x=15, y=428, height=16)
-        Label(menu, text='Final', bg='#FFFFFF').place(x=109, y=428, height=16)
-        Label(menu, text='Detalle', bg='#FFFFFF').place(x=186, y=428, height=16)
-        Label(menu, text='Dias', bg='#FFFFFF').place(x=505, y=428, height=16)
+        Label(menu, text='Importe', bg='#FFFFFF').place(x=684, y=40, height=16)     
+        Label(menu, text='Detalle', bg='#FFFFFF').place(x=13, y=264, height=16)
+        Label(menu, text='Monto', bg='#FFFFFF').place(x=216, y=264, height=16)
+        Label(menu, text='Detalle', bg='#FFFFFF').place(x=298, y=264, height=16)
+        Label(menu, text='Monto', bg='#FFFFFF').place(x=502, y=264, height=16)
+        Label(menu, text='Inicio', bg='#FFFFFF').place(x=584, y=264, height=16)
+        Label(menu, text='Final', bg='#FFFFFF').place(x=679, y=264, height=16)
+        Label(menu, text='Dias', bg='#FFFFFF').place(x=764, y=264, height=16)        
+        Label(menu, text='Inicio', bg='#FFFFFF').place(x=13, y=445, height=16)
+        Label(menu, text='Final', bg='#FFFFFF').place(x=108, y=445, height=16)
+        Label(menu, text='Detalle', bg='#FFFFFF').place(x=193, y=445, height=16)
+        Label(menu, text='Dias', bg='#FFFFFF').place(x=524, y=445, height=16)
+        Label(menu, text='Inicio', bg='#FFFFFF').place(x=584, y=445, height=16)
+        Label(menu, text='Final', bg='#FFFFFF').place(x=679, y=445, height=16)
+        Label(menu, text='Dias', bg='#FFFFFF').place(x=764, y=445, height=16)
 
         self.apoyo = Treeview(menu, columns=('#1'))
         self.apoyo.column('#0', width=0)
-        self.apoyo.column('#1', width=92)   
+        self.apoyo.column('#1', width=98)   
         self.falta = Treeview(menu, columns=('#1'))
         self.falta.column('#0', width=0)
-        self.falta.column('#1', width=92) 
+        self.falta.column('#1', width=98) 
         self.feriado = Treeview(menu, columns=('#1'))
         self.feriado.column('#0', width=0)
-        self.feriado.column('#1', width=92) 
+        self.feriado.column('#1', width=98) 
         self.adelanto = Treeview(menu, columns=('#1', '#2'))
         self.adelanto.column('#0', width=0)
-        self.adelanto.column('#1', width=80) 
-        self.adelanto.column('#2', width=70, anchor='e')
+        self.adelanto.column('#1', width=84) 
+        self.adelanto.column('#2', width=74, anchor='e')
         self.ingreso = Treeview(menu, columns=('#1', '#2'))
         self.ingreso.column('#0', width=0)
-        self.ingreso.column('#1', width=182) 
-        self.ingreso.column('#2', width=70, anchor='e') 
+        self.ingreso.column('#1', width=178) 
+        self.ingreso.column('#2', width=85, anchor='e') 
         self.descuento = Treeview(menu, columns=('#1', '#2'))
         self.descuento.column('#0', width=0)
-        self.descuento.column('#1', width=182) 
-        self.descuento.column('#2', width=70, anchor='e') 
+        self.descuento.column('#1', width=179) 
+        self.descuento.column('#2', width=85, anchor='e') 
         self.vacaciones = Treeview(menu, columns=('#1', '#2', '#3'))
         self.vacaciones.column('#0', width=0)
-        self.vacaciones.column('#1', width=74) 
-        self.vacaciones.column('#2', width=74, anchor='e') 
-        self.vacaciones.column('#3', width=45, anchor='e') 
+        self.vacaciones.column('#1', width=84) 
+        self.vacaciones.column('#2', width=84) 
+        self.vacaciones.column('#3', width=50, anchor='e') 
         self.dmedico = Treeview(menu, columns=('#1', '#2', '#3', '#4'))
         self.dmedico.column('#0', width=0)
-        self.dmedico.column('#1', width=74) 
-        self.dmedico.column('#2', width=75, anchor='e') 
-        self.dmedico.column('#3', width=321) 
-        self.dmedico.column('#4', width=45, anchor='e') 
+        self.dmedico.column('#1', width=84) 
+        self.dmedico.column('#2', width=84) 
+        self.dmedico.column('#3', width=320) 
+        self.dmedico.column('#4', width=61, anchor='e') 
         self.cvacaciones = Treeview(menu, columns=('#1', '#2', '#3'))
         self.cvacaciones.column('#0', width=0)
-        self.cvacaciones.column('#1', width=74) 
-        self.cvacaciones.column('#2', width=74, anchor='e') 
-        self.cvacaciones.column('#3', width=45, anchor='e') 
+        self.cvacaciones.column('#1', width=84) 
+        self.cvacaciones.column('#2', width=84) 
+        self.cvacaciones.column('#3', width=50, anchor='e') 
 
         self.adelantoImporte = Entry(menu, bg='#F0F0F0', justify='right')
         self.ingresoDetalle = Entry(menu, bg='#F0F0F0')
@@ -785,35 +785,35 @@ class App(Tk):
         # Posicionamos todos los elementos
         self.cale.place(x=15, y=15)
 
-        self.apoyo.place(x=275, y=42, height=160)
-        self.falta.place(x=377, y=42, height=160)
-        self.feriado.place(x=479, y=42, height=160)
-        self.adelanto.place(x=581, y=62, height=140)   
-        self.ingreso.place(x=15, y=304, height=60)
-        self.descuento.place(x=277, y=304, height=60)
-        self.vacaciones.place(x=539, y=304, height=60)
-        self.dmedico.place(x=15, y=466, height=60)
-        self.cvacaciones.place(x=539, y=466, height=60)
+        self.apoyo.place(x=286, y=42, height=160)
+        self.falta.place(x=406, y=42, height=160)
+        self.feriado.place(x=526, y=42, height=160)
+        self.adelanto.place(x=646, y=62, height=140)   
+        self.ingreso.place(x=15, y=304, height=80)
+        self.descuento.place(x=300, y=304, height=80)
+        self.vacaciones.place(x=586, y=304, height=80)
+        self.dmedico.place(x=15, y=485, height=80)
+        self.cvacaciones.place(x=586, y=485, height=80)
 
-        self.adelantoImporte.place(x=671, y=42, width=60, height=17)   
-        self.ingresoDetalle.place(x=15, y=284, width=198, height=17)        
-        self.ingresoImporte.place(x=217, y=284, width=50, height=17)
-        self.descuentoDetalle.place(x=277, y=284, width=198, height=17)        
-        self.descuentoImporte.place(x=479, y=284, width=50, height=17)
-        self.vacacionesInicial.place(x=539, y=284, width=92, height=17)        
-        self.vacacionesFinal.place(x=633, y=284, width=73, height=17)        
-        self.vacacionesTotal.place(x=708, y=284, width=24, height=17)   
-        self.dmedicoInicial.place(x=15, y=446, width=92, height=17)
-        self.dmedicoFinal.place(x=109, y=446, width=73, height=17)
-        self.dmedicoDetalle.place(x=186, y=446, width=317, height=17)
-        self.dmedicoTotal.place(x=505, y=446, width=25, height=17)
-        self.cvacacionesInicial.place(x=539, y=446, width=92, height=17)
-        self.cvacacionesFinal.place(x=633, y=446, width=73, height=17)
-        self.cvacacionesTotal.place(x=708, y=446, width=24, height=17)        
+        self.adelantoImporte.place(x=744, y=41, width=60, height=17)   
+        self.ingresoDetalle.place(x=15, y=281, width=198, height=17)        
+        self.ingresoImporte.place(x=218, y=281, width=60, height=17)
+        self.descuentoDetalle.place(x=300, y=281, width=199, height=17)        
+        self.descuentoImporte.place(x=504, y=281, width=60, height=17)
+        self.vacacionesInicial.place(x=586, y=281, width=90, height=17)        
+        self.vacacionesFinal.place(x=681, y=281, width=80, height=17)        
+        self.vacacionesTotal.place(x=766, y=281, width=38, height=17)
+        self.dmedicoInicial.place(x=15, y=462, width=90, height=17)
+        self.dmedicoFinal.place(x=110, y=462, width=80, height=17)
+        self.dmedicoDetalle.place(x=195, y=462, width=326, height=17)
+        self.dmedicoTotal.place(x=526, y=462, width=38, height=17)
+        self.cvacacionesInicial.place(x=586, y=462, width=90, height=17)
+        self.cvacacionesFinal.place(x=681, y=462, width=80, height=17)
+        self.cvacacionesTotal.place(x=766, y=462, width=38, height=17)        
                     
         # Creamos los botones principales
         Button(menu, text='ELIMINAR', command=self.EliminarDetalles).place(x=875, y=15, width=90, height=30)     
-        Button(menu, text='SALIR', command=self.OcultarDetalles).place(x=875, y=50, width=90, height=30)
+        Button(menu, text='SALIR', bg='#DF2F2F', command=self.OcultarDetalles).place(x=875, y=50, width=90, height=30)
 
         # Posicionamos la ventana principal
         menu.place(width=980, height=580) 
@@ -941,6 +941,36 @@ class App(Tk):
         self.vacaciones.delete(*self.vacaciones.get_children())
         self.dmedico.delete(*self.dmedico.get_children())
         self.cvacaciones.delete(*self.cvacaciones.get_children())
+
+        self.vacacionesInicial.configure(state='normal')
+        self.vacacionesFinal.configure(state='normal')
+        self.dmedicoInicial.configure(state='normal')
+        self.dmedicoFinal.configure(state='normal')
+        self.cvacacionesInicial.configure(state='normal')
+        self.cvacacionesFinal.configure(state='normal')  
+
+        self.adelantoImporte.delete(0, END)
+        self.ingresoDetalle.delete(0, END)
+        self.ingresoImporte.delete(0, END)
+        self.descuentoDetalle.delete(0, END)
+        self.descuentoImporte.delete(0, END)
+        self.vacacionesInicial.delete(0, END)
+        self.vacacionesFinal.delete(0, END)
+        self.vacacionesTotal.delete(0, END)
+        self.dmedicoInicial.delete(0, END)
+        self.dmedicoFinal.delete(0, END)
+        self.dmedicoDetalle.delete(0, END)
+        self.dmedicoTotal.delete(0, END)
+        self.cvacacionesInicial.delete(0, END)
+        self.cvacacionesFinal.delete(0, END)
+        self.cvacacionesTotal.delete(0, END)
+
+        self.vacacionesInicial.configure(state='readonly')
+        self.vacacionesFinal.configure(state='readonly')
+        self.dmedicoInicial.configure(state='readonly')
+        self.dmedicoFinal.configure(state='readonly')
+        self.cvacacionesInicial.configure(state='readonly')
+        self.cvacacionesFinal.configure(state='readonly')
         
         # Ocultamos la ventana detalles
         self.men2_detalles.place_forget() 
@@ -1001,7 +1031,7 @@ class App(Tk):
             self.cvacacionesFinal.configure(state='readonly')
 
     def GrabarDetalles(self, widget: str):
-        
+
         valores = self.tre2.item(self.tre2.focus())['values']
         id = int(self.tre2.item(self.tre2.focus()).get('text'))
         fecha = self.cale.get_date()
@@ -1271,6 +1301,83 @@ class App(Tk):
         self.tre2.item(self.tre2.focus(), values=valores)        
 
 
+    def Menu3(self):
+
+        # Bloqueamos los botones
+        self.BloquearBotones()
+        self.btn3.configure(state='normal')
+        
+        # Validacion para destruir el menu si esta activo
+        if self.menu == 3: 
+            self.menu = 0
+            self.men3.destroy()              
+            return
+        
+        # Creamos los elementos del menu 1      
+        menu = Frame(self, background='#FFFFFF')                     
+      
+        self.tre3 = Treeview(menu, show='headings', columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', 
+                                                            '#11', '#12', '#13', '#14', '#15', '#16', '#17', '#18', '#19', '#20'))
+        self.tre3.column('#0', width=0)
+        self.tre3.column('#1', width=30)
+        self.tre3.column('#2', width=250)
+        self.tre3.column('#3', width=60, anchor='center')  
+        self.tre3.column('#4', width=60, anchor='center')
+        self.tre3.column('#5', width=60, anchor='center')
+        self.tre3.column('#6', width=30, anchor='center') 
+        self.tre3.column('#7', width=30, anchor='center')
+        self.tre3.column('#8', width=60, anchor='center')
+        self.tre3.column('#9', width=60, anchor='center') 
+        self.tre3.column('#10', width=30, anchor='center') 
+        self.tre3.column('#11', width=60, anchor='center')     
+        self.tre3.column('#12', width=30, anchor='center') 
+        self.tre3.column('#13', width=60, anchor='center')
+
+        self.tre3.heading('#1', text='N°')
+        self.tre3.heading('#2', text='APELLIDOS Y NOMBRE')
+        self.tre3.heading('#3', text='PLANILLA')
+        self.tre3.heading('#4', text='A. FAMI.')
+        self.tre3.heading('#5', text='MOVILIDAD')
+        self.tre3.heading('#6', text='D.LAB.')
+        self.tre3.heading('#7', text='D.FAL.')
+        self.tre3.heading('#8', text='PLANILLA')
+        self.tre3.heading('#9', text='MOVILI.')
+        self.tre3.heading('#10', text='D.VAC.')
+        self.tre3.heading('#11', text='VACAC.')
+        self.tre3.heading('#12', text='D.CVA')
+
+
+
+
+        scroll = Scrollbar(menu, orient='vertical', command=self.tre3.yview)
+        scrol2 = Scrollbar(menu, orient='horizontal', command=self.tre3.xview)
+        self.tre3.configure(yscrollcommand=scroll.set, xscrollcommand=scrol2.set)  
+
+        # Evento de seleccion en treeview    
+        #self.tre3.bind('<Double-1>', self.AbrirDetalles)
+
+        # Posicionamiento de los elementos 
+        self.tre3.place(x=15, y=15, height=520, width=900)
+        scroll.place(x=950, y=15, height=550)            
+        scrol2.place(x=15, y=550, width=900)   
+
+        # Cargamos datos al treeview
+        #self.CargarDatos()
+
+        # Posicionamos la ventana principal
+        menu.place(x=110, y=10, width=980, height=580)   
+
+        # Asignamos ventana a variable y modificamos menu activo
+        self.men3 = menu
+        self.menu = 3     
+
+        self.tre3.insert('', END, values=('100', 'OROPEZA INCA JEANCARLOS ALBERTO', '25000.00', '102.50', '1000.00', '20', '11', '15833.00',
+                                         '600.00', '30', '25000.00', '30', '25000.00', '31', '1700.00', '102.50', 
+                                         '100.00'))
+
+        # Creamos ventana de detalles y lo ocultamos
+        #self.Detalles()
+        #self.OcultarDetalles()      
 
 if __name__ == '__main__':
     aplicacion = App()
