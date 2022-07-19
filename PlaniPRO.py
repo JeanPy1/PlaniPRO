@@ -1320,81 +1320,114 @@ class App(Tk):
                                                             '#11', '#12', '#13', '#14', '#15', '#16', '#17', '#18', '#19', '#20',
                                                             '#21', '#22', '#23', '#24', '#25', '#26', '#27', '#28', '#29', '#30'))
         self.tre3.column('#0', width=0)
-        self.tre3.column('#1', width=30)
-        self.tre3.column('#2', width=250)
-        self.tre3.column('#3', width=60, anchor='center')  
-        self.tre3.column('#4', width=60, anchor='center')
-        self.tre3.column('#5', width=60, anchor='center')
-        self.tre3.column('#6', width=30, anchor='center') 
-        self.tre3.column('#7', width=30, anchor='center')
-        self.tre3.column('#8', width=60, anchor='center')
-        self.tre3.column('#9', width=60, anchor='center') 
-        self.tre3.column('#10', width=30, anchor='center') 
-        self.tre3.column('#11', width=60, anchor='center')     
-        self.tre3.column('#12', width=30, anchor='center') 
-        self.tre3.column('#13', width=60, anchor='center')
+        self.tre3.column('#1', width=30, minwidth=30)
+        self.tre3.column('#2', width=250, minwidth=250)
+        self.tre3.column('#3', width=80, minwidth=80, anchor='e')  
+        self.tre3.column('#4', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#5', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#6', width=44, minwidth=44 , anchor='e') 
+        self.tre3.column('#7', width=44, minwidth=44 , anchor='e')
+        self.tre3.column('#8', width=80, minwidth=80 , anchor='e')        
+        self.tre3.column('#9', width=44, minwidth=44 , anchor='e') 
+        self.tre3.column('#10', width=80, minwidth=80 , anchor='e')     
+        self.tre3.column('#11', width=44, minwidth=44 , anchor='e') 
+        self.tre3.column('#12', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#13', width=44, minwidth=44 , anchor='e') 
+        self.tre3.column('#14', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#15', width=44, minwidth=44 , anchor='e') 
+        self.tre3.column('#16', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#17', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#18', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#19', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#20', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#21', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#22', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#23', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#24', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#25', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#26', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#27', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#28', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#29', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#30', width=80, minwidth=80 , anchor='e')
 
         self.tre3.heading('#1', text='N°')
         self.tre3.heading('#2', text='Apellidos y Nombre')
         self.tre3.heading('#3', text='Planilla')
         self.tre3.heading('#4', text='AsignacionF')
         self.tre3.heading('#5', text='Movilidad')
-        self.tre3.heading('#6', text='DiasT')
-        self.tre3.heading('#7', text='DiasF')
-        self.tre3.heading('#8', text='Planilla')
-        self.tre3.heading('#9', text='Movilidad')
-        self.tre3.heading('#10', text='DiasV')
-        self.tre3.heading('#11', text='Vacaciones')
-        self.tre3.heading('#12', text='DiasCV')
-        self.tre3.heading('#13', text='CompraV')
-        self.tre3.heading('#14', text='DiasDM')
-        self.tre3.heading('#15', text='DescansoM')
-        self.tre3.heading('#16', text='DiasF')
-        self.tre3.heading('#17', text='Feriados')
-        self.tre3.heading('#18', text='COMISION')
-        self.tre3.heading('#19', text='P. SEGURO')
-        self.tre3.heading('#20', text='APORTE')
-        self.tre3.heading('#21', text='RENTA 5')
-        self.tre3.heading('#22', text='DESCUENTO')
-        self.tre3.heading('#23', text='APOYO')
-        self.tre3.heading('#24', text='OTROS INGRESOS')
-        self.tre3.heading('#25', text='TOTAL PLANILLA')
-        self.tre3.heading('#26', text='TOTAL MOVILIDAD')
-        self.tre3.heading('#27', text='POR FUERA')
-        self.tre3.heading('#28', text='ESSALUD')
-
-
-
+        self.tre3.heading('#6', text='DiaT')
+        self.tre3.heading('#7', text='DiaF')
+        self.tre3.heading('#8', text='Planilla')        
+        self.tre3.heading('#9', text='DiaV')
+        self.tre3.heading('#10', text='Vacaciones')
+        self.tre3.heading('#11', text='DiaCV')
+        self.tre3.heading('#12', text='CompraV')
+        self.tre3.heading('#13', text='DiaDM')
+        self.tre3.heading('#14', text='DescansoM')
+        self.tre3.heading('#15', text='DiaF')
+        self.tre3.heading('#16', text='Feriados')
+        self.tre3.heading('#17', text='Planilla')
+        self.tre3.heading('#18', text='Onp')
+        self.tre3.heading('#19', text='Comision')
+        self.tre3.heading('#20', text='PrimaS')
+        self.tre3.heading('#21', text='Aporte')
+        self.tre3.heading('#22', text='RentaQ')
+        self.tre3.heading('#23', text='Descuento')
+        self.tre3.heading('#24', text='Apoyo')
+        self.tre3.heading('#25', text='Ingreso')
+        self.tre3.heading('#26', text='PlanillaT')
+        self.tre3.heading('#27', text='MovilidadT')
+        self.tre3.heading('#28', text='PorFuera')
+        self.tre3.heading('#29', text='Essalud')
+        self.tre3.heading('#30', text='Adelanto')
 
         scroll = Scrollbar(menu, orient='vertical', command=self.tre3.yview)
         scrol2 = Scrollbar(menu, orient='horizontal', command=self.tre3.xview)
-        self.tre3.configure(yscrollcommand=scroll.set, xscrollcommand=scrol2.set)  
+        self.tre3.configure(yscrollcommand=scroll.set, xscrollcommand=scrol2.set)
 
         # Evento de seleccion en treeview    
         #self.tre3.bind('<Double-1>', self.AbrirDetalles)
 
         # Posicionamiento de los elementos 
         self.tre3.place(x=15, y=15, height=520, width=900)
-        scroll.place(x=950, y=15, height=550)            
-        scrol2.place(x=15, y=550, width=900)   
+        scroll.place(x=950, y=15, height=550)
+        scrol2.place(x=15, y=550, width=900)
 
         # Cargamos datos al treeview
-        #self.CargarDatos()
+        self.CargarPlanilla()
 
         # Posicionamos la ventana principal
-        menu.place(x=110, y=10, width=980, height=580)   
+        menu.place(x=110, y=10, width=980, height=580)
 
         # Asignamos ventana a variable y modificamos menu activo
         self.men3 = menu
-        self.menu = 3     
+        self.menu = 3
+        
+    def CargarPlanilla(self):
 
-        self.tre3.insert('', END, values=('100', 'OROPEZA INCA JEANCARLOS ALBERTO', '25000.00', '102.50', '1000.00', '20', '11', '15833.00',
-                                         '600.00', '30', '25000.00', '30', '25000.00', '31', '1700.00', '102.50', 
-                                         '100.00'))
+        mes = '07/2022'
 
-        # Creamos ventana de detalles y lo ocultamos
-        #self.Detalles()
-        #self.OcultarDetalles()      
+        # Obtener datos para elaborar planilla
+        datos = select(f'SELECT ID, NDNI, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES FROM ACTIVO', True)
+
+        for index, dato in enumerate(datos, 1):
+            
+            id = dato[0]
+            nombre = f'{dato[2]} {dato[3]} {dato[4]}'
+            ingreso = dato[5]
+            planilla = dato[6]
+            asignacion = dato[7]
+            movilidad = dato[8]
+            aporte = dato[9]
+            comision = dato[10]
+            cese = dato[11]
+
+
+            self.tre3.insert('', END, text=id, values=(index, nombre, planilla, asignacion, movilidad, '20', '11', '15833.00',
+                                         '30', '25000.00', '30', '25000.00', '31', '1700.00', '30', '100.00', '30000.00', '', '100.00',
+                                         '30.00', '520.00', '', '100.00', '', '', '30000.00', '800.00', '', '240.00', '500.00'))
+
 
 if __name__ == '__main__':
     aplicacion = App()
