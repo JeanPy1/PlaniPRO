@@ -54,7 +54,7 @@ def __obtener_dias_del_mes(mes: int, anio: int) -> int:
         return 31 # Todos los demas 
 
 def FechaValida(fecha: str, posterior: bool) -> bool:
-
+        
     try:
         validar = datetime.strptime(fecha, '%d/%m/%Y') 
         if validar > datetime.today():
@@ -69,3 +69,30 @@ def FechaValida(fecha: str, posterior: bool) -> bool:
                 return True
     except:
         return False
+
+def PlanillaMes(fecha: str) -> int:
+    
+    fechaMes = f'01/{fecha}'
+
+    if FechaValida(fechaMes, True):
+       
+        fechaPlanilla = datetime.strptime(fechaMes, '%d/%m/%Y')   
+        dias = __obtener_dias_del_mes(fechaPlanilla.month, fechaPlanilla.year)
+
+        return dias
+    
+    else:
+
+        return 0
+
+def CompararFechas(fechaInicial: str, fechaFinal: str) -> bool:
+    
+    if FechaValida(fechaInicial, True) and FechaValida(fechaFinal, True):
+
+        fechaIngreso = datetime.strptime(fechaInicial, '%d/%m/%Y')       
+        fechaMes = datetime.strptime(fechaFinal, '%d/%m/%Y')   
+
+        if fechaIngreso <= fechaMes: 
+            return True
+        else:
+            return False

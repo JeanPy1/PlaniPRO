@@ -2,7 +2,7 @@ from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, mess
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
 from tkcalendar import Calendar
-from scripts import select, insert, update, delete, search, Edad, Tiempo, FechaValida
+from scripts import select, insert, update, delete, search, Edad, Tiempo, FechaValida, PlanillaMes, CompararFechas
 
 class App(Tk):
 
@@ -1328,14 +1328,14 @@ class App(Tk):
         self.tre3.column('#6', width=44, minwidth=44 , anchor='e') 
         self.tre3.column('#7', width=44, minwidth=44 , anchor='e')
         self.tre3.column('#8', width=80, minwidth=80 , anchor='e')        
-        self.tre3.column('#9', width=44, minwidth=44 , anchor='e') 
-        self.tre3.column('#10', width=80, minwidth=80 , anchor='e')     
-        self.tre3.column('#11', width=44, minwidth=44 , anchor='e') 
-        self.tre3.column('#12', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#13', width=44, minwidth=44 , anchor='e') 
-        self.tre3.column('#14', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#15', width=44, minwidth=44 , anchor='e') 
-        self.tre3.column('#16', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#9', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#10', width=44, minwidth=44 , anchor='e')     
+        self.tre3.column('#11', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#12', width=44, minwidth=44 , anchor='e')
+        self.tre3.column('#13', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#14', width=44, minwidth=44 , anchor='e')
+        self.tre3.column('#15', width=80, minwidth=80 , anchor='e') 
+        self.tre3.column('#16', width=44, minwidth=44 , anchor='e')
         self.tre3.column('#17', width=80, minwidth=80 , anchor='e') 
         self.tre3.column('#18', width=80, minwidth=80 , anchor='e')
         self.tre3.column('#19', width=80, minwidth=80 , anchor='e') 
@@ -1358,29 +1358,30 @@ class App(Tk):
         self.tre3.heading('#5', text='Movilidad')
         self.tre3.heading('#6', text='DiaT')
         self.tre3.heading('#7', text='DiaF')
-        self.tre3.heading('#8', text='Planilla')        
-        self.tre3.heading('#9', text='DiaV')
-        self.tre3.heading('#10', text='Vacaciones')
-        self.tre3.heading('#11', text='DiaCV')
-        self.tre3.heading('#12', text='CompraV')
-        self.tre3.heading('#13', text='DiaDM')
-        self.tre3.heading('#14', text='DescansoM')
-        self.tre3.heading('#15', text='DiaF')
-        self.tre3.heading('#16', text='Feriados')
-        self.tre3.heading('#17', text='Planilla')
-        self.tre3.heading('#18', text='Onp')
-        self.tre3.heading('#19', text='Comision')
-        self.tre3.heading('#20', text='PrimaS')
-        self.tre3.heading('#21', text='Aporte')
-        self.tre3.heading('#22', text='RentaQ')
-        self.tre3.heading('#23', text='Descuento')
-        self.tre3.heading('#24', text='Apoyo')
-        self.tre3.heading('#25', text='Ingreso')
-        self.tre3.heading('#26', text='PlanillaT')
-        self.tre3.heading('#27', text='MovilidadT')
-        self.tre3.heading('#28', text='PorFuera')
-        self.tre3.heading('#29', text='Essalud')
-        self.tre3.heading('#30', text='Adelanto')
+        self.tre3.heading('#8', text='Planilla') 
+        self.tre3.heading('#9', text='Movilidad')        
+        self.tre3.heading('#10', text='DiaV')
+        self.tre3.heading('#11', text='Vacaciones')
+        self.tre3.heading('#12', text='DiaCV')
+        self.tre3.heading('#13', text='CompraV')
+        self.tre3.heading('#14', text='DiaDM')
+        self.tre3.heading('#15', text='DescansoM')
+        self.tre3.heading('#16', text='DiaF')
+        self.tre3.heading('#17', text='Feriados')
+        self.tre3.heading('#18', text='Planilla')
+        self.tre3.heading('#19', text='Onp')
+        self.tre3.heading('#20', text='Comision')
+        self.tre3.heading('#21', text='PrimaS')
+        self.tre3.heading('#22', text='Aporte')
+        self.tre3.heading('#23', text='RentaQ')
+        self.tre3.heading('#24', text='Descuento')
+        self.tre3.heading('#25', text='Apoyo')
+        self.tre3.heading('#26', text='Ingreso')
+        self.tre3.heading('#27', text='PlanillaT')
+        self.tre3.heading('#28', text='MovilidadT')
+        self.tre3.heading('#29', text='PorFuera')
+        self.tre3.heading('#30', text='Essalud')
+        
 
         scroll = Scrollbar(menu, orient='vertical', command=self.tre3.yview)
         scrol2 = Scrollbar(menu, orient='horizontal', command=self.tre3.xview)
@@ -1407,6 +1408,11 @@ class App(Tk):
     def CargarPlanilla(self):
 
         mes = '07/2022'
+        mesCompleto = f'01/{mes}'
+        dias = PlanillaMes(mes)        
+
+        if dias == 0:
+            return
 
         # Obtener datos para elaborar planilla
         datos = select(f'SELECT ID, NDNI, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES FROM ACTIVO', True)
@@ -1419,14 +1425,93 @@ class App(Tk):
             planilla = dato[6]
             asignacion = dato[7]
             movilidad = dato[8]
+            sueldo = planilla + asignacion + movilidad
             aporte = dato[9]
             comision = dato[10]
             cese = dato[11]
+            
+            apoyos = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {id}', False)[0]
+            faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0]        
+            feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0]  
+            ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
+            descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]            
+            vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
+            cvacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
+            dmedicos = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
+            adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
+            xfueras = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
+
+            diasApoy = apoyos
+            diasFalt = faltas
+            diasFeri = feriados
+            
+            if ingresos:
+                importeIngr = ingresos
+            else:
+                importeIngr = 0
+
+            if descuentos:
+                importeDesc = descuentos
+            else:
+                importeDesc = 0
+
+            if vacaciones:
+                diasVaca = int(vacaciones)
+                importeVaca = planilla / 30 * diasVaca
+            else:
+                diasVaca = 0
+                importeVaca = 0
+
+            if cvacaciones:
+                diasCVaca = int(cvacaciones)
+                importeCVaca = planilla / 30 * diasCVaca
+            else:
+                diasCVaca = 0
+                importeCVaca = 0
+            
+            if dmedicos:
+                diasDMed = int(dmedicos)
+                importeDMed = planilla / 30 * diasDMed
+            else:
+                diasDMed = 0
+                importeDMed = 0    
+
+            
 
 
-            self.tre3.insert('', END, text=id, values=(index, nombre, planilla, asignacion, movilidad, '20', '11', '15833.00',
-                                         '30', '25000.00', '30', '25000.00', '31', '1700.00', '30', '100.00', '30000.00', '', '100.00',
-                                         '30.00', '520.00', '', '100.00', '', '', '30000.00', '800.00', '', '240.00', '500.00'))
+
+
+
+
+
+
+
+            if CompararFechas(ingreso, mesCompleto):
+                diaL = dias - int(falt[0])
+
+            else:
+                diaL = dias - int(ingreso[:2]) + 1 - int(falt[0])
+
+
+            diaA = (sueldo / 30) * int(apoy)
+            diaF = falt[0]
+            diaFe = feri[0]
+            feriado = planilla / 30 * diaFe * 2  
+
+          
+
+            totalDiasL = diaL + diaV + diaDM
+
+            if totalDiasL > (dias/2):
+                rPlanilla = planilla - (planilla * (dias - totalDiasL))
+                rMovilidad = movilidad - (movilidad * (dias - totalDiasL))
+            else:
+                rPlanilla = planilla * totalDiasL
+                rMovilidad
+
+            self.tre3.insert('', END, text=id, values=(index, nombre, planilla, asignacion, movilidad, diaL, diaF, rPlanilla, '500.00',
+                                         diaV, vacaciones, diaCV, cvacaciones, diaDM, dmedico, diaFe, feriado, '30000.00', '', '100.00',
+                                         '30.00', '520.00', '', restar, diaA, adicional, '30000.00', '800.00', '', '240.00'))
 
 
 if __name__ == '__main__':
