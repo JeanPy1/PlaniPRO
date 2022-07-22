@@ -1422,9 +1422,9 @@ class App(Tk):
             id = dato[0]
             nombre = f'{dato[2]} {dato[3]} {dato[4]}'
             ingreso = dato[5]
-            planilla = dato[6]
-            asignacion = dato[7]
-            movilidad = dato[8]
+            planilla = int(dato[6])
+            asignacion = float(dato[7])
+            movilidad = int(dato[8])
             sueldo = planilla + asignacion + movilidad
             aporte = dato[9]
             comision = dato[10]
@@ -1441,77 +1441,62 @@ class App(Tk):
             adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
             xfueras = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
 
-            diasApoy = apoyos
-            diasFalt = faltas
-            diasFeri = feriados
+            diasApoy = int(apoyos)
+            diasFalt = int(faltas)
+            diasFeri = int(feriados)
             
             if ingresos:
-                importeIngr = ingresos
+                importeIngr = float(ingresos)
             else:
                 importeIngr = 0
 
             if descuentos:
-                importeDesc = descuentos
+                importeDesc = float(descuentos)
             else:
                 importeDesc = 0
 
             if vacaciones:
-                diasVaca = int(vacaciones)
-                importeVaca = planilla / 30 * diasVaca
+                diasVaca = int(vacaciones)                
             else:
-                diasVaca = 0
-                importeVaca = 0
+                diasVaca = 0               
 
             if cvacaciones:
-                diasCVaca = int(cvacaciones)
-                importeCVaca = planilla / 30 * diasCVaca
+                diasCVaca = int(cvacaciones)                
             else:
-                diasCVaca = 0
-                importeCVaca = 0
+                diasCVaca = 0                
             
             if dmedicos:
-                diasDMed = int(dmedicos)
-                importeDMed = planilla / 30 * diasDMed
+                diasDMed = int(dmedicos)               
             else:
-                diasDMed = 0
-                importeDMed = 0    
-
+                diasDMed = 0             
             
-
-
-
-
-
-
-
-
-
             if CompararFechas(ingreso, mesCompleto):
-                diaL = dias - int(falt[0])
-
+                diasLaborados = dias - diasFalt - diasVaca - diasDMed
             else:
-                diaL = dias - int(ingreso[:2]) + 1 - int(falt[0])
+                diaIngreso = int(ingreso[:2])
+                diasTrabajo = dias - diaIngreso + 1
+                diasLaborados = diasTrabajo - diasFalt - diasVaca - diasDMed
 
+            importeApoyos = (sueldo / 30) * diasApoy
+            importeFeriados = planilla / 30 * diasFeri * 2
 
-            diaA = (sueldo / 30) * int(apoy)
-            diaF = falt[0]
-            diaFe = feri[0]
-            feriado = planilla / 30 * diaFe * 2  
+            if (diasLaborados + diasVaca + diasDMed) > (dias/2):
+                diasNoLaborados = dias - (diasLaborados + diasVaca + diasDMed)
+                planillaBruta = planilla - (planilla / 30 * diasNoLaborados) + asignacion
+            else:                
+                planillaBruta = planilla / 30 * (diasLaborados + diasVaca + diasDMed) + asignacion
 
-          
-
-            totalDiasL = diaL + diaV + diaDM
-
-            if totalDiasL > (dias/2):
-                rPlanilla = planilla - (planilla * (dias - totalDiasL))
-                rMovilidad = movilidad - (movilidad * (dias - totalDiasL))
+            if diasLaborados > (dias/2):
+                movilidadBruta = movilidad - (movilidad /30 * diasNoLaborados)
             else:
-                rPlanilla = planilla * totalDiasL
-                rMovilidad
+                movilidadBruta = movilidad / 30 * diasLaborados
 
-            self.tre3.insert('', END, text=id, values=(index, nombre, planilla, asignacion, movilidad, diaL, diaF, rPlanilla, '500.00',
-                                         diaV, vacaciones, diaCV, cvacaciones, diaDM, dmedico, diaFe, feriado, '30000.00', '', '100.00',
-                                         '30.00', '520.00', '', restar, diaA, adicional, '30000.00', '800.00', '', '240.00'))
+            if diasVaca 
+
+
+            self.tre3.insert('', END, text=id, values=(index, nombre, planilla, asignacion, movilidad, diasLaborados, diasFalt, planillaBruta,
+                                                        movilidadBruta, diasVaca, importeVaca, diasCVaca, importeCVaca, diasDMed, importeDMed,
+                                                        diasFeri, importeFeriados, '30000.00', '', '100.00', '30.00', '520.00', '', importeDesc, importeApoyos, importeIngr, '30000.00', '800.00', '', '240.00'))
 
 
 if __name__ == '__main__':
