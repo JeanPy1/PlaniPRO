@@ -58,6 +58,13 @@ class App(Tk):
         # Remuneracion minima vital RMV
         self.rmv = 1025
 
+        # Comision AFP
+        self.onp = 0.13
+        self.habitat = (0.0147, 0.0023, 0.0174, 0.1)
+        self.integra = (0.0147, 0.0023, 0.0174, 0.1)
+        self.prima = (0.0147, 0.0023, 0.0174, 0.1)
+        self.profuturo = (0.0147, 0.0023, 0.0174, 0.1)
+
         # Variable global para el control de los menus
         self.menu = 0            
 
@@ -1409,9 +1416,9 @@ class App(Tk):
 
         mes = '07/2022'
         mesCompleto = f'01/{mes}'
-        dias = PlanillaMes(mes)        
+        diasDelMes = PlanillaMes(mes)        
 
-        if dias == 0:
+        if diasDelMes == 0:
             return
 
         # Obtener datos para elaborar planilla
@@ -1420,83 +1427,151 @@ class App(Tk):
         for index, dato in enumerate(datos, 1):
             
             id = dato[0]
-            nombre = f'{dato[2]} {dato[3]} {dato[4]}'
-            ingreso = dato[5]
-            planilla = int(dato[6])
-            asignacion = float(dato[7])
-            movilidad = int(dato[8])
-            sueldo = planilla + asignacion + movilidad
-            aporte = dato[9]
-            comision = dato[10]
-            cese = dato[11]
+            nombreCompleto = f'{dato[2]} {dato[3]} {dato[4]}'
+            fechaIngreso = dato[5]
+            sueldoPlanilla = int(dato[6])
+            asignacionFamiliar = float(dato[7])
+            sueldoMovilidad = int(dato[8])
+            totalSueldo = sueldoPlanilla + asignacionFamiliar + sueldoMovilidad
+            entidadAportacion = dato[9]
+            comisionAportacion = dato[10]
+            fechaCese = dato[11]
             
-            apoyos = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {id}', False)[0]
-            faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0]        
-            feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0]  
-            ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
-            descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]            
-            vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
-            cvacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
-            dmedicos = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
-            adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
-            xfueras = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
+            diasApoyos = int(select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {id}', False)[0])
+            diasFaltas = int(select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0])      
+            diasFeriados = int(select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0])
+            totalIngresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
+            totalDescuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]            
+            diasVacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
+            diasCompraVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
+            diasDescansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
+            totalAdelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
+            totalXfuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
+           
+            if totalIngresos:
+                totalIngresos = float(totalIngresos)
+            else:
+                totalIngresos = 0
 
-            diasApoy = int(apoyos)
-            diasFalt = int(faltas)
-            diasFeri = int(feriados)
+            if totalDescuentos:
+                totalDescuentos = float(totalDescuentos)
+            else:
+                totalDescuentos = 0
+
+            if diasVacaciones:
+                diasVacaciones = int(diasVacaciones)
+            else:
+                diasVacaciones = 0
+
+            if diasCompraVacaciones:
+                diasCompraVacaciones = int(diasCompraVacaciones)
+            else:
+                diasCompraVacaciones = 0
             
-            if ingresos:
-                importeIngr = float(ingresos)
+            if diasDescansoMedico:
+                diasDescansoMedico = int(diasDescansoMedico)
             else:
-                importeIngr = 0
+                diasDescansoMedico = 0
 
-            if descuentos:
-                importeDesc = float(descuentos)
+            if CompararFechas(fechaIngreso, mesCompleto):
+                diasLaborados = diasDelMes - diasFaltas - diasVacaciones - diasDescansoMedico
             else:
-                importeDesc = 0
+                diasLaborados = diasDelMes - (int(fechaIngreso[:2]) + 1) - diasFaltas - diasVacaciones - diasDescansoMedico
 
-            if vacaciones:
-                diasVaca = int(vacaciones)                
-            else:
-                diasVaca = 0               
+            DiasComputables = diasLaborados + diasVacaciones + diasDescansoMedico
+            diasNoComputables = diasDelMes - DiasComputables
 
-            if cvacaciones:
-                diasCVaca = int(cvacaciones)                
-            else:
-                diasCVaca = 0                
-            
-            if dmedicos:
-                diasDMed = int(dmedicos)               
-            else:
-                diasDMed = 0             
-            
-            if CompararFechas(ingreso, mesCompleto):
-                diasLaborados = dias - diasFalt - diasVaca - diasDMed
-            else:
-                diaIngreso = int(ingreso[:2])
-                diasTrabajo = dias - diaIngreso + 1
-                diasLaborados = diasTrabajo - diasFalt - diasVaca - diasDMed
-
-            importeApoyos = (sueldo / 30) * diasApoy
-            importeFeriados = planilla / 30 * diasFeri * 2
-
-            if (diasLaborados + diasVaca + diasDMed) > (dias/2):
-                diasNoLaborados = dias - (diasLaborados + diasVaca + diasDMed)
-                planillaBruta = planilla - (planilla / 30 * diasNoLaborados) + asignacion
+            if DiasComputables > (diasDelMes / 2):
+                planillaBruta = sueldoPlanilla - (sueldoPlanilla / 30 * diasNoComputables) + asignacionFamiliar                
             else:                
-                planillaBruta = planilla / 30 * (diasLaborados + diasVaca + diasDMed) + asignacion
+                planillaBruta = sueldoPlanilla / 30 * DiasComputables + asignacionFamiliar
 
-            if diasLaborados > (dias/2):
-                movilidadBruta = movilidad - (movilidad /30 * diasNoLaborados)
+            if diasLaborados > (diasDelMes / 2):
+                movilidadBruta = sueldoMovilidad - (sueldoMovilidad / 30 * diasNoComputables)
             else:
-                movilidadBruta = movilidad / 30 * diasLaborados
+                movilidadBruta = sueldoMovilidad / 30 * diasLaborados
 
-            if diasVaca 
+            if diasVacaciones > 0:
+                if diasVacaciones >= diasDelMes:
+                    totalVacaciones = planillaBruta              
+                else:                    
+                    if diasVacaciones > 15:                        
+                        totalVacaciones = (sueldoPlanilla + asignacionFamiliar) - ((sueldoPlanilla + asignacionFamiliar) / 30 * (diasDelMes - diasVacaciones))
+                    else:
+                        totalVacaciones = (sueldoPlanilla + asignacionFamiliar) / 30 * diasVacaciones  
+            else:
+                  totalVacaciones = 0
+
+            if diasDescansoMedico > 0:
+                if diasDescansoMedico >= diasDelMes:
+                    totalDescansoMedico = planillaBruta            
+                else:
+                    if diasDescansoMedico > 15:                        
+                        totalDescansoMedico = (sueldoPlanilla + asignacionFamiliar) - ((sueldoPlanilla + asignacionFamiliar) / 30 * (diasDelMes - diasDescansoMedico))
+                    else:
+                        totalDescansoMedico = (sueldoPlanilla + asignacionFamiliar) / 30 * diasDescansoMedico
+            else:
+                  totalDescansoMedico = 0
+                      
+            if diasLaborados > 0:
+                planillaBruta = planillaBruta - totalVacaciones - totalDescansoMedico
+            else:
+                planillaBruta = 0
+
+            totalApoyos = (totalSueldo / 30) * diasApoyos
+            totalFeriados = sueldoPlanilla / 30 * diasFeriados * 2
+            totalCompraVacaciones = (sueldoPlanilla + asignacionFamiliar) / 30 * diasCompraVacaciones
+            totalPlanillaBruta = planillaBruta + totalVacaciones + totalCompraVacaciones + totalDescansoMedico + totalFeriados
+           
+            totalOnp = 0
+            totalComision = 0
+            totalPrima = 0
+            totalAporte = 0
+
+            if entidadAportacion == 'ONP':
+                totalOnp = totalPlanillaBruta * self.onp
+            elif entidadAportacion == 'HABITAT':
+                if comisionAportacion == 'FLUJO':
+                    totalComision = totalPlanillaBruta * self.habitat[0]
+                elif comisionAportacion == 'MIXTA':
+                    totalComision = totalPlanillaBruta * self.habitat[1]              
+                totalPrima = totalPlanillaBruta * self.habitat[2]
+                totalAporte = totalPlanillaBruta * self.habitat[3]
+            elif entidadAportacion == 'INTEGRA':
+                if comisionAportacion == 'FLUJO':
+                    totalComision = totalPlanillaBruta * self.integra[0]
+                elif comisionAportacion == 'MIXTA':
+                    totalComision = totalPlanillaBruta * self.integra[1]                   
+                totalPrima = totalPlanillaBruta * self.integra[2]   
+                totalAporte = totalPlanillaBruta * self.integra[3]   
+            elif entidadAportacion == 'PRIMA':
+                if comisionAportacion == 'FLUJO':
+                    totalComision = totalPlanillaBruta * self.prima[0]
+                elif comisionAportacion == 'MIXTA':
+                    totalComision = totalPlanillaBruta * self.prima[1]                   
+                totalPrima = totalPlanillaBruta * self.prima[2]   
+                totalAporte = totalPlanillaBruta * self.prima[3]   
+            elif entidadAportacion == 'PROFUTURO':
+                if comisionAportacion == 'FLUJO':
+                    totalComision = totalPlanillaBruta * self.profuturo[0]
+                elif comisionAportacion == 'MIXTA':
+                    totalComision = totalPlanillaBruta * self.profuturo[1]                   
+                totalPrima = totalPlanillaBruta * self.profuturo[2]   
+                totalAporte = totalPlanillaBruta * self.profuturo[3]   
+
+            if totalPlanillaBruta > self.rmv:
+                totalEssalud = totalPlanillaBruta * 0.09
+            else:
+                totalEssalud = self.rmv * 0.09
 
 
-            self.tre3.insert('', END, text=id, values=(index, nombre, planilla, asignacion, movilidad, diasLaborados, diasFalt, planillaBruta,
-                                                        movilidadBruta, diasVaca, importeVaca, diasCVaca, importeCVaca, diasDMed, importeDMed,
-                                                        diasFeri, importeFeriados, '30000.00', '', '100.00', '30.00', '520.00', '', importeDesc, importeApoyos, importeIngr, '30000.00', '800.00', '', '240.00'))
+            self.tre3.insert('', END, text=id, values=(index, nombreCompleto, sueldoPlanilla, asignacionFamiliar, sueldoMovilidad,
+                                                    diasLaborados, diasFaltas, round(planillaBruta, 2), round(movilidadBruta, 2),
+                                                    diasVacaciones, round(totalVacaciones, 2), diasCompraVacaciones, round(totalCompraVacaciones, 2), 
+                                                    diasDescansoMedico, round(totalDescansoMedico, 2), diasFeriados, round(totalFeriados, 2),
+                                                    round(totalPlanillaBruta, 2), round(totalOnp, 2), round(totalComision, 2), round(totalPrima, 2),
+                                                    round(totalAporte, 2), '', round(totalDescuentos, 2), round(totalApoyos, 2), round(totalIngresos, 2),
+                                                    '', '', '', round(totalEssalud, 2)))
 
 
 if __name__ == '__main__':
