@@ -7,140 +7,98 @@ from scripts import select, insert, update, delete, search, Edad, Tiempo, FechaV
 class App(Tk):
 
     def __init__(self):
-        super(App, self).__init__()  
-      
+        super(App, self).__init__()
+
         # Creamos la ventana principal
         self.title('PlaniPRO')
-        self.geometry('1100x600+-8+0')
-        self.resizable(0,0)     
-        self.iconbitmap('./img/ico.ico')  
+        self.geometry('1000x600+-8+0')
+        self.resizable(0,0)
+        self.iconbitmap('./img/ico.ico')
 
         # Modificamos estilo de los diferentes widgets
-        self.option_add('*Font', ('Segoe UI Semibold', '10'))   
-        self.option_add('*Button*Font', ('Segoe UI Semibold', '8'))  
-        self.option_add('*Button*BorderWidth', 0)  
-        self.option_add('*Button*Cursor', 'hand2')         
-        self.option_add('*Button*TakeFocus', False) 
-        self.option_add('*Entry*relief', 'flat')        
-        self.option_add('*Treeview*SelectMode', 'browse') 
-        self.option_add('*Treeview*Show', 'tree') 
-        self.option_add('*Treeview*padding', -1) 
-        self.option_add('*Treeview*TakeFocus', False)  
-        self.option_add('*Label*Foreground', '#5B5857')  
+        self.option_add('*Font', ('Segoe UI Semibold', '10'))
+        self.option_add('*Button*Font', ('Segoe UI Semibold', '8'))
+        self.option_add('*Button*BorderWidth', 0)
+        self.option_add('*Button*Cursor', 'hand2')
+        self.option_add('*Button*TakeFocus', False)
+        self.option_add('*Button*Background', '#FFFFFF')
+        self.option_add('*Entry*relief', 'flat')
+        self.option_add('*Treeview*SelectMode', 'browse')
+        self.option_add('*Treeview*Show', 'headings')
+        self.option_add('*Treeview*padding', 2)
+        self.option_add('*Treeview*Cursor', 'hand2')
+        self.option_add('*Treeview*TakeFocus', False)
+        self.option_add('*Label*Foreground', '#5B5857')
+        self.option_add('*Label*Background', '#FFFFFF')
 
         # Modificados estilo de los treeview
-        Style().configure('Treeview', background='#F0F0F0', font=('Segoe UI Semibold', 10)) 
+        Style().configure('Treeview', font=('Segoe UI Semibold', 10))
 
         # Cargamos las imagenes de los botones
         img1 = PhotoImage(file='./img/menu1.png')
         img2 = PhotoImage(file='./img/menu2.png')
         img3 = PhotoImage(file='./img/menu3.png')
         img4 = PhotoImage(file='./img/menu4.png')
-        img5 = PhotoImage(file='./img/menu5.png')        
+        img5 = PhotoImage(file='./img/menu5.png')
         img6 = PhotoImage(file='./img/menu6.png')
 
-        # Creamos los botones del menu  
-        self.btn1 = Button(self, image=img1, command=self.Menu1)
-        self.btn2 = Button(self, image=img2, command=self.Menu2)
-        self.btn3 = Button(self, image=img3, command=self.Menu3)
-        self.btn4 = Button(self, image=img4)
-        self.btn5 = Button(self, image=img5)
-        self.btn6 = Button(self, image=img6)
+        # Creamos los botones del menu
+        self.btn1 = Button(self, bg='#F0F0F0', image=img1, command=self.Menu1)
+        self.btn2 = Button(self, bg='#F0F0F0', image=img2, command=self.Menu2)
+        self.btn3 = Button(self, bg='#F0F0F0', image=img3, command=self.Menu3)
+        self.btn4 = Button(self, bg='#F0F0F0', image=img4)
+        self.btn5 = Button(self, bg='#F0F0F0', image=img5)
+        self.btn6 = Button(self, bg='#F0F0F0', image=img6)
 
         # Posicionamos los botones
-        self.btn1.place(width=100, height=100)        
-        self.btn2.place(y=100, width=100, height=100)       
-        self.btn3.place(y=200, width=100, height=100)          
-        self.btn4.place(y=300, width=100, height=100)             
-        self.btn5.place(y=400, width=100, height=100)         
+        self.btn1.place(       width=100, height=100)
+        self.btn2.place(y=100, width=100, height=100)
+        self.btn3.place(y=200, width=100, height=100)
+        self.btn4.place(y=300, width=100, height=100)
+        self.btn5.place(y=400, width=100, height=100)
         self.btn6.place(y=500, width=100, height=100)
 
-        # Remuneracion minima vital RMV
-        self.rmv = 1025
-
-        # Comision AFP
-        self.onp = 0.13
-        self.habitat = (0.0147, 0.0023, 0.0174, 0.1)
-        self.integra = (0.0147, 0.0023, 0.0174, 0.1)
-        self.prima = (0.0147, 0.0023, 0.0174, 0.1)
-        self.profuturo = (0.0147, 0.0023, 0.0174, 0.1)
-
-        # Variable global para el control de los menus
-        self.menu = 0            
-
         # Corremos programa
-        self.mainloop()  
-
-
-    def BloquearBotones(self):
-        
-        # Bloquear botones
-        if self.menu == 0:
-            self.btn1.configure(state='disabled')
-            self.btn2.configure(state='disabled')
-            self.btn3.configure(state='disabled')
-            self.btn4.configure(state='disabled')
-            self.btn5.configure(state='disabled')
-            self.btn6.configure(state='disabled') 
-
-        # Desbloquear botones
-        else:
-            self.btn1.configure(state='normal')
-            self.btn2.configure(state='normal')
-            self.btn3.configure(state='normal')
-            self.btn4.configure(state='normal')
-            self.btn5.configure(state='normal')
-            self.btn6.configure(state='normal')                     
+        self.mainloop()
 
 
     def Menu1(self):
-        
-        # Bloqueamos los botones
-        self.BloquearBotones()
-        self.btn1.configure(state='normal')
-        
-        # Validacion para destruir el menu si esta activo
-        if self.menu == 1: 
-            self.menu = 0
-            self.men1.destroy()   
-            return
 
         # Creamos los elementos del menu 1
-        menu = Frame(self, bg='#FFFFFF')      
-
-        Label(menu, text='N°').place(x=15, y=15, width=30, height=30)
-        Label(menu, text='APELLIDOS Y NOMBRE').place(x=45, y=15, width=280, height=30)
-        Label(menu, text='DNI').place(x=325, y=15, width=82, height=30)
+        menu = Frame(self)
 
         self.tre1 = Treeview(menu, columns=('#1', '#2', '#3'))
         self.tre1.column('#0', width=0)
-        self.tre1.column('#1', width=30)
-        self.tre1.column('#2', width=270)
-        self.tre1.column('#3', width=90)
+        self.tre1.column('#1', width=30, minwidth=30)
+        self.tre1.column('#2', width=270, minwidth=270)
+        self.tre1.column('#3', width=70, minwidth=70, anchor='center')
+        self.tre1.heading('#1', text='No.')
+        self.tre1.heading('#2', text='APELLIDOS Y NOMBRE')
+        self.tre1.heading('#3', text='No. DNI')
 
         scroll = Scrollbar(menu, orient='vertical', command=self.tre1.yview)
         self.tre1.configure(yscrollcommand=scroll.set)
 
-        Label(menu, text=' Fecha de Nacimiento', anchor='nw').place(x=437, y=15, width=200, height=54)
-        Label(menu, text=' Fecha de Ingreso', anchor='nw').place(x=437, y=70, width=200, height=54)
-        Label(menu, text=' Planilla', anchor='nw').place(x=437, y=125, width=200, height=54)
-        Label(menu, text=' Asignacion Familiar', anchor='nw').place(x=437, y=180, width=200, height=54)
-        Label(menu, text=' Movilidad', anchor='nw').place(x=437, y=235, width=200, height=54)
-        Label(menu, text=' Sueldo Total', anchor='nw').place(x=437, y=290, width=200, height=54)
-        Label(menu, text=' Cargo Laboral', anchor='nw').place(x=437, y=345, width=200, height=54)
-        Label(menu, text=' Entidad Pensionaria', anchor='nw').place(x=437, y=400, width=200, height=54)
-        Label(menu, text=' Tipo de Comision', anchor='nw').place(x=437, y=455, width=200, height=54)
-        Label(menu, text=' Cuspp', anchor='nw').place(x=437, y=510, width=200, height=55)        
-        Label(menu, text=' Cuenta Bancaria', anchor='nw').place(x=638, y=15, width=200, height=54)       
-        Label(menu, text=' Numero de Licencia', anchor='nw').place(x=638, y=70, width=200, height=54)
-        Label(menu, text=' Categoria de Licencia', anchor='nw').place(x=638, y=125, width=200, height=54)
-        Label(menu, text=' Vencimiento de Licencia', anchor='nw').place(x=638, y=180, width=200, height=54)        
-        Label(menu, text=' Area de Labor', anchor='nw').place(x=638, y=235, width=200, height=54)
-        Label(menu, text=' Numero de Celular', anchor='nw').place(x=638, y=290, width=200, height=54)
-        Label(menu, text=' Distrito', anchor='nw').place(x=638, y=345, width=200, height=54)
-        Label(menu, text=' Edad', anchor='nw').place(x=638, y=400, width=200, height=54)
-        Label(menu, text=' Tiempo', anchor='nw').place(x=638, y=455, width=200, height=54)
-        Label(menu, text=' Fecha de Baja', anchor='nw').place(x=638, y=510, width=200, height=55)
+        Label(menu, text='  Fecha de Nacimiento'    , anchor='nw').place(x=437, y= 20, width=200, height=54)
+        Label(menu, text='  Fecha de Ingreso'       , anchor='nw').place(x=437, y= 75, width=200, height=54)
+        Label(menu, text='  Planilla'               , anchor='nw').place(x=437, y=130, width=200, height=54)
+        Label(menu, text='  Asignacion Familiar'    , anchor='nw').place(x=437, y=185, width=200, height=54)
+        Label(menu, text='  Movilidad'              , anchor='nw').place(x=437, y=240, width=200, height=54)
+        Label(menu, text='  Sueldo Total'           , anchor='nw').place(x=437, y=295, width=200, height=54)
+        Label(menu, text='  Cargo Laboral'          , anchor='nw').place(x=437, y=350, width=200, height=54)
+        Label(menu, text='  Entidad Pensionaria'    , anchor='nw').place(x=437, y=405, width=200, height=54)
+        Label(menu, text='  Tipo de Comision'       , anchor='nw').place(x=437, y=460, width=200, height=54)
+        Label(menu, text='  Cuspp'                  , anchor='nw').place(x=437, y=515, width=200, height=55)        
+        Label(menu, text='  Cuenta Bancaria'        , anchor='nw').place(x=638, y= 20, width=200, height=54)       
+        Label(menu, text='  Numero de Licencia'     , anchor='nw').place(x=638, y= 75, width=200, height=54)
+        Label(menu, text='  Categoria de Licencia'  , anchor='nw').place(x=638, y=130, width=200, height=54)
+        Label(menu, text='  Vencimiento de Licencia', anchor='nw').place(x=638, y=185, width=200, height=54)        
+        Label(menu, text='  Area de Labor'          , anchor='nw').place(x=638, y=240, width=200, height=54)
+        Label(menu, text='  Numero de Celular'      , anchor='nw').place(x=638, y=295, width=200, height=54)
+        Label(menu, text='  Distrito'               , anchor='nw').place(x=638, y=350, width=200, height=54)
+        Label(menu, text='  Edad'                   , anchor='nw').place(x=638, y=405, width=200, height=54)
+        Label(menu, text='  Tiempo'                 , anchor='nw').place(x=638, y=460, width=200, height=54)
+        Label(menu, text='  Fecha de Baja'          , anchor='nw').place(x=638, y=515, width=200, height=55)
 
         self.naci = Label(menu, fg='#000000', anchor='e')
         self.ingr = Label(menu, fg='#000000', anchor='e')
@@ -161,77 +119,74 @@ class App(Tk):
         self.dist = Label(menu, fg='#000000', anchor='e')
         self.edad = Label(menu, fg='#000000', anchor='e')
         self.tiem = Label(menu, fg='#000000', anchor='e')
-        self.cese = Label(menu, fg='#000000', anchor='e')      
+        self.cese = Label(menu, fg='#000000', anchor='e')
 
         # Evento de seleccion en treeview
         self.tre1.bind('<<TreeviewSelect>>', self.MostrarDetalles)
 
-        # Posicionamiento de los elementos      
-        self.tre1.place(x=15, y=45, height=520)
-        scroll.place(x=409, y=15, height=550)  
-        self.naci.place(x=448, y=40, width=184) 
-        self.ingr.place(x=448, y=95, width=184)
-        self.plan.place(x=448, y=150, width=184)
-        self.asig.place(x=448, y=205, width=184)    
-        self.movi.place(x=448, y=260, width=184)
-        self.suel.place(x=448, y=315, width=184)
-        self.carg.place(x=448, y=370, width=184)
-        self.apor.place(x=448, y=425, width=184) 
-        self.comi.place(x=448, y=480, width=184)        
-        self.cusp.place(x=448, y=535, width=184)
-        self.cuen.place(x=649, y=40, width=184)
-        self.nlic.place(x=649, y=95, width=184)    
-        self.clic.place(x=649, y=150, width=184)
-        self.vlic.place(x=649, y=205, width=184)
-        self.area.place(x=649, y=260, width=184)
-        self.celu.place(x=649, y=315, width=184) 
-        self.dist.place(x=649, y=370, width=184)
-        self.edad.place(x=649, y=425, width=184)
-        self.tiem.place(x=649, y=480, width=184) 
-        self.cese.place(x=649, y=535, width=184)   
-                  
+        # Posicionamiento de los elementos
+        scroll.place(x=396, y=20, height=550)
+        self.tre1.place(x=20, y=20, height=550)
+        self.naci.place(x=448, y= 44, width=182)
+        self.ingr.place(x=448, y= 99, width=182)
+        self.plan.place(x=448, y=154, width=182)
+        self.asig.place(x=448, y=209, width=182)
+        self.movi.place(x=448, y=264, width=182)
+        self.suel.place(x=448, y=319, width=182)
+        self.carg.place(x=448, y=374, width=182)
+        self.apor.place(x=448, y=429, width=182)
+        self.comi.place(x=448, y=484, width=182)
+        self.cusp.place(x=448, y=539, width=182)
+        self.cuen.place(x=649, y= 44, width=182)
+        self.nlic.place(x=649, y= 99, width=182)
+        self.clic.place(x=649, y=154, width=182)
+        self.vlic.place(x=649, y=209, width=182)
+        self.area.place(x=649, y=264, width=182)
+        self.celu.place(x=649, y=319, width=182)
+        self.dist.place(x=649, y=374, width=182)
+        self.edad.place(x=649, y=429, width=182)
+        self.tiem.place(x=649, y=484, width=182)
+        self.cese.place(x=649, y=539, width=182)
+
         # Botones de gestion
-        Button(menu, text='AGREGAR', command=self.Agregar).place(x=875, y=15, width=90, height=30)     
-        Button(menu, text='MODIFICAR', command=self.Modificar).place(x=875, y=50, width=90, height=30)
-        Button(menu, text='ELIMINAR', command=self.Eliminar).place(x=875, y=85, width=90, height=30)        
-        
+        Button(menu, text='AGREGAR'  , command=self.Agregar  ).place(x=890, y=20, width=90, height=30)
+        Button(menu, text='MODIFICAR', command=self.Modificar).place(x=890, y=55, width=90, height=30)
+        Button(menu, text='ELIMINAR' , command=self.Eliminar ).place(x=890, y=90, width=90, height=30)
+        Button(menu, text='SALIR'    , bg='#DF2F2F', command=lambda:menu.destroy()).place(x=890, y=125, width=90, height=30)
+
         # Cargamos datos al treeview
         self.MostrarDatos()
-        
+
         # Posicionamos la ventana principal
-        menu.place(x=110, y=10, width=980, height=578) 
-        
-        # Asignamos ventana a variable y modificamos menu activo
-        self.men1 = menu
-        self.menu = 1
+        menu.place(width=1000, height=600)
 
     def Agregar(self):
        
         # Creamos los elementos del menu 1 agregar
-        menu = Frame(self.men1, background='#FFFFFF')
-        
-        Label(menu, text='  Buscar Dni', anchor='nw').place(width=200, height=54)
-        Label(menu, text='  Numero Dni', anchor='nw').place(y=55, width=200, height=54)
-        Label(menu, text='  Apellido Paterno', anchor='nw').place(y=110, width=200, height=54)
-        Label(menu, text='  Apellido Materno', anchor='nw').place(y=165, width=200, height=54)
-        Label(menu, text='  Nombres', anchor='nw').place(y=220, width=200, height=54)
-        Label(menu, text='  Fecha de Nacimiento', anchor='nw').place(y=275, width=200, height=54)
-        Label(menu, text='  Fecha de Ingreso', anchor='nw').place(y=330, width=200, height=54)
-        Label(menu, text='  Planilla', anchor='nw').place(y=385, width=200, height=54)
-        Label(menu, text='  A. Fam.', anchor='nw').place(x=62, y=385)
-        Label(menu, text='  Movili.', anchor='nw').place(x=123, y=385)
-        Label(menu, text='  Cargo Laboral', anchor='nw').place(y=440, width=200, height=54)
-        Label(menu, text='  Cuenta Bancaria', anchor='nw').place(y=495, width=200, height=55)
-        Label(menu, text='  Entidad Pensio.', anchor='nw').place(x=201, width=200, height=54)
-        Label(menu, text='  Comision', anchor='nw').place(x=312)
-        Label(menu, text='  Codigo Unico S.P.P.', anchor='nw').place(x=201, y=55, width=200, height=54)
-        Label(menu, text='  Licencia', anchor='nw').place(x=201, y=110, width=200, height=54)
-        Label(menu, text='  Vencimi.', anchor='nw').place(x=265, y=110)
-        Label(menu, text='  Cod.', anchor='nw').place(x=351, y=110)
-        Label(menu, text='  Area', anchor='nw').place(x=201, y=165, width=200, height=54)
-        Label(menu, text='  Celular', anchor='nw').place(x=297, y=165)
-        Label(menu, text='  Distrito', anchor='nw').place(x=201, y=220, width=200, height=54)
-        Label(menu, text='  Fecha de Cese', anchor='nw').place(x=201, y=275, width=200, height=54)                
+        menu = Frame(self)   
+
+        Label(menu, bg='#F8FDFF', text='  Buscar Dni'           , anchor='nw').place(       width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Numero Dni'           , anchor='nw').place(y= 55, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Apellido Paterno'     , anchor='nw').place(y=110, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Apellido Materno'     , anchor='nw').place(y=165, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Nombres'              , anchor='nw').place(y=220, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Fecha de Nacimiento'  , anchor='nw').place(y=275, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Fecha de Ingreso'     , anchor='nw').place(y=330, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Planilla'             , anchor='nw').place(y=385, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  A. Fam.'              , anchor='nw').place(x= 62, y=385)
+        Label(menu, bg='#F8FDFF', text='  Movili.'              , anchor='nw').place(x=123, y=385)
+        Label(menu, bg='#F8FDFF', text='  Cargo Laboral'        , anchor='nw').place(y=440, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Cuenta Bancaria'      , anchor='nw').place(y=495, width=200, height=55)
+        Label(menu, bg='#F8FDFF', text='  Entidad Pensio.'      , anchor='nw').place(x=201, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Comision'             , anchor='nw').place(x=312)
+        Label(menu, bg='#F8FDFF', text='  Codigo Unico S.P.P.'  , anchor='nw').place(x=201, y= 55, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Licencia'             , anchor='nw').place(x=201, y=110, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Vencimi.'             , anchor='nw').place(x=265, y=110)
+        Label(menu, bg='#F8FDFF', text='  Cod.'                 , anchor='nw').place(x=351, y=110)
+        Label(menu, bg='#F8FDFF', text='  Area'                 , anchor='nw').place(x=201, y=165, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Celular'              , anchor='nw').place(x=297, y=165)
+        Label(menu, bg='#F8FDFF', text='  Distrito'             , anchor='nw').place(x=201, y=220, width=200, height=54)
+        Label(menu, bg='#F8FDFF', text='  Fecha de Cese'        , anchor='nw').place(x=201, y=275, width=200, height=54)                
        
         self.busc = Button(menu, text='BUSCAR', bg='#88C7FF', command=self.BuscarDni)
         self.bdni = Entry(menu)     
@@ -257,47 +212,48 @@ class App(Tk):
         self.dres = Combobox(menu, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS', 'LOS OLIVOS', 
                                                             'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO',
                                                             'SAN JUAN DE LURIGANCHO', 'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 
-                                                            'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO', ''])      
+                                                            'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR',
+                                                            'VILLA MARIA DEL TRIUNFO', ''])      
         self.fces = Entry(menu)                       
 
         # Posicionamiento de los elementos      
-        self.busc.place(x=136, y=23, width=54, height=24)    
-        self.bdni.place(x=10, y=23, width=120, height=24)    
-        self.ndni.place(x=10, y=78, width=180, height=24)
-        self.apat.place(x=10, y=133, width=180, height=24)
-        self.amat.place(x=10, y=188, width=180, height=24)
-        self.nomb.place(x=10, y=243, width=180, height=24)        
-        self.fnac.place(x=10, y=298, width=180, height=24)        
-        self.fing.place(x=10, y=353, width=180, height=24)
-        self.spla.place(x=10, y=408, width=56, height=24)  
-        self.afam.place(x=72, y=408, width=56, height=24)      
-        self.smov.place(x=134, y=408, width=56, height=24) 
-        self.plab.place(x=10, y=463, width=180, height=24)        
-        self.ncue.place(x=10, y=518, width=180, height=24)
-        self.eapo.place(x=211, y=23, width=105, height=24) 
-        self.ecom.place(x=322, y=23, width=69, height=24) 
-        self.ecus.place(x=211, y=78, width=180, height=24)
-        self.cate.place(x=211, y=133, width=58, height=24)
-        self.fven.place(x=275, y=133, width=80, height=24)
-        self.codi.place(x=361, y=133, width=30, height=24)
-        self.alab.place(x=211, y=188, width=90, height=24)
-        self.ncel.place(x=307, y=188, width=84, height=24)
+        self.busc.place(x=136, y= 23, width= 54, height=24)    
+        self.bdni.place(x= 10, y= 23, width=120, height=24)    
+        self.ndni.place(x= 10, y= 78, width=180, height=24)
+        self.apat.place(x= 10, y=133, width=180, height=24)
+        self.amat.place(x= 10, y=188, width=180, height=24)
+        self.nomb.place(x= 10, y=243, width=180, height=24)        
+        self.fnac.place(x= 10, y=298, width=180, height=24)        
+        self.fing.place(x= 10, y=353, width=180, height=24)
+        self.spla.place(x= 10, y=408, width= 56, height=24)  
+        self.afam.place(x= 72, y=408, width= 56, height=24)      
+        self.smov.place(x=134, y=408, width= 56, height=24) 
+        self.plab.place(x= 10, y=463, width=180, height=24)        
+        self.ncue.place(x= 10, y=518, width=180, height=24)
+        self.eapo.place(x=211, y= 23, width=105, height=24) 
+        self.ecom.place(x=322, y= 23, width= 69, height=24) 
+        self.ecus.place(x=211, y= 78, width=180, height=24)
+        self.cate.place(x=211, y=133, width= 58, height=24)
+        self.fven.place(x=275, y=133, width= 80, height=24)
+        self.codi.place(x=361, y=133, width= 30, height=24)
+        self.alab.place(x=211, y=188, width= 90, height=24)
+        self.ncel.place(x=307, y=188, width= 84, height=24)
         self.dres.place(x=211, y=243, width=180, height=24)
         self.fces.place(x=211, y=298, width=180, height=24)         
             
         # Creamos los botones principales
-        Button(menu, text='GRABAR', command=self.Grabar).place(x=438, width=90, height=30)     
-        Button(menu, text='SALIR', bg='#DF2F2F', command=lambda:self.men1_agre.destroy()).place(x=438, y=35, width=90, height=30)
+        Button(menu, text='GRABAR', command=self.Grabar).place(x=453, width=90, height=30)     
+        Button(menu, text='SALIR', bg='#DF2F2F', command=lambda:menu.destroy()).place(x=453, y=35, width=90, height=30)
 
-        # Posicionamos la ventana principal
-        menu.place(x=437, y=15, width=528, height=550)
-        
         # Foco en cuadro de busqueda y Superponemos la ventana principal
         self.bdni.focus_set()
         menu.grab_set()
-
-        # Asignamos variable para poder destruir la ventana
+        
+        # Asignamos variablo global a menu para destruir
         self.men1_agre = menu
+
+        # Posicionamos la ventana principal
+        menu.place(x=437, y=20, width=563, height=550)
 
     def Modificar(self):
         
@@ -344,24 +300,25 @@ class App(Tk):
 
         # Consulta para eliminar registro
         if self.tre1.selection():
-            respuesta = messagebox.askyesno('ELIMINAR','Deseas eliminar al Trabajador?', default='no')     
-            if respuesta: 
-                
-                # Id del trabajador                
-                id = int(self.tre1.item(self.tre1.focus()).get('text'))    
+            respuesta = messagebox.askyesno('ELIMINAR','Deseas eliminar al Trabajador?', default='no')
+
+            if respuesta:
+
+                # Id del trabajador
+                id = int(self.tre1.item(self.tre1.focus()).get('text'))
 
                 # Enviamos registro a cesado
                 if self.cese['text'] != '':
-                    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')                   
+                    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
 
                 # Eliminamos sus datos
-                delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)   
-                
+                delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)
+
                 # Limpiamos sus detalles de los cuadros
-                self.BorrarDetalles()             
-                
+                self.BorrarDetalles()
+
                 # Cargamos nuevamente los datos al treeview
-                self.MostrarDatos()   
+                self.MostrarDatos()
 
     def MostrarDatos(self):
         
@@ -373,6 +330,7 @@ class App(Tk):
 
         # Ingresamos datos al treeview
         for index, dato in enumerate(datos, 1):
+
             nombre = f'{dato[2]} {dato[3]} {dato[4]}'    
             self.tre1.insert('', END, text=dato[0], values=(index, nombre, dato[1]))   
 
@@ -417,13 +375,15 @@ class App(Tk):
 
             # Buscar datos del numero de dni
             persona = search(dni)
+
             if persona != None:
                 self.ndni['text'] = persona['numeroDocumento']
                 self.apat['text'] = persona['apellidoPaterno']
                 self.amat['text'] = persona['apellidoMaterno']
                 self.nomb['text'] = persona['nombres']                
                 self.bdni.delete(0, END)   
-                self.fnac.focus_set()            
+                self.fnac.focus_set()         
+
             else:                
                 messagebox.showinfo('BUSCAR', 'No se encontro el numero de Dni')           
                 self.bdni.focus()   
@@ -432,6 +392,7 @@ class App(Tk):
                 
         # Mostramos detalles del trabajador selecionado
         if self.tre1.selection():     
+
             self.BorrarDetalles()
             
             # Id del trabajador             
@@ -464,101 +425,101 @@ class App(Tk):
             self.cese['text'] = datos[21]
 
     def Grabar(self):
-        
+
         # Validacion de dni
-        if self.ndni['text'] == '':    
-            messagebox.showinfo('GRABAR', 'Busca los datos del trabajador !')            
-            self.bdni.focus()                      
+        if self.ndni['text'] == '':
+            messagebox.showinfo('GRABAR', 'Busca los datos del trabajador !')
+            self.bdni.focus()
 
         # Validacion de fecha de nacimiento
         elif self.fnac.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la fecha de nacimiento !')  
+            messagebox.showinfo('GRABAR', 'Registra la fecha de nacimiento !')
             self.fnac.focus()
         elif len(self.fnac.get()) != 10 or not FechaValida(self.fnac.get(), False):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')  
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')
             self.fnac.focus()
 
-        # Validacion de fecha de ingreso    
+        # Validacion de fecha de ingreso
         elif self.fing.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la fecha de ingreso !') 
+            messagebox.showinfo('GRABAR', 'Registra la fecha de ingreso !')
             self.fing.focus()
         elif len(self.fing.get()) != 10 or not FechaValida(self.fing.get(), False):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')  
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')
             self.fing.focus()
 
         # Validacion de sueldo planilla
         elif self.spla.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la remuneracion de la planilla !')  
+            messagebox.showinfo('GRABAR', 'Registra la remuneracion de la planilla !')
             self.spla.focus()
-        elif not self.spla.get().isdigit(): 
-            messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la planilla !')   
+        elif not self.spla.get().isdigit():
+            messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la planilla !')
             self.spla.focus()
 
         # Validacion de asignacion familiar
         elif self.afam.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la asignacion familiar !')  
+            messagebox.showinfo('GRABAR', 'Registra la asignacion familiar !')
             self.afam.focus()
-                    
+
         # Validacion de movilidad
         elif self.smov.get() != '' and not self.smov.get().isdigit():
-            messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la movilidad !')  
+            messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la movilidad !')
             self.smov.focus()
 
-        # Validacion de cuenta bancaria                              
-        elif self.ncue.get() != '' and not self.ncue.get().isdigit():          
-            messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !')  
-            self.ncue.focus()                                                  
+        # Validacion de cuenta bancaria
+        elif self.ncue.get() != '' and not self.ncue.get().isdigit():
+            messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !')
+            self.ncue.focus()
 
-        # Validacion del cusp de la entidad de aportacion 
+        # Validacion del cusp de la entidad de aportacion
         elif self.ecus.get() != '' and not self.ecus.get().isalnum():
-            messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !')                                      
-            self.ecus.focus()               
-                                     
-        # Validacion de vencimiento de la licencia de conducir        
-        elif self.fven.get() != '' and len(self.fven.get()) != 10:
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                                    
-            self.fven.focus()   
-        elif self.fven.get() != '' and not FechaValida(self.fven.get(), True):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')                                    
-            self.fven.focus()    
-                               
-        # Validacion del codigo de la licencia de conducir       
-        elif self.codi.get() != '' and len(self.codi.get()) != 1:   
-            messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')                            
-            self.codi.focus()   
-        elif self.codi.get() != '' and not self.codi.get().isalpha():   
-            messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')                             
-            self.codi.focus()           
+            messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !')
+            self.ecus.focus()
 
-        # Validacion del numero celular          
+        # Validacion de vencimiento de la licencia de conducir
+        elif self.fven.get() != '' and len(self.fven.get()) != 10:
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')
+            self.fven.focus()
+        elif self.fven.get() != '' and not FechaValida(self.fven.get(), True):
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')
+            self.fven.focus()
+
+        # Validacion del codigo de la licencia de conducir
+        elif self.codi.get() != '' and len(self.codi.get()) != 1:
+            messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')
+            self.codi.focus()
+        elif self.codi.get() != '' and not self.codi.get().isalpha():
+            messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')
+            self.codi.focus()
+
+        # Validacion del numero celular
         elif self.ncel.get() != '' and not self.ncel.get().isdigit():
-            messagebox.showinfo('GRABAR', 'Registra correctamente el numero de celular !')                                       
+            messagebox.showinfo('GRABAR', 'Registra correctamente el numero de celular !')
             self.ncel.focus()
-                      
+
         # Validacion de fecha del cese
         elif self.fces.get() != '' and len(self.fces.get()) != 10:
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                                        
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')
             self.fces.focus()
         elif self.fces.get() != '' and not FechaValida(self.fces.get(), True):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')                            
-            self.fces.focus()       
+            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')
+            self.fces.focus()
         else:
 
-            # Verificacion de dni ya registrado      
+            # Verificacion de dni ya registrado
             if self.busc['state'] == 'normal':
                 for index in self.tre1.get_children():
-                    if f'''{self.tre1.item(index).get('values')[2]:0>8}''' == self.ndni['text']:                                    
-                        messagebox.showinfo('GRABAR', 'El trabajador ya esta registrado !')    
+                    if f'''{self.tre1.item(index).get('values')[2]:0>8}''' == self.ndni['text']:
+                        messagebox.showinfo('GRABAR', 'El trabajador ya esta registrado !')
                         return
 
-            # Guardar datos registrados en variables                                                                                                                                                                   
+            # Guardar datos registrados en variables
             ndni = self.ndni.cget('text')
             apat = self.apat.cget('text')
             amat = self.amat.cget('text')
             nomb = self.nomb.cget('text')
             naci = self.fnac.get()
             ingr = self.fing.get()
-            plan = int(self.spla.get())      
+            plan = int(self.spla.get())
             carg = self.plab.get()
             cuen = self.ncue.get()
             apor = self.eapo.get()
@@ -569,50 +530,50 @@ class App(Tk):
             codi = self.codi.get().upper()
             area = self.alab.get()
             celu = self.ncel.get()
-            dist = self.dres.get()              
-            cese = self.fces.get()  
+            dist = self.dres.get()
+            cese = self.fces.get()
 
-            if codi: 
-                codi = codi + ndni    
+            if codi:
+                codi = codi + ndni
 
             if self.afam.get() == 'SI':
-                asig = self.rmv * 0.1                            
+                asig = 102.50
             else:
                 asig = 0
 
             if self.smov.get():
-                movi = int(self.smov.get())                                
-            else:                            
-                movi = 0      
+                movi = int(self.smov.get())
+            else:
+                movi = 0
 
             # Id del trabajador seleccionado
-            seleccion = self.tre1.focus()    
+            seleccion = self.tre1.focus()
 
             if seleccion:
-                id = int(self.tre1.item(seleccion).get('text'))   
+                id = int(self.tre1.item(seleccion).get('text'))
 
             # Insertar nuevo trabajador
-            if self.busc['state'] == 'normal':  
+            if self.busc['state'] == 'normal':
                 query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, EAPO, TCOM, NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES (
                     '{ndni}','{apat}','{amat}','{nomb}','{naci}','{ingr}',{plan},'{asig}',{movi},'{apor}','{comi}','{cusp}','{carg}','{cuen}','{area}','{codi}','{venc}','{lice}','{celu}','{dist}','{cese}')'''
                 insert(query)
 
-            # Actualizar datos de trabajador     
-            else:     
+            # Actualizar datos de trabajador
+            else:
                 query = f'''UPDATE ACTIVO SET FNAC = '{naci}', FING = '{ingr}', SPLA = {plan}, AFAM = '{asig}', SMOV = {movi}, EAPO = '{apor}' , TCOM = '{comi}', NCUS = '{cusp}', 
                         PLAB = '{carg}', NCUE = '{cuen}', ALAB = '{area}', NLIC = '{codi}', VLIC = '{venc}', CLIC = '{lice}', NCEL = '{celu}', DRES = '{dist}', FCES = '{cese}' WHERE ID = {id}'''           
-                update(query)  
+                update(query)
 
             # Ordenamos los datos con el nuevo registro
             self.MostrarDatos()
-            self.BorrarDetalles()  
-                            
+            self.BorrarDetalles()
+
             # Devolvemos la seleccion del trabajador
             if seleccion:
                 for index in self.tre1.get_children():
                     if int(self.tre1.item(index).get('text')) == id:
                         self.tre1.selection_set(index)
-                        self.tre1.focus(index)    
+                        self.tre1.focus(index)
 
             # Cerrar ventana                           
             self.men1_agre.destroy()
@@ -620,127 +581,110 @@ class App(Tk):
 
     def Menu2(self):
 
-        # Bloqueamos los botones
-        self.BloquearBotones()
-        self.btn2.configure(state='normal')
-        
-        # Validacion para destruir el menu si esta activo
-        if self.menu == 2: 
-            self.menu = 0
-            self.men2.destroy()              
-            return
-        
-        # Creamos los elementos del menu 1      
-        menu = Frame(self, background='#FFFFFF')  
+        # Creamos los elementos del menu 1
+        menu = Frame(self)
 
-        Label(menu, text='N°', font=('Segoe UI Semibold', 8)).place(x=15, y=15, width=46, height=30)
-        Label(menu, text='APELLIDOS Y NOMBRE', font=('Segoe UI Semibold', 8)).place(x=61, y=15, width=271, height=30)
-        Label(menu, text='APOYO', font=('Segoe UI Semibold', 8)).place(x=332, y=15, width=51, height=30)             
-        Label(menu, text='FALTA', font=('Segoe UI Semibold', 8)).place(x=383, y=15, width=51, height=30)
-        Label(menu, text='FERIADO', font=('Segoe UI Semibold', 8)).place(x=434, y=15, width=51, height=30)
-        Label(menu, text='INGRESO', font=('Segoe UI Semibold', 8)).place(x=485, y=15, width=81, height=30)     
-        Label(menu, text='RECORTE', font=('Segoe UI Semibold', 8)).place(x=566, y=15, width=81, height=30)
-        Label(menu, text='D. ME.', font=('Segoe UI Semibold', 8)).place(x=647, y=15, width=51, height=30)        
-        Label(menu, text='VACA.', font=('Segoe UI Semibold', 8)).place(x=698, y=15, width=51, height=30)     
-        Label(menu, text='C. VA.', font=('Segoe UI Semibold', 8)).place(x=749, y=15, width=51, height=30)
-        Label(menu, text='ADELANTO', font=('Segoe UI Semibold', 8)).place(x=800, y=15, width=78, height=30)    
-        Label(menu, text='XFUERA', font=('Segoe UI Semibold', 8)).place(x=878, y=15, width=70, height=30)            
-      
         self.tre2 = Treeview(menu, columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', '#11', '#12'))
-        self.tre2.column('#0', width=0)
-        self.tre2.column('#1', width=30)
-        self.tre2.column('#2', width=268)
-        self.tre2.column('#3', width=50, anchor='center')  
-        self.tre2.column('#4', width=50, anchor='center')
-        self.tre2.column('#5', width=50, anchor='center')
-        self.tre2.column('#6', width=81, anchor='center') 
-        self.tre2.column('#7', width=80, anchor='center')
-        self.tre2.column('#8', width=52, anchor='center')
-        self.tre2.column('#9', width=50, anchor='center') 
-        self.tre2.column('#10', width=50, anchor='center') 
-        self.tre2.column('#11', width=85, anchor='center')     
-        self.tre2.column('#12', width=85, anchor='center') 
+        self.tre2.column('#0' , width=0)
+        self.tre2.column('#1' , width= 30, minwidth= 30)
+        self.tre2.column('#2' , width=270, minwidth=270)
+        self.tre2.column('#3' , width= 40, minwidth= 40, anchor='center')
+        self.tre2.column('#4' , width= 40, minwidth= 40, anchor='center')
+        self.tre2.column('#5' , width= 40, minwidth= 40, anchor='center')
+        self.tre2.column('#6' , width= 70, minwidth= 70, anchor='center')
+        self.tre2.column('#7' , width= 70, minwidth= 70, anchor='center')
+        self.tre2.column('#8' , width= 40, minwidth= 40, anchor='center')
+        self.tre2.column('#9' , width= 40, minwidth= 40, anchor='center')
+        self.tre2.column('#10', width= 40, minwidth= 40, anchor='center')
+        self.tre2.column('#11', width= 70, minwidth= 70, anchor='center')
+        self.tre2.column('#12', width= 70, minwidth= 70, anchor='center')
+        self.tre2.heading('#1' , text='No.')
+        self.tre2.heading('#2' , text='APELLIDOS Y NOMBRE')
+        self.tre2.heading('#3' , text='APO.')
+        self.tre2.heading('#4' , text='FAL.')
+        self.tre2.heading('#5' , text='FER.')
+        self.tre2.heading('#6' , text='INGRES.')
+        self.tre2.heading('#7' , text='DESCUE.')
+        self.tre2.heading('#8' , text='D.M.')
+        self.tre2.heading('#9' , text='VAC.')
+        self.tre2.heading('#10', text='C.V.')
+        self.tre2.heading('#11', text='ADELAN.')
+        self.tre2.heading('#12', text='XFUERA')
 
         scroll = Scrollbar(menu, orient='vertical', command=self.tre2.yview)
-        self.tre2.configure(yscrollcommand=scroll.set)  
+        self.tre2.configure(yscrollcommand=scroll.set)
 
-        # Evento de seleccion en treeview    
+        # Evento de seleccion en treeview
         self.tre2.bind('<Double-1>', self.AbrirDetalles)
 
-        # Posicionamiento de los elementos 
-        self.tre2.place(x=15, y=45, height=520)
-        scroll.place(x=950, y=15, height=550)            
+        # Posicionamiento de los elementos
+        scroll.place(x=846, y=20, height=550)
+        self.tre2.place(x=20, y=20, height=550)
 
         # Cargamos datos al treeview
         self.CargarDatos()
 
-        # Posicionamos la ventana principal
-        menu.place(x=110, y=10, width=980, height=580)   
-
-        # Asignamos ventana a variable y modificamos menu activo
-        self.men2 = menu
-        self.menu = 2     
-
+        Button(menu, text='AGREGAR'  ).place(x=890, y=20, width=90, height=30)
+        Button(menu, text='MODIFICAR').place(x=890, y=55, width=90, height=30)
+        Button(menu, text='ELIMINAR' ).place(x=890, y=90, width=90, height=30)
+        Button(menu, text='SALIR'    , bg='#DF2F2F', command=lambda:menu.destroy()).place(x=890, y=125, width=90, height=30)
+       
         # Creamos ventana de detalles y lo ocultamos
         self.Detalles()
-        self.OcultarDetalles()        
+        self.OcultarDetalles()
+
+        # Posicionamos la ventana principal
+        menu.place(width=1000, height=600)
 
     def Detalles(self):
         
         # Creamos los elementos del menu 2 detalles
-        menu = Frame(self.men2, background='#FFFFFF')   
+        menu = Frame(self)   
 
-        self.cale = Calendar(menu, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2')
+        self.cale = Calendar(menu, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2', borderwidth=0)
       
-        Button(menu, text='APOYO', command=lambda:self.GrabarDetalles('APO')).place(x=286, y=15, width=100, height=22)
-        Button(menu, text='FALTA', command=lambda:self.GrabarDetalles('FAL')).place(x=406, y=15, width=100, height=22)
-        Button(menu, text='FERIADO', command=lambda:self.GrabarDetalles('FER')).place(x=526, y=15, width=100, height=22)
-        Button(menu, text='ADELANTO', command=lambda:self.GrabarDetalles('ADE')).place(x=646, y=15, width=160, height=22)
-        Button(menu, text='INGRESO', command=lambda:self.GrabarDetalles('ING')).place(x=15, y=237, width=265, height=22)
-        Button(menu, text='DESCUENTO', command=lambda:self.GrabarDetalles('DES')).place(x=300, y=237, width=266, height=22)
-        Button(menu, text='VACACIONES', command=lambda:self.GrabarDetalles('VAC')).place(x=586, y=237, width=220, height=22)
-        Button(menu, text='DESCANSO MEDICO', command=lambda:self.GrabarDetalles('DME')).place(x=15, y=418, width=551, height=22)
+        Button(menu, text='APOYO'               , command=lambda:self.GrabarDetalles('APO')).place(x=286, y= 20, width=100, height=22)
+        Button(menu, text='FALTA'               , command=lambda:self.GrabarDetalles('FAL')).place(x=406, y= 20, width=100, height=22)
+        Button(menu, text='FERIADO'             , command=lambda:self.GrabarDetalles('FER')).place(x=526, y= 20, width=100, height=22)
+        Button(menu, text='ADELANTO'            , command=lambda:self.GrabarDetalles('ADE')).place(x=646, y= 20, width=160, height=22)
+        Button(menu, text='INGRESO'             , command=lambda:self.GrabarDetalles('ING')).place(x= 15, y=237, width=265, height=22)
+        Button(menu, text='DESCUENTO'           , command=lambda:self.GrabarDetalles('DES')).place(x=300, y=237, width=266, height=22)
+        Button(menu, text='VACACIONES'          , command=lambda:self.GrabarDetalles('VAC')).place(x=586, y=237, width=220, height=22)
+        Button(menu, text='DESCANSO MEDICO'     , command=lambda:self.GrabarDetalles('DME')).place(x= 15, y=418, width=551, height=22)
         Button(menu, text='COMPRA DE VACACIONES', command=lambda:self.GrabarDetalles('CVA')).place(x=586, y=418, width=220, height=22)
         Button(menu, command=lambda:self.SeleccionarFecha('vaca1')).place(x=661, y=267, width=15, height=14)
         Button(menu, command=lambda:self.SeleccionarFecha('vaca2')).place(x=746, y=267, width=15, height=14)
-        Button(menu, command=lambda:self.SeleccionarFecha('dmed1')).place(x=90, y=448, width=15, height=14)
+        Button(menu, command=lambda:self.SeleccionarFecha('dmed1')).place(x= 90, y=448, width=15, height=14)
         Button(menu, command=lambda:self.SeleccionarFecha('dmed2')).place(x=175, y=448, width=15, height=14)
         Button(menu, command=lambda:self.SeleccionarFecha('cvac1')).place(x=661, y=448, width=15, height=14)
         Button(menu, command=lambda:self.SeleccionarFecha('cvac2')).place(x=746, y=448, width=15, height=14)
 
-        Label(menu, text='Importe', bg='#FFFFFF').place(x=684, y=40, height=16)     
-        Label(menu, text='Detalle', bg='#FFFFFF').place(x=13, y=264, height=16)
-        Label(menu, text='Monto', bg='#FFFFFF').place(x=216, y=264, height=16)
-        Label(menu, text='Detalle', bg='#FFFFFF').place(x=298, y=264, height=16)
-        Label(menu, text='Monto', bg='#FFFFFF').place(x=502, y=264, height=16)
-        Label(menu, text='Inicio', bg='#FFFFFF').place(x=584, y=264, height=16)
-        Label(menu, text='Final', bg='#FFFFFF').place(x=679, y=264, height=16)
-        Label(menu, text='Dias', bg='#FFFFFF').place(x=764, y=264, height=16)        
-        Label(menu, text='Inicio', bg='#FFFFFF').place(x=13, y=445, height=16)
-        Label(menu, text='Final', bg='#FFFFFF').place(x=108, y=445, height=16)
-        Label(menu, text='Detalle', bg='#FFFFFF').place(x=193, y=445, height=16)
-        Label(menu, text='Dias', bg='#FFFFFF').place(x=524, y=445, height=16)
-        Label(menu, text='Inicio', bg='#FFFFFF').place(x=584, y=445, height=16)
-        Label(menu, text='Final', bg='#FFFFFF').place(x=679, y=445, height=16)
-        Label(menu, text='Dias', bg='#FFFFFF').place(x=764, y=445, height=16)
-
         self.apoyo = Treeview(menu, columns=('#1'))
         self.apoyo.column('#0', width=0)
-        self.apoyo.column('#1', width=98)   
+        self.apoyo.column('#1', width=94, minwidth=94, anchor='center')
+        self.apoyo.heading('#1', text='FECHA')
         self.falta = Treeview(menu, columns=('#1'))
         self.falta.column('#0', width=0)
-        self.falta.column('#1', width=98) 
+        self.falta.column('#1', width=94, minwidth=94, anchor='center')
+        self.falta.heading('#1', text='FECHA')
         self.feriado = Treeview(menu, columns=('#1'))
         self.feriado.column('#0', width=0)
-        self.feriado.column('#1', width=98) 
+        self.feriado.column('#1', width=94, minwidth=94, anchor='center')
+        self.feriado.heading('#1', text='FECHA')
         self.adelanto = Treeview(menu, columns=('#1', '#2'))
         self.adelanto.column('#0', width=0)
-        self.adelanto.column('#1', width=84) 
-        self.adelanto.column('#2', width=74, anchor='e')
+        self.adelanto.column('#1', width=82, anchor='center')         
+        self.adelanto.column('#2', width=72, anchor='e')
+        self.adelanto.heading('#1', text='FECHA')
+        self.adelanto.heading('#2', text='IMPORTE')
+
         self.ingreso = Treeview(menu, columns=('#1', '#2'))
         self.ingreso.column('#0', width=0)
-        self.ingreso.column('#1', width=178) 
-        self.ingreso.column('#2', width=85, anchor='e') 
+        self.ingreso.column('#1', width=200, minwidth=200) 
+        self.ingreso.column('#2', width= 60, minwidth= 60, anchor='e')
+        self.ingreso.heading('#1', text='DETALLE')
+        self.ingreso.heading('#2', text='IMPORTE')
+
         self.descuento = Treeview(menu, columns=('#1', '#2'))
         self.descuento.column('#0', width=0)
         self.descuento.column('#1', width=179) 
@@ -762,21 +706,21 @@ class App(Tk):
         self.cvacaciones.column('#2', width=84) 
         self.cvacaciones.column('#3', width=50, anchor='e') 
 
-        self.adelantoImporte = Entry(menu, bg='#F0F0F0', justify='right')
-        self.ingresoDetalle = Entry(menu, bg='#F0F0F0')
-        self.ingresoImporte = Entry(menu, bg='#F0F0F0', justify='right')
-        self.descuentoDetalle = Entry(menu, bg='#F0F0F0')
-        self.descuentoImporte = Entry(menu, bg='#F0F0F0', justify='right')
-        self.vacacionesInicial = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
-        self.vacacionesFinal = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
-        self.vacacionesTotal = Entry(menu, bg='#F0F0F0', justify='right')
-        self.dmedicoInicial = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
-        self.dmedicoFinal = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
-        self.dmedicoDetalle = Entry(menu, bg='#F0F0F0')
-        self.dmedicoTotal = Entry(menu, bg='#F0F0F0', justify='right')
-        self.cvacacionesInicial = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
-        self.cvacacionesFinal = Entry(menu, bg='#F0F0F0', justify='right', state='readonly', takefocus=False)
-        self.cvacacionesTotal = Entry(menu, bg='#F0F0F0', justify='right')
+        self.adelantoImporte    = Entry(menu, justify='right')
+        self.ingresoDetalle     = Entry(menu)
+        self.ingresoImporte     = Entry(menu, justify='right')
+        self.descuentoDetalle   = Entry(menu)
+        self.descuentoImporte   = Entry(menu, justify='right')
+        self.vacacionesInicial  = Entry(menu, justify='right', state='readonly', takefocus=False)
+        self.vacacionesFinal    = Entry(menu, justify='right', state='readonly', takefocus=False)
+        self.vacacionesTotal    = Entry(menu, justify='right')
+        self.dmedicoInicial     = Entry(menu, justify='right', state='readonly', takefocus=False)
+        self.dmedicoFinal       = Entry(menu, justify='right', state='readonly', takefocus=False)
+        self.dmedicoDetalle     = Entry(menu)
+        self.dmedicoTotal       = Entry(menu, justify='right')
+        self.cvacacionesInicial = Entry(menu, justify='right', state='readonly', takefocus=False)
+        self.cvacacionesFinal   = Entry(menu, justify='right', state='readonly', takefocus=False)
+        self.cvacacionesTotal   = Entry(menu, justify='right')
 
         # Evento de click del treeview para quitar seleccion
         self.apoyo.bind('<Button-1>', self.QuitarSeleccion)
@@ -790,19 +734,19 @@ class App(Tk):
         self.cvacaciones.bind('<Button-1>', self.QuitarSeleccion)
         
         # Posicionamos todos los elementos
-        self.cale.place(x=15, y=15)
+        self.cale.place(x=20, y=20)
 
-        self.apoyo.place(x=286, y=42, height=160)
-        self.falta.place(x=406, y=42, height=160)
-        self.feriado.place(x=526, y=42, height=160)
-        self.adelanto.place(x=646, y=62, height=140)   
-        self.ingreso.place(x=15, y=304, height=80)
-        self.descuento.place(x=300, y=304, height=80)
-        self.vacaciones.place(x=586, y=304, height=80)
-        self.dmedico.place(x=15, y=485, height=80)
-        self.cvacaciones.place(x=586, y=485, height=80)
+        self.apoyo.place        (x=286, y= 52, height=150)
+        self.falta.place        (x=406, y= 52, height=150)
+        self.feriado.place      (x=526, y= 52, height=150)
+        self.adelanto.place     (x=646, y= 72, height=130)   
+        self.ingreso.place      (x= 15, y=304, height= 70)
+        self.descuento.place    (x=300, y=304, height= 70)
+        self.vacaciones.place   (x=586, y=304, height= 70)
+        self.dmedico.place      (x= 15, y=485, height= 70)
+        self.cvacaciones.place  (x=586, y=485, height= 70)
 
-        self.adelantoImporte.place(x=744, y=41, width=60, height=17)   
+        self.adelantoImporte.place(x=742, y=49, width=60, height=17)   
         self.ingresoDetalle.place(x=15, y=281, width=198, height=17)        
         self.ingresoImporte.place(x=218, y=281, width=60, height=17)
         self.descuentoDetalle.place(x=300, y=281, width=199, height=17)        
@@ -1310,15 +1254,7 @@ class App(Tk):
 
     def Menu3(self):
 
-        # Bloqueamos los botones
-        self.BloquearBotones()
-        self.btn3.configure(state='normal')
-        
-        # Validacion para destruir el menu si esta activo
-        if self.menu == 3: 
-            self.menu = 0
-            self.men3.destroy()              
-            return
+              
         
         # Creamos los elementos del menu 1      
         menu = Frame(self, background='#FFFFFF')                     
@@ -1403,7 +1339,7 @@ class App(Tk):
         scrol2.place(x=15, y=550, width=900)
 
         # Cargamos datos al treeview
-        self.CargarPlanilla()
+        #self.CargarPlanilla()
 
         # Posicionamos la ventana principal
         menu.place(x=110, y=10, width=980, height=580)
@@ -1522,7 +1458,7 @@ class App(Tk):
             totalFeriados = sueldoPlanilla / 30 * diasFeriados * 2
             totalCompraVacaciones = (sueldoPlanilla + asignacionFamiliar) / 30 * diasCompraVacaciones
             totalPlanillaBruta = planillaBruta + totalVacaciones + totalCompraVacaciones + totalDescansoMedico + totalFeriados
-           
+
             totalOnp = 0
             totalComision = 0
             totalPrima = 0
