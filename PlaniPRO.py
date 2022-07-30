@@ -650,24 +650,23 @@ class App(Tk):
         Button(menu, text='INGRESO'             , command=lambda:self.GrabarDetalles('ING')).place(x= 20, y=237, width=265, height=22)
         Button(menu, text='DESCUENTO'           , command=lambda:self.GrabarDetalles('DES')).place(x=303, y=237, width=266, height=22)
         Button(menu, text='VACACIONES'          , command=lambda:self.GrabarDetalles('VAC')).place(x=586, y=237, width=220, height=22)
-        Button(menu, text='DESCANSO MEDICO'     , command=lambda:self.GrabarDetalles('DME')).place(x= 20, y=418, width=551, height=22)
+        Button(menu, text='DESCANSO MEDICO'     , command=lambda:self.GrabarDetalles('DME')).place(x= 20, y=418, width=548, height=22)
         Button(menu, text='COMPRA DE VACACIONES', command=lambda:self.GrabarDetalles('CVA')).place(x=586, y=418, width=220, height=22)
         
-        Label(menu, cursor='hand2').place(x=586, y=267, width= 86, height=17)
-        Label(menu, cursor='hand2').place(x=673, y=267, width= 83, height=17)
-        Label(menu, cursor='hand2').place(x= 20, y=447, width= 84, height=17)
-        Label(menu, cursor='hand2').place(x=110, y=447, width= 84, height=17)
-        Label(menu, cursor='hand2').place(x=586, y=447, width= 84, height=17)
-        Label(menu, cursor='hand2').place(x=681, y=447, width= 84, height=17)
+        self.vIni = Label(menu, cursor='hand2')
+        self.vFin = Label(menu, cursor='hand2')
+        self.dmIn = Label(menu, cursor='hand2')
+        self.dmfi = Label(menu, cursor='hand2')
+        self.cvIn = Label(menu, cursor='hand2')
+        self.cvFi = Label(menu, cursor='hand2')
 
-
-
-        #Button(menu, command=lambda:self.SeleccionarFecha('vaca1')).place(x=661, y=267, width=15, height=14)
-        #Button(menu, command=lambda:self.SeleccionarFecha('vaca2')).place(x=746, y=267, width=15, height=14)
-        #Button(menu, command=lambda:self.SeleccionarFecha('dmed1')).place(x= 20, y=448, width=15, height=14)
-        #Button(menu, command=lambda:self.SeleccionarFecha('dmed2')).place(x=175, y=448, width=15, height=14)
-        #Button(menu, command=lambda:self.SeleccionarFecha('cvac1')).place(x=661, y=448, width=15, height=14)
-        #Button(menu, command=lambda:self.SeleccionarFecha('cvac2')).place(x=746, y=448, width=15, height=14)
+        # Evento de click del label para seleccionar fecha
+        self.vIni.bind('<Button-1>', lambda e: self.SeleccionarFecha('vaca1'))
+        self.vFin.bind('<Button-1>', lambda e: self.SeleccionarFecha('vaca2')) 
+        self.dmIn.bind('<Button-1>', lambda e: self.SeleccionarFecha('dmed1'))        
+        self.dmfi.bind('<Button-1>', lambda e: self.SeleccionarFecha('dmed2'))        
+        self.cvIn.bind('<Button-1>', lambda e: self.SeleccionarFecha('cvac1'))
+        self.cvFi.bind('<Button-1>', lambda e: self.SeleccionarFecha('cvac2'))
 
         self.apoyo = Treeview(menu, columns=('#1'))
         self.apoyo.column('#0', width=0)
@@ -684,7 +683,7 @@ class App(Tk):
         self.adelanto = Treeview(menu, columns=('#1', '#2'))
         self.adelanto.column('#0', width=0)
         self.adelanto.column('#1', width=82, anchor='center')         
-        self.adelanto.column('#2', width=72, anchor='e')
+        self.adelanto.column('#2', width=71, anchor='e')
         self.adelanto.heading('#1', text='FECHA')
         self.adelanto.heading('#2', text='IMPORTE')        
         self.ingreso = Treeview(menu, columns=('#1', '#2'))
@@ -703,7 +702,7 @@ class App(Tk):
         self.vacaciones.column('#0', width=0)
         self.vacaciones.column('#1', width=84, minwidth=84) 
         self.vacaciones.column('#2', width=84, minwidth=84) 
-        self.vacaciones.column('#3', width=47, minwidth=47, anchor='e') 
+        self.vacaciones.column('#3', width=46, minwidth=46, anchor='e') 
         self.vacaciones.heading('#1', text='F. INICIAL')
         self.vacaciones.heading('#2', text='F. FINAL')
         self.vacaciones.heading('#3', text='DIAS')        
@@ -711,17 +710,17 @@ class App(Tk):
         self.dmedico.column('#0', width=0)
         self.dmedico.column('#1', width= 84, minwidth= 84) 
         self.dmedico.column('#2', width= 84, minwidth= 84) 
-        self.dmedico.column('#3', width=320, minwidth=320) 
-        self.dmedico.column('#4', width= 61, minwidth= 61, anchor='e') 
+        self.dmedico.column('#3', width=314, minwidth=314) 
+        self.dmedico.column('#4', width= 60, minwidth= 60, anchor='e') 
         self.dmedico.heading('#1', text='F. INICIAL')
         self.dmedico.heading('#2', text='F. FINAL')
         self.dmedico.heading('#3', text='DETALLE')
         self.dmedico.heading('#3', text='DIAS')
         self.cvacaciones = Treeview(menu, columns=('#1', '#2', '#3'))
         self.cvacaciones.column('#0', width=0)
-        self.cvacaciones.column('#1', width=84) 
-        self.cvacaciones.column('#2', width=84) 
-        self.cvacaciones.column('#3', width=50, anchor='e')
+        self.cvacaciones.column('#1', width=84, minwidth=84) 
+        self.cvacaciones.column('#2', width=84, minwidth=84) 
+        self.cvacaciones.column('#3', width=46, minwidth=46, anchor='e') 
         self.cvacaciones.heading('#1', text='F. INICIAL')
         self.cvacaciones.heading('#2', text='F. FINAL')
         self.cvacaciones.heading('#3', text='DIAS')
@@ -730,16 +729,10 @@ class App(Tk):
         self.ingresoDetalle     = Entry(menu)
         self.ingresoImporte     = Entry(menu, justify='right')
         self.descuentoDetalle   = Entry(menu)
-        self.descuentoImporte   = Entry(menu, justify='right')
-        #self.vacacionesInicial  = Entry(menu, justify='right', state='readonly', takefocus=False)
-        #self.vacacionesFinal    = Entry(menu, justify='right', state='readonly', takefocus=False)
+        self.descuentoImporte   = Entry(menu, justify='right')        
         self.vacacionesTotal    = Entry(menu, justify='right')
-        #self.dmedicoInicial     = Entry(menu, justify='right', state='readonly', takefocus=False)
-        #self.dmedicoFinal       = Entry(menu, justify='right', state='readonly', takefocus=False)
         self.dmedicoDetalle     = Entry(menu)
         self.dmedicoTotal       = Entry(menu, justify='right')
-        #self.cvacacionesInicial = Entry(menu, justify='right', state='readonly', takefocus=False)
-        #self.cvacacionesFinal   = Entry(menu, justify='right', state='readonly', takefocus=False)
         self.cvacacionesTotal   = Entry(menu, justify='right')
 
         # Evento de click del treeview para quitar seleccion
@@ -766,21 +759,22 @@ class App(Tk):
         self.dmedico.place      (x= 20, y=470, height= 90)
         self.cvacaciones.place  (x=586, y=470, height= 90)
 
-        self.adelantoImporte.place      (x=742, y= 50, width= 60, height=17)   
+        self.vIni.place(x=586, y=267, width= 86, height=17)
+        self.vFin.place(x=673, y=267, width= 83, height=17)
+        self.dmIn.place(x= 20, y=447, width= 86, height=17)
+        self.dmfi.place(x=107, y=447, width= 83, height=17)
+        self.cvIn.place(x=586, y=447, width= 86, height=17)
+        self.cvFi.place(x=673, y=447, width= 83, height=17)
+
+        self.adelantoImporte.place      (x=732, y= 50, width= 73, height=17)   
         self.ingresoDetalle.place       (x= 20, y=267, width=201, height=17)        
         self.ingresoImporte.place       (x=222, y=267, width= 63, height=17)
         self.descuentoDetalle.place     (x=303, y=267, width=201, height=17)        
-        self.descuentoImporte.place     (x=505, y=267, width= 63, height=17)
-        #elf.vacacionesInicial.place    (x=586, y=267, width= 90, height=17)        
-        #self.vacacionesFinal.place      (x=681, y=267, width= 80, height=17)        
+        self.descuentoImporte.place     (x=505, y=267, width= 63, height=17)        
         self.vacacionesTotal.place      (x=757, y=267, width= 49, height=17)
-        #self.dmedicoInicial.place       (x= 20, y=447, width= 90, height=17)
-        #self.dmedicoFinal.place         (x=110, y=447, width= 80, height=17)
-        self.dmedicoDetalle.place       (x=195, y=447, width=326, height=17)
-        self.dmedicoTotal.place         (x=526, y=447, width= 38, height=17)
-        #self.cvacacionesInicial.place   (x=586, y=447, width= 90, height=17)
-        #self.cvacacionesFinal.place     (x=681, y=447, width= 80, height=17)
-        self.cvacacionesTotal.place     (x=766, y=447, width= 38, height=17)        
+        self.dmedicoDetalle.place       (x=191, y=447, width=313, height=17)
+        self.dmedicoTotal.place         (x=505, y=447, width= 63, height=17)
+        self.cvacacionesTotal.place     (x=757, y=447, width= 49, height=17)        
                     
         # Creamos los botones principales
         Button(menu, text='ELIMINAR', command=self.EliminarDetalles).place(x=875, y=15, width=90, height=30)     
@@ -913,35 +907,22 @@ class App(Tk):
         self.dmedico.delete(*self.dmedico.get_children())
         self.cvacaciones.delete(*self.cvacaciones.get_children())
 
-        #self.vacacionesInicial.configure(state='normal')
-        #self.vacacionesFinal.configure(state='normal')
-        #self.dmedicoInicial.configure(state='normal')
-        #self.dmedicoFinal.configure(state='normal')
-        #self.cvacacionesInicial.configure(state='normal')
-        #self.cvacacionesFinal.configure(state='normal')  
+        self.vIni['text'] = ''
+        self.vFin['text'] = ''
+        self.dmIn['text'] = ''
+        self.dmfi['text'] = ''
+        self.cvIn['text'] = ''
+        self.cvFi['text'] = ''
 
         self.adelantoImporte.delete(0, END)
         self.ingresoDetalle.delete(0, END)
         self.ingresoImporte.delete(0, END)
         self.descuentoDetalle.delete(0, END)
-        self.descuentoImporte.delete(0, END)
-        #self.vacacionesInicial.delete(0, END)
-        #self.vacacionesFinal.delete(0, END)
-        self.vacacionesTotal.delete(0, END)
-        #self.dmedicoInicial.delete(0, END)
-        #self.dmedicoFinal.delete(0, END)
+        self.descuentoImporte.delete(0, END)        
+        self.vacacionesTotal.delete(0, END)       
         self.dmedicoDetalle.delete(0, END)
         self.dmedicoTotal.delete(0, END)
-        #self.cvacacionesInicial.delete(0, END)
-        #self.cvacacionesFinal.delete(0, END)
         self.cvacacionesTotal.delete(0, END)
-
-        #self.vacacionesInicial.configure(state='readonly')
-        #self.vacacionesFinal.configure(state='readonly')
-        #self.dmedicoInicial.configure(state='readonly')
-        #self.dmedicoFinal.configure(state='readonly')
-        #self.cvacacionesInicial.configure(state='readonly')
-        #self.cvacacionesFinal.configure(state='readonly')
         
         # Ocultamos la ventana detalles
         self.men2_detalles.place_forget() 
@@ -965,41 +946,17 @@ class App(Tk):
         fecha = self.cale.get_date()
 
         if boton == 'vaca1':
-            # Agregar fecha inicial al cuadro de vacaciones
-            self.vacacionesInicial.configure(state='normal')
-            self.vacacionesInicial.delete(0, END)
-            self.vacacionesInicial.insert(0, fecha)
-            self.vacacionesInicial.configure(state='readonly')
+            self.vIni['text'] = fecha            
         elif boton == 'vaca2':
-            # Agregar fecha final al cuadro de vacaciones
-            self.vacacionesFinal.configure(state='normal')
-            self.vacacionesFinal.delete(0, END)
-            self.vacacionesFinal.insert(0, fecha)
-            self.vacacionesFinal.configure(state='readonly')
+            self.vFin['text'] = fecha
         elif boton == 'dmed1':  
-            # Agregar fecha inicial al cuadro de descanso medico
-            self.dmedicoInicial.configure(state='normal')
-            self.dmedicoInicial.delete(0, END)
-            self.dmedicoInicial.insert(0, fecha)
-            self.dmedicoInicial.configure(state='readonly')
+            self.dmIn['text'] = fecha
         elif boton == 'dmed2':  
-            # Agregar fecha final al cuadro de descanso medico
-            self.dmedicoFinal.configure(state='normal')
-            self.dmedicoFinal.delete(0, END)
-            self.dmedicoFinal.insert(0, fecha)
-            self.dmedicoFinal.configure(state='readonly')
+            self.dmfi['text'] = fecha
         elif boton == 'cvac1':  
-            # Agregar fecha inicial al cuadro de compra de vacaciones
-            self.cvacacionesInicial.configure(state='normal')
-            self.cvacacionesInicial.delete(0, END)
-            self.cvacacionesInicial.insert(0, fecha)
-            self.cvacacionesInicial.configure(state='readonly')
+            self.cvIn['text'] = fecha
         elif boton == 'cvac2':  
-            # Agregar fecha final al cuadro de compra de vacaciones
-            self.cvacacionesFinal.configure(state='normal')
-            self.cvacacionesFinal.delete(0, END)
-            self.cvacacionesFinal.insert(0, fecha)
-            self.cvacacionesFinal.configure(state='readonly')
+            self.cvFi['text'] = fecha
 
     def GrabarDetalles(self, widget: str):
 
@@ -1075,10 +1032,10 @@ class App(Tk):
                 self.ingresoImporte.focus_set()
                 messagebox.showinfo('INGRESO', 'Registra el importe del ingreso !')
             else:
-                
+                detalle = self.ingresoDetalle.get()
                 monto = float(self.ingresoImporte.get())
                 valores[5] = f'{float(valores[5]) + monto:.2f}'
-                insert(f'INSERT INTO INGRESO (IDAC, DETA, MONT) VALUES ({id}, "{self.ingresoDetalle.get()}", {monto})')
+                insert(f'INSERT INTO INGRESO (IDAC, DETA, MONT) VALUES ({id}, "{detalle}", {monto})')
                 idRegistro = select(f'SELECT ID FROM INGRESO ORDER BY ID DESC', False)
                 self.ingreso.insert('', END, text=idRegistro[0], values=(self.ingresoDetalle.get(), f'{monto:.2f}'))
                 self.ingresoDetalle.delete(0, END)
@@ -1100,10 +1057,10 @@ class App(Tk):
                 self.descuentoImporte.focus_set()
                 messagebox.showinfo('DESCUENTO', 'Registra el importe del descuento !')
             else:
-                
+                detalle = self.descuentoDetalle.get()
                 monto = float(self.descuentoImporte.get())
                 valores[6] = f'{float(valores[6]) + monto:.2f}'
-                insert(f'INSERT INTO DESCUENTO (IDAC, DETA, MONT) VALUES ({id}, "{self.descuentoDetalle.get()}", {monto})')
+                insert(f'INSERT INTO DESCUENTO (IDAC, DETA, MONT) VALUES ({id}, "{detalle}", {monto})')
                 idRegistro = select(f'SELECT ID FROM DESCUENTO ORDER BY ID DESC', False)
                 self.descuento.insert('', END, text=idRegistro[0], values=(self.descuentoDetalle.get(), f'{monto:.2f}'))
                 self.descuentoDetalle.delete(0, END)
@@ -1111,11 +1068,11 @@ class App(Tk):
 
         elif widget == 'VAC':
 
-            # Validamos los cuadros de vacaciones si estan vacios enviar el foco
-            if self.vacacionesInicial.get() == '':
+            # Validamos los cuadros de vacaciones si estan vacios enviar el foco           
+            if self.vIni['text'] == '':
                 self.vacacionesTotal.focus_set() 
                 messagebox.showinfo('VACACIONES', 'Selecciona la fecha inicial de las vacaciones !')
-            elif self.vacacionesFinal.get() == '':
+            elif self.vFin['text'] == '':
                 self.vacacionesTotal.focus_set() 
                 messagebox.showinfo('VACACIONES', 'Selecciona la fecha final de las vacaciones !')
             elif self.vacacionesTotal.get() == '':
@@ -1125,27 +1082,24 @@ class App(Tk):
                 self.vacacionesTotal.focus_set()   
                 messagebox.showinfo('VACACIONES', 'Registra correctamente el total de dias de las vacaciones !')
             else:
-        
+                fechaI = self.vIni['text']
+                fechaF = self.vFin['text']
                 total =int(self.vacacionesTotal.get())
                 valores[8] = int(valores[8]) + total
-                insert(F'INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{self.vacacionesInicial.get()}", "{self.vacacionesFinal.get()}", {total})')
+                insert(F'INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{fechaI}", "{fechaF}", {total})')
                 idRegistro = select(F'SELECT ID FROM VACACIONES ORDER BY ID DESC', False)
-                self.vacaciones.insert('', END, text=idRegistro[0], values=(self.vacacionesInicial.get(), self.vacacionesFinal.get(), total))
-                self.vacacionesInicial.configure(state='normal')
-                self.vacacionesFinal.configure(state='normal')
-                self.vacacionesInicial.delete(0, END)
-                self.vacacionesFinal.delete(0, END)
+                self.vacaciones.insert('', END, text=idRegistro[0], values=(fechaI, fechaF, total))
+                self.vIni['text'] = ''
+                self.vFin['text'] = ''
                 self.vacacionesTotal.delete(0, END)
-                self.vacacionesInicial.configure(state='readonly')
-                self.vacacionesFinal.configure(state='readonly')
 
         elif widget == 'DME':
             
             # Validamos los cuadros de descanso medico si estan vacios enviar el foco
-            if self.dmedicoInicial.get() == '':
+            if self.dmIn['text'] == '':
                 self.dmedicoDetalle.focus_set() 
                 messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha inicial del descanso medico !')
-            elif self.dmedicoFinal.get() == '':
+            elif self.dmfi['text'] == '':
                 self.dmedicoDetalle.focus_set() 
                 messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha final del descanso medico !')
             elif self.dmedicoDetalle.get() == '':
@@ -1158,28 +1112,27 @@ class App(Tk):
                 self.dmedicoTotal.focus_set()   
                 messagebox.showinfo('DESCANSO MEDICO', 'Registra el total de dias del descanso medico !')
             else:
-
+                dmedI = self.dmIn['text']
+                dmedF = self.dmfi['text']
+                detalle = self.dmedicoDetalle.get()
                 total =int(self.dmedicoTotal.get())
                 valores[7] = int(valores[7]) + total
-                insert(f'INSERT INTO DMEDICO (IDAC, FINI, FFIN, DETA, DTOT) VALUES ({id}, "{self.dmedicoInicial.get()}", "{self.dmedicoFinal.get()}", "{self.dmedicoDetalle.get()}", {total})')
+                insert(f'INSERT INTO DMEDICO (IDAC, FINI, FFIN, DETA, DTOT) VALUES ({id}, "{dmedI}", "{dmedF}", "{detalle}", {total})')
                 idRegistro = select(f'SELECT ID FROM DMEDICO ORDER BY ID DESC', False)
-                self.dmedico.insert('', END, text=idRegistro[0], values=(self.dmedicoInicial.get(), self.dmedicoFinal.get(), self.dmedicoDetalle.get(), total))
-                self.dmedicoInicial.configure(state='normal')
-                self.dmedicoFinal.configure(state='normal')
-                self.dmedicoInicial.delete(0, END)
-                self.dmedicoFinal.delete(0, END)
+                self.dmedico.insert('', END, text=idRegistro[0], values=(dmedI, dmedF, detalle, total))
+                self.dmIn['text'] = ''
+                self.dmfi['text'] = ''
                 self.dmedicoDetalle.delete(0, END)
                 self.dmedicoTotal.delete(0, END)
-                self.dmedicoInicial.configure(state='readonly')
-                self.dmedicoFinal.configure(state='readonly')
+               
 
         elif widget == 'CVA':
 
              # Validamos los cuadros de compra de vacaciones si estan vacios enviar el foco
-            if self.cvacacionesInicial.get() == '':
+            if self.cvIn['text'] == '':
                 self.cvacacionesTotal.focus_set() 
                 messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha inicial de la compra de vacaciones !')
-            elif self.cvacacionesFinal.get() == '':
+            elif self.cvFi['text'] == '':
                 self.cvacacionesTotal.focus_set() 
                 messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha final de la compra de vacaciones !')
             elif self.cvacacionesTotal.get() == '':
@@ -1189,19 +1142,16 @@ class App(Tk):
                 self.cvacacionesTotal.focus_set()   
                 messagebox.showinfo('COMPRA DE VACACIONES', 'Registra el total de dias de la compra de vacaciones !')
             else:
-
+                cvacI = self.cvIn['text']
+                cvacF = self.cvFi['text']
                 total =int(self.cvacacionesTotal.get())
                 valores[9] = int(valores[9]) + total
-                insert(f'INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{self.cvacacionesInicial.get()}", "{self.cvacacionesFinal.get()}", {total})')
+                insert(f'INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{cvacI}", "{cvacF}", {total})')
                 idRegistro = select(f'SELECT ID FROM CVACACIONES ORDER BY ID DESC', False)
-                self.cvacaciones.insert('', END, text=idRegistro[0], values=(self.cvacacionesInicial.get(), self.cvacacionesFinal.get(), total))
-                self.cvacacionesInicial.configure(state='normal')
-                self.cvacacionesFinal.configure(state='normal')
-                self.cvacacionesInicial.delete(0, END)
-                self.cvacacionesFinal.delete(0, END)
-                self.cvacacionesTotal.delete(0, END)
-                self.cvacacionesInicial.configure(state='readonly')
-                self.cvacacionesFinal.configure(state='readonly')
+                self.cvacaciones.insert('', END, text=idRegistro[0], values=(cvacI, cvacF, total))
+                self.cvIn['text'] = ''
+                self.cvFi['text'] = ''
+                self.cvacacionesTotal.delete(0, END)               
 
         self.tre2.item(self.tre2.focus(), values=valores)
 
@@ -1273,11 +1223,9 @@ class App(Tk):
 
 
     def Menu3(self):
-
-              
         
         # Creamos los elementos del menu 1      
-        menu = Frame(self, background='#FFFFFF')                     
+        menu = Frame(self)                     
       
         self.tre3 = Treeview(menu, show='headings', columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', 
                                                             '#11', '#12', '#13', '#14', '#15', '#16', '#17', '#18', '#19', '#20',
@@ -1343,8 +1291,7 @@ class App(Tk):
         self.tre3.heading('#27', text='PlanillaT')
         self.tre3.heading('#28', text='MovilidadT')
         self.tre3.heading('#29', text='PorFuera')
-        self.tre3.heading('#30', text='Essalud')
-        
+        self.tre3.heading('#30', text='Essalud')        
 
         scroll = Scrollbar(menu, orient='vertical', command=self.tre3.yview)
         scrol2 = Scrollbar(menu, orient='horizontal', command=self.tre3.xview)
@@ -1354,19 +1301,15 @@ class App(Tk):
         #self.tre3.bind('<Double-1>', self.AbrirDetalles)
 
         # Posicionamiento de los elementos 
-        self.tre3.place(x=15, y=15, height=520, width=900)
-        scroll.place(x=950, y=15, height=550)
-        scrol2.place(x=15, y=550, width=900)
+        self.tre3.place(x=20, y=20, height=540, width=940)
+        scroll.place(x=960, y=20, height=562)
+        scrol2.place(x=20, y=560, width=900)
 
         # Cargamos datos al treeview
-        #self.CargarPlanilla()
+        self.CargarPlanilla()
 
         # Posicionamos la ventana principal
-        menu.place(x=110, y=10, width=980, height=580)
-
-        # Asignamos ventana a variable y modificamos menu activo
-        self.men3 = menu
-        self.menu = 3
+        menu.place(width=1000, height=600)
         
     def CargarPlanilla(self):
 
@@ -1485,40 +1428,40 @@ class App(Tk):
             totalAporte = 0
 
             if entidadAportacion == 'ONP':
-                totalOnp = totalPlanillaBruta * self.onp
+                totalOnp = totalPlanillaBruta * 0.13
             elif entidadAportacion == 'HABITAT':
                 if comisionAportacion == 'FLUJO':
-                    totalComision = totalPlanillaBruta * self.habitat[0]
+                    totalComision = totalPlanillaBruta * 0.027
                 elif comisionAportacion == 'MIXTA':
-                    totalComision = totalPlanillaBruta * self.habitat[1]              
-                totalPrima = totalPlanillaBruta * self.habitat[2]
-                totalAporte = totalPlanillaBruta * self.habitat[3]
+                    totalComision = totalPlanillaBruta * 0.027             
+                totalPrima = totalPlanillaBruta * 0.027
+                totalAporte = totalPlanillaBruta * 0.027
             elif entidadAportacion == 'INTEGRA':
                 if comisionAportacion == 'FLUJO':
-                    totalComision = totalPlanillaBruta * self.integra[0]
+                    totalComision = totalPlanillaBruta * 0.027
                 elif comisionAportacion == 'MIXTA':
-                    totalComision = totalPlanillaBruta * self.integra[1]                   
-                totalPrima = totalPlanillaBruta * self.integra[2]   
-                totalAporte = totalPlanillaBruta * self.integra[3]   
+                    totalComision = totalPlanillaBruta * 0.027                 
+                totalPrima = totalPlanillaBruta * 0.027
+                totalAporte = totalPlanillaBruta * 0.027
             elif entidadAportacion == 'PRIMA':
                 if comisionAportacion == 'FLUJO':
-                    totalComision = totalPlanillaBruta * self.prima[0]
+                    totalComision = totalPlanillaBruta * 0.027
                 elif comisionAportacion == 'MIXTA':
-                    totalComision = totalPlanillaBruta * self.prima[1]                   
-                totalPrima = totalPlanillaBruta * self.prima[2]   
-                totalAporte = totalPlanillaBruta * self.prima[3]   
+                    totalComision = totalPlanillaBruta * 0.027             
+                totalPrima = totalPlanillaBruta * 0.027
+                totalAporte = totalPlanillaBruta * 0.027
             elif entidadAportacion == 'PROFUTURO':
                 if comisionAportacion == 'FLUJO':
-                    totalComision = totalPlanillaBruta * self.profuturo[0]
+                    totalComision = totalPlanillaBruta * 0.027
                 elif comisionAportacion == 'MIXTA':
-                    totalComision = totalPlanillaBruta * self.profuturo[1]                   
-                totalPrima = totalPlanillaBruta * self.profuturo[2]   
-                totalAporte = totalPlanillaBruta * self.profuturo[3]   
+                    totalComision = totalPlanillaBruta * 0.027             
+                totalPrima = totalPlanillaBruta * 0.027
+                totalAporte = totalPlanillaBruta * 0.027
 
-            if totalPlanillaBruta > self.rmv:
+            if totalPlanillaBruta > 1025:
                 totalEssalud = totalPlanillaBruta * 0.09
             else:
-                totalEssalud = self.rmv * 0.09
+                totalEssalud = 1025 * 0.09
 
 
             self.tre3.insert('', END, text=id, values=(index, nombreCompleto, sueldoPlanilla, asignacionFamiliar, sueldoMovilidad,
