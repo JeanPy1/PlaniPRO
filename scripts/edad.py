@@ -71,18 +71,16 @@ def FechaValida(fecha: str, posterior: bool) -> bool:
         return False
 
 def PlanillaMes(fecha: str) -> int:
-    
-    fechaMes = f'01/{fecha}'
 
-    if FechaValida(fechaMes, True):
+    if FechaValida(fecha, True):
        
-        fechaPlanilla = datetime.strptime(fechaMes, '%d/%m/%Y')   
+        fechaPlanilla = datetime.strptime(fecha, '%d/%m/%Y')   
         dias = __obtener_dias_del_mes(fechaPlanilla.month, fechaPlanilla.year)
 
         return dias
     
     else:
-
+        
         return 0
 
 def CompararFechas(fechaInicial: str, fechaFinal: str) -> bool:
