@@ -1,3 +1,8 @@
-fecha = '01/02/2015'
+aa = 'gfdg'
 
-print(fecha[:2])
+if type(aa) == 'str':
+    print('hola')
+
+print(type(aa).__str__())
+
+print(type(aa))

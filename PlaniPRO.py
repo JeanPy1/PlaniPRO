@@ -209,29 +209,29 @@ class App(Tk):
         self.retiro = Entry(menu)                       
 
         # Posicionamiento de los elementos      
-        self.buscar.place       (x=136, y= 23, width= 54, height=24)    
-        self.buscarDni.place    (x= 10, y= 23, width=120, height=24)    
-        self.numeroDni.place    (x= 10, y= 78, width=180, height=24)
-        self.apPaterno.place    (x= 10, y=133, width=180, height=24)
-        self.apMaterno.place    (x= 10, y=188, width=180, height=24)
-        self.nombre.place       (x= 10, y=243, width=180, height=24)        
-        self.fechaNaci.place    (x= 10, y=298, width=180, height=24)        
-        self.fechaIngr.place    (x= 10, y=353, width=180, height=24)
-        self.planilla.place     (x= 10, y=408, width= 56, height=24)  
-        self.asignacion.place   (x= 72, y=408, width= 56, height=24)      
-        self.movilidad.place    (x=134, y=408, width= 56, height=24) 
-        self.cargo.place        (x= 10, y=463, width=180, height=24)        
-        self.cuenta.place       (x= 10, y=518, width=180, height=24)
-        self.aportacion.place   (x=211, y= 23, width=105, height=24) 
-        self.comision.place     (x=322, y= 23, width= 69, height=24) 
-        self.cuspp.place        (x=211, y= 78, width=180, height=24)
-        self.categoria.place    (x=211, y=133, width= 58, height=24)
-        self.revalidacion.place (x=275, y=133, width= 80, height=24)
-        self.codigo.place       (x=361, y=133, width= 30, height=24)
-        self.area.place         (x=211, y=188, width= 90, height=24)
-        self.celular.place      (x=307, y=188, width= 84, height=24)
-        self.distrito.place     (x=211, y=243, width=180, height=24)
-        self.retiro.place       (x=211, y=298, width=180, height=24)         
+        self.buscar.place      (x=136, y= 23, width= 54, height=24)    
+        self.buscarDni.place   (x= 10, y= 23, width=120, height=24)    
+        self.numeroDni.place   (x= 10, y= 78, width=180, height=24)
+        self.apPaterno.place   (x= 10, y=133, width=180, height=24)
+        self.apMaterno.place   (x= 10, y=188, width=180, height=24)
+        self.nombre.place      (x= 10, y=243, width=180, height=24)        
+        self.fechaNaci.place   (x= 10, y=298, width=180, height=24)        
+        self.fechaIngr.place   (x= 10, y=353, width=180, height=24)
+        self.planilla.place    (x= 10, y=408, width= 56, height=24)  
+        self.asignacion.place  (x= 72, y=408, width= 56, height=24)      
+        self.movilidad.place   (x=134, y=408, width= 56, height=24) 
+        self.cargo.place       (x= 10, y=463, width=180, height=24)        
+        self.cuenta.place      (x= 10, y=518, width=180, height=24)
+        self.aportacion.place  (x=211, y= 23, width=105, height=24) 
+        self.comision.place    (x=322, y= 23, width= 69, height=24) 
+        self.cuspp.place       (x=211, y= 78, width=180, height=24)
+        self.categoria.place   (x=211, y=133, width= 58, height=24)
+        self.revalidacion.place(x=275, y=133, width= 80, height=24)
+        self.codigo.place      (x=361, y=133, width= 30, height=24)
+        self.area.place        (x=211, y=188, width= 90, height=24)
+        self.celular.place     (x=307, y=188, width= 84, height=24)
+        self.distrito.place    (x=211, y=243, width=180, height=24)
+        self.retiro.place      (x=211, y=298, width=180, height=24)         
             
         # Creamos los botones principales
         Button(menu, text='GRABAR', command=self.SaveEmployee).place(x=453, width=90, height=30)     
@@ -293,7 +293,6 @@ class App(Tk):
             respuesta = messagebox.askyesno('ELIMINAR','Deseas eliminar al Trabajador?', default='no')
 
             if respuesta:
-
                 # Id del trabajador
                 id = int(self.employee.item(self.employee.focus()).get('text'))
 
@@ -350,14 +349,11 @@ class App(Tk):
         # Validamos el numero de dni ingresado
         dni = self.buscarDni.get()
         if dni == '':
-            messagebox.showinfo('BUSCAR', 'Registra el numero de Dni')    
+            messagebox.showinfo('BUSCAR', 'Registra el numero DNI')    
             self.buscarDni.focus()       
-        elif len(dni) != 8: 
-            messagebox.showinfo('BUSCAR', 'Registra correctamente el numero de Dni') 
-            self.buscarDni.focus()
-        elif not dni.isdigit(): 
-            messagebox.showinfo('BUSCAR', 'Registra correctamente el numero de Dni') 
-            self.buscarDni.focus()
+        elif len(dni) != 8 or not dni.isdigit():  
+            messagebox.showinfo('BUSCAR', 'Registra correctamente el numero DNI') 
+            self.buscarDni.focus()      
         else:
 
             # Buscar datos del numero de dni
@@ -371,7 +367,7 @@ class App(Tk):
                 self.buscarDni.delete(0, END)
                 self.fechaNaci.focus_set()
             else:                
-                messagebox.showinfo('BUSCAR', 'No se encontro el numero de Dni')           
+                messagebox.showinfo('BUSCAR', 'No se encontro el numero DNI')           
                 self.buscarDni.focus()   
 
     def ShowDetails(self, e):
@@ -413,80 +409,83 @@ class App(Tk):
 
         # Validacion de dni
         if self.numeroDni['text'] == '':
-            messagebox.showinfo('GRABAR', 'Busca los datos del trabajador !')
+            messagebox.showinfo('GRABAR', 'Registra el DNI !')
             self.numeroDni.focus()
 
         # Validacion de fecha de nacimiento
         elif self.fechaNaci.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la fecha de nacimiento !')
+            messagebox.showinfo('GRABAR', 'Registra el NACIMIENTO !')
             self.fechaNaci.focus()
         elif len(self.fechaNaci.get()) != 10 or not FechaValida(self.fechaNaci.get(), False):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de nacimiento !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente el NACIMIENTO !')
             self.fechaNaci.focus()
 
         # Validacion de fecha de ingreso
         elif self.fechaIngr.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la fecha de ingreso !')
+            messagebox.showinfo('GRABAR', 'Registra el INGRESO !')
             self.fechaIngr.focus()
         elif len(self.fechaIngr.get()) != 10 or not FechaValida(self.fechaIngr.get(), False):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de ingreso !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente el INGRESO !')
             self.fechaIngr.focus()
 
         # Validacion de sueldo planilla
         elif self.planilla.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la remuneracion de la planilla !')
+            messagebox.showinfo('GRABAR', 'Registra la PLANILLA !')
             self.planilla.focus()
-        elif not self.planilla.get().isdigit():
-            messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la planilla !')
+        elif not self.planilla.get().replace('.','').isdigit() or self.planilla.get().count('.') > 1:
+            messagebox.showinfo('GRABAR', 'Registra correctamente la PLANILLA !')
             self.planilla.focus()
 
         # Validacion de asignacion familiar
         elif self.asignacion.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la asignacion familiar !')
+            messagebox.showinfo('GRABAR', 'Registra la ASIGNACION !')
             self.asignacion.focus()
 
         # Validacion de movilidad
-        elif self.movilidad.get() != '' and not self.movilidad.get().isdigit():
-            messagebox.showinfo('GRABAR', 'Registra correctamente la remuneracion de la movilidad !')
+        elif self.movilidad.get() == '':
+            messagebox.showinfo('GRABAR', 'Registra la MOVILIDAD !')
             self.movilidad.focus()
+        elif not self.movilidad.get().replace('.','').isdigit() or self.movilidad.get().count('.') > 1:
+            messagebox.showinfo('GRABAR', 'Registra correctamente la MOVILIDAD !')
+            self.movilidad.focus()        
 
         # Validacion de cuenta bancaria
         elif self.cuenta.get() != '' and not self.cuenta.get().isdigit():
-            messagebox.showinfo('GRABAR', 'Registra correctamente la cuenta bancaria !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente la CUENTA !')
             self.cuenta.focus()
 
         # Validacion del cusp de la entidad de aportacion
         elif self.cuspp.get() != '' and not self.cuspp.get().isalnum():
-            messagebox.showinfo('GRABAR', 'Registra correctamente el cusp de la entidad pensionaria !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente el CUSPP !')
             self.cuspp.focus()
 
         # Validacion de vencimiento de la licencia de conducir
         elif self.revalidacion.get() != '' and len(self.revalidacion.get()) != 10:
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente la REVALIDACION !')
             self.revalidacion.focus()
         elif self.revalidacion.get() != '' and not FechaValida(self.revalidacion.get(), True):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de revalidacion de la licencia !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente la REVALIDACION !')
             self.revalidacion.focus()
 
         # Validacion del codigo de la licencia de conducir
         elif self.codigo.get() != '' and len(self.codigo.get()) != 1:
-            messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente el CODIGO !')
             self.codigo.focus()
         elif self.codigo.get() != '' and not self.codigo.get().isalpha():
-            messagebox.showinfo('GRABAR', 'Registra correctamente el codigo de la licencia !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente el CODIGO !')
             self.codigo.focus()
 
         # Validacion del numero celular
         elif self.celular.get() != '' and not self.celular.get().isdigit():
-            messagebox.showinfo('GRABAR', 'Registra correctamente el numero de celular !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente el CELULAR !')
             self.celular.focus()
 
         # Validacion de fecha del cese
         elif self.retiro.get() != '' and len(self.retiro.get()) != 10:
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente el RETIRO !')
             self.retiro.focus()
         elif self.retiro.get() != '' and not FechaValida(self.retiro.get(), True):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la fecha de cese del trabajador !')
+            messagebox.showinfo('GRABAR', 'Registra correctamente el RETIRO !')
             self.retiro.focus()
         else:
 
@@ -494,7 +493,7 @@ class App(Tk):
             if self.buscar['state'] == 'normal':
                 for index in self.employee.get_children():
                     if f"{self.employee.item(index).get('values')[2]:0>8}" == self.numeroDni['text']:
-                        messagebox.showinfo('GRABAR', 'El trabajador ya esta registrado !')
+                        messagebox.showinfo('GRABAR', 'Ya esta REGISTRADO !')
                         return
 
             # Guardar datos registrados en variables
@@ -504,7 +503,7 @@ class App(Tk):
             nomb = self.nombre.cget('text')
             naci = self.fechaNaci.get()
             ingr = self.fechaIngr.get()
-            plan = int(self.planilla.get())
+            plan = float(self.planilla.get())
             asig = 0
             movi = 0
             carg = self.cargo.get()
@@ -527,7 +526,7 @@ class App(Tk):
                 asig = 102.50           
 
             if self.movilidad.get():
-                movi = int(self.movilidad.get())         
+                movi = float(self.movilidad.get())         
 
             # Id del trabajador seleccionado
             seleccion = self.employee.focus()
@@ -614,8 +613,8 @@ class App(Tk):
         Button(window, text='SALIR'    , command=lambda:window.destroy(), bg='#DF2F2F').place(x=890, y=125, width=90, height=30)
        
         # Creamos ventana de detalles y lo ocultamos
-        #self.Detalles()
-        #self.OcultarDetalles()
+        self.Detalles()
+        self.OcultarDetalles()
 
         # Posicionamos la ventana principal
         window.place(width=1000, height=600)
@@ -709,15 +708,15 @@ class App(Tk):
         self.cvacaciones.heading('#2', text='F. FINAL')
         self.cvacaciones.heading('#3', text='DIAS')
 
-        self.adelantoImporte    = Entry(window, justify='right')
-        self.ingresoDetalle     = Entry(window)
-        self.ingresoImporte     = Entry(window, justify='right')
-        self.descuentoDetalle   = Entry(window)
-        self.descuentoImporte   = Entry(window, justify='right')        
-        self.vacacionesTotal    = Entry(window, justify='right')
-        self.dmedicoDetalle     = Entry(window)
-        self.dmedicoTotal       = Entry(window, justify='right')
-        self.cvacacionesTotal   = Entry(window, justify='right')
+        self.adelantoImporte  = Entry(window, justify='right')
+        self.ingresoDetalle   = Entry(window)
+        self.ingresoImporte   = Entry(window, justify='right')
+        self.descuentoDetalle = Entry(window)
+        self.descuentoImporte = Entry(window, justify='right')        
+        self.vacacionesTotal  = Entry(window, justify='right')
+        self.dmedicoDetalle   = Entry(window)
+        self.dmedicoTotal     = Entry(window, justify='right')
+        self.cvacacionesTotal = Entry(window, justify='right')
 
         # Evento de click del treeview para quitar seleccion
         self.apoyo.bind('<Button-1>', self.QuitarSeleccion)
@@ -793,49 +792,64 @@ class App(Tk):
             cvac = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)
             adel = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)
             xfue = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)
-    
+
+            if apoy[0] == 0:
+                apoy = ''
+            else:
+                apoy = apoy[0]
+
+            if falt[0] == 0:
+                falt = ''
+            else:
+                falt = falt[0]   
+
+            if feri[0] == 0:
+                feri = ''
+            else:
+                feri = feri[0]  
+
             if ingr[0]:
                 ingr = f'{ingr[0]:.2f}'
             else:
-                ingr = '0.00'
+                ingr = ''
 
             if desc[0]:
                 desc = f'{desc[0]:.2f}'
             else:
-                desc = '0.00'   
+                desc = ''   
 
             if dmed[0]:
                 dmed = dmed[0]
             else:
-                dmed = '0'                
+                dmed = ''                
 
             if vaca[0]:
                 vaca = vaca[0]
             else:
-                vaca = '0'
+                vaca = ''
                 
             if cvac[0]:
                 cvac = cvac[0]
             else:
-                cvac = '0'
+                cvac = ''
                 
             if adel[0]:
                 adel = f'{adel[0]:.2f}'
             else:
-                adel = '0.00'                
+                adel = ''                
 
             if xfue[0]:
                 xfue = f'{xfue[0]:.2f}'
             else:
-                xfue = '0.00'                
+                xfue = ''                
             
-            self.details.insert('', END, text=id, values=(index, nombre, apoy[0], falt[0], feri[0], ingr, desc, dmed, vaca, cvac, adel, xfue)) 
+            self.details.insert('', END, text=id, values=(index, nombre, apoy, falt, feri, ingr, desc, dmed, vaca, cvac, adel, xfue)) 
 
     def AbrirDetalles(self):
       
         # Mostramos la ventana detalles
-        if self.tre2.selection():            
-            id = int(self.tre2.item(self.tre2.focus()).get('text'))
+        if self.details.selection():            
+            id = int(self.details.item(self.details.focus()).get('text'))
 
             # Ejecutamos consultas de los detalles de cada trabajador en base de datos
             apoy = select(F'SELECT ID, FECH FROM APOYO WHERE IDAC = {id}', True)
@@ -944,16 +958,20 @@ class App(Tk):
 
     def GrabarDetalles(self, widget: str):
 
-        valores = self.tre2.item(self.tre2.focus())['values']
-        id = int(self.tre2.item(self.tre2.focus()).get('text'))
+        valores = self.details.item(self.details.focus())['values']
+        id = int(self.details.item(self.details.focus()).get('text'))
         fecha = self.cale.get_date()
 
         if widget == 'APO':
             for row in self.apoyo.get_children():
                 if self.apoyo.item(row)['values'][0] == fecha:
                     return
-        
-            valores[2] = int(valores[2]) + 1
+
+            if valores[2] == '':
+                valores[2] = 1
+            else:
+                valores[2] = int(valores[2]) + 1
+
             insert(f'INSERT INTO APOYO (IDAC, FECH) VALUES ({id}, "{fecha}")')
             idRegistro = select(f'SELECT ID FROM APOYO ORDER BY ID DESC', False)
             self.apoyo.insert('', END, text=idRegistro[0], values=fecha)
@@ -1137,11 +1155,11 @@ class App(Tk):
                 self.cvFi['text'] = ''
                 self.cvacacionesTotal.delete(0, END)               
 
-        self.tre2.item(self.tre2.focus(), values=valores)
+        self.details.item(self.details.focus(), values=valores)
 
     def EliminarDetalles(self):
 
-        valores = self.tre2.item(self.tre2.focus())['values']
+        valores = self.details.item(self.details.focus())['values']
                 
         if self.apoyo.selection():
             valores[2] = int(valores[2]) - 1
@@ -1203,7 +1221,7 @@ class App(Tk):
             delete(F'DELETE FROM CVACACIONES WHERE ID = {id}', False)
             self.cvacaciones.delete(self.cvacaciones.focus())
 
-        self.tre2.item(self.tre2.focus(), values=valores)        
+        self.details.item(self.details.focus(), values=valores)        
 
 
     def Menu3(self):
