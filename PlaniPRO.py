@@ -303,7 +303,7 @@ class App(Tk):
                 # Eliminamos sus datos
                 delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)
 
-                # Limpiamos y cargamos detalles
+                # Limpiamos y cargamos AllDetails
                 self.RemoveDetails()
                 self.ShowDetails()
 
@@ -322,7 +322,7 @@ class App(Tk):
 
     def RemoveDetails(self):
 
-            # Limpiamos los cuadros de detalles
+            # Limpiamos los cuadros de AllDetails
             self.detail01['text'] = ''
             self.detail02['text'] = ''
             self.detail03['text'] = ''
@@ -372,7 +372,7 @@ class App(Tk):
 
     def ShowDetails(self, e):
                 
-        # Mostramos detalles del trabajador selecionado
+        # Mostramos AllDetails del trabajador selecionado
         if self.employee.selection():     
 
             self.RemoveDetails()
@@ -383,7 +383,7 @@ class App(Tk):
             # Obtener sus datos
             datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
 
-            # Mostramos detalles del trabajador en los cuadros          
+            # Mostramos AllDetails del trabajador en los cuadros          
             self.detail01['text'] = datos[5]
             self.detail02['text'] = datos[6]
             self.detail03['text'] = f'{datos[7]:,.2f}'
@@ -608,48 +608,48 @@ class App(Tk):
         self.LoadDetails()
 
         Button(window, text='GENERAR'                              ).place(x=890, y=20, width=90, height=30)
-        Button(window, text='MODIFICAR', command=self.AbrirDetalles).place(x=890, y=55, width=90, height=30)
+        Button(window, text='MODIFICAR', command=self.OpenDetails).place(x=890, y=55, width=90, height=30)
         Button(window, text='REPORTE'                              ).place(x=890, y=90, width=90, height=30)
         Button(window, text='SALIR'    , command=lambda:window.destroy(), bg='#DF2F2F').place(x=890, y=125, width=90, height=30)
        
-        # Creamos ventana de detalles y lo ocultamos
-        self.Detalles()
-        self.OcultarDetalles()
+        # Creamos ventana de AllDetails y lo ocultamos
+        self.AllDetails()
+        self.HideDetails()
 
         # Posicionamos la ventana principal
         window.place(width=1000, height=600)
 
-    def Detalles(self):
+    def AllDetails(self):
         
-        # Creamos los elementos del menu 2 detalles
+        # Creamos los elementos del menu 2 AllDetails
         window = Frame(self)   
 
-        self.cale = Calendar(window, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2', borderwidth=0)
+        self.calendario = Calendar(window, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2', borderwidth=0)
       
-        Button(window, text='APOYO'               , command=lambda:self.GrabarDetalles('APO')).place(x=286, y= 20, width=100, height=22)
-        Button(window, text='FALTA'               , command=lambda:self.GrabarDetalles('FAL')).place(x=406, y= 20, width=100, height=22)
-        Button(window, text='FERIADO'             , command=lambda:self.GrabarDetalles('FER')).place(x=526, y= 20, width=100, height=22)
-        Button(window, text='ADELANTO'            , command=lambda:self.GrabarDetalles('ADE')).place(x=646, y= 20, width=160, height=22)
-        Button(window, text='INGRESO'             , command=lambda:self.GrabarDetalles('ING')).place(x= 20, y=237, width=265, height=22)
-        Button(window, text='DESCUENTO'           , command=lambda:self.GrabarDetalles('DES')).place(x=303, y=237, width=266, height=22)
-        Button(window, text='VACACIONES'          , command=lambda:self.GrabarDetalles('VAC')).place(x=586, y=237, width=220, height=22)
-        Button(window, text='DESCANSO MEDICO'     , command=lambda:self.GrabarDetalles('DME')).place(x= 20, y=418, width=548, height=22)
-        Button(window, text='COMPRA DE VACACIONES', command=lambda:self.GrabarDetalles('CVA')).place(x=586, y=418, width=220, height=22)
+        Button(window, text='APOYO'            , command=lambda:self.SaveDetails('APO')).place(x=286, y= 20, width=100, height=22)
+        Button(window, text='FALTA'            , command=lambda:self.SaveDetails('FAL')).place(x=406, y= 20, width=100, height=22)
+        Button(window, text='FERIADO'          , command=lambda:self.SaveDetails('FER')).place(x=526, y= 20, width=100, height=22)
+        Button(window, text='ADELANTO'         , command=lambda:self.SaveDetails('ADE')).place(x=646, y= 20, width=160, height=22)
+        Button(window, text='INGRESO'          , command=lambda:self.SaveDetails('ING')).place(x= 20, y=237, width=265, height=22)
+        Button(window, text='DESCUENTO'        , command=lambda:self.SaveDetails('DES')).place(x=303, y=237, width=266, height=22)
+        Button(window, text='VACACIONES'       , command=lambda:self.SaveDetails('VAC')).place(x=586, y=237, width=220, height=22)
+        Button(window, text='DESCANSO MEDICO'  , command=lambda:self.SaveDetails('DME')).place(x= 20, y=418, width=548, height=22)
+        Button(window, text='COMPRA VACACIONES', command=lambda:self.SaveDetails('CVA')).place(x=586, y=418, width=220, height=22)
         
-        self.vIni = Label(window, cursor='hand2')
-        self.vFin = Label(window, cursor='hand2')
-        self.dmIn = Label(window, cursor='hand2')
-        self.dmfi = Label(window, cursor='hand2')
-        self.cvIn = Label(window, cursor='hand2')
-        self.cvFi = Label(window, cursor='hand2')
+        self.date01 = Label(window, cursor='hand2', anchor='e')
+        self.date02 = Label(window, cursor='hand2', anchor='e')
+        self.date03 = Label(window, cursor='hand2', anchor='e')
+        self.date04 = Label(window, cursor='hand2', anchor='e')
+        self.date05 = Label(window, cursor='hand2', anchor='e')
+        self.date06 = Label(window, cursor='hand2', anchor='e')
 
         # Evento de click del label para seleccionar fecha
-        self.vIni.bind('<Button-1>', lambda e: self.SeleccionarFecha('vaca1'))
-        self.vFin.bind('<Button-1>', lambda e: self.SeleccionarFecha('vaca2')) 
-        self.dmIn.bind('<Button-1>', lambda e: self.SeleccionarFecha('dmed1'))        
-        self.dmfi.bind('<Button-1>', lambda e: self.SeleccionarFecha('dmed2'))        
-        self.cvIn.bind('<Button-1>', lambda e: self.SeleccionarFecha('cvac1'))
-        self.cvFi.bind('<Button-1>', lambda e: self.SeleccionarFecha('cvac2'))
+        self.date01.bind('<Button-1>', lambda e: self.SelectDate('vaca1'))
+        self.date02.bind('<Button-1>', lambda e: self.SelectDate('vaca2')) 
+        self.date03.bind('<Button-1>', lambda e: self.SelectDate('dmed1'))        
+        self.date04.bind('<Button-1>', lambda e: self.SelectDate('dmed2'))        
+        self.date05.bind('<Button-1>', lambda e: self.SelectDate('cvac1'))
+        self.date06.bind('<Button-1>', lambda e: self.SelectDate('cvac2'))
 
         self.apoyo = Treeview(window, columns=('#1'))
         self.apoyo.column('#0', width=0)
@@ -719,18 +719,18 @@ class App(Tk):
         self.cvacacionesTotal = Entry(window, justify='right')
 
         # Evento de click del treeview para quitar seleccion
-        self.apoyo.bind('<Button-1>', self.QuitarSeleccion)
-        self.falta.bind('<Button-1>', self.QuitarSeleccion) 
-        self.feriado.bind('<Button-1>', self.QuitarSeleccion)
-        self.adelanto.bind('<Button-1>', self.QuitarSeleccion)
-        self.ingreso.bind('<Button-1>', self.QuitarSeleccion)
-        self.descuento.bind('<Button-1>', self.QuitarSeleccion)
-        self.vacaciones.bind('<Button-1>', self.QuitarSeleccion)
-        self.dmedico.bind('<Button-1>', self.QuitarSeleccion)
-        self.cvacaciones.bind('<Button-1>', self.QuitarSeleccion)
+        self.apoyo.bind('<Button-1>', self.RemoveSelection)
+        self.falta.bind('<Button-1>', self.RemoveSelection) 
+        self.feriado.bind('<Button-1>', self.RemoveSelection)
+        self.adelanto.bind('<Button-1>', self.RemoveSelection)
+        self.ingreso.bind('<Button-1>', self.RemoveSelection)
+        self.descuento.bind('<Button-1>', self.RemoveSelection)
+        self.vacaciones.bind('<Button-1>', self.RemoveSelection)
+        self.dmedico.bind('<Button-1>', self.RemoveSelection)
+        self.cvacaciones.bind('<Button-1>', self.RemoveSelection)
         
         # Posicionamos todos los elementos
-        self.cale.place(x=20, y=20)
+        self.calendario.place(x=20, y=20)
 
         self.apoyo.place      (x=286, y= 52, height=150)
         self.falta.place      (x=406, y= 52, height=150)
@@ -742,12 +742,12 @@ class App(Tk):
         self.dmedico.place    (x= 20, y=470, height= 90)
         self.cvacaciones.place(x=586, y=470, height= 90)
 
-        self.vIni.place(x=586, y=267, width= 86, height=17)
-        self.vFin.place(x=673, y=267, width= 83, height=17)
-        self.dmIn.place(x= 20, y=447, width= 86, height=17)
-        self.dmfi.place(x=107, y=447, width= 83, height=17)
-        self.cvIn.place(x=586, y=447, width= 86, height=17)
-        self.cvFi.place(x=673, y=447, width= 83, height=17)
+        self.date01.place(x=586, y=267, width=86, height=17)
+        self.date02.place(x=673, y=267, width=83, height=17)
+        self.date03.place(x= 20, y=447, width=86, height=17)
+        self.date04.place(x=107, y=447, width=83, height=17)
+        self.date05.place(x=586, y=447, width=86, height=17)
+        self.date06.place(x=673, y=447, width=83, height=17)
 
         self.adelantoImporte.place (x=732, y= 50, width= 73, height=17)   
         self.ingresoDetalle.place  (x= 20, y=267, width=201, height=17)        
@@ -760,11 +760,11 @@ class App(Tk):
         self.cvacacionesTotal.place(x=757, y=447, width= 49, height=17)        
                     
         # Creamos los botones principales
-        Button(window, text='ELIMINAR',            command=self.EliminarDetalles).place(x=890, y=20, width=90, height=30)     
-        Button(window, text='SALIR', bg='#DF2F2F', command=self.OcultarDetalles ).place(x=890, y=55, width=90, height=30)
+        Button(window, text='ELIMINAR',            command=self.DeleteDetails).place(x=890, y=20, width=90, height=30)     
+        Button(window, text='SALIR', bg='#DF2F2F', command=self.HideDetails ).place(x=890, y=55, width=90, height=30)
 
         # Asignamos variable para poder destruir la ventana
-        self.men2_detalles = window
+        self.men2_AllDetails = window
 
         # Posicionamos la ventana principal
         window.place(width=1000, height=600)         
@@ -845,13 +845,13 @@ class App(Tk):
             
             self.details.insert('', END, text=id, values=(index, nombre, apoy, falt, feri, ingr, desc, dmed, vaca, cvac, adel, xfue)) 
 
-    def AbrirDetalles(self):
+    def OpenDetails(self):
       
-        # Mostramos la ventana detalles
+        # Mostramos la ventana AllDetails
         if self.details.selection():            
             id = int(self.details.item(self.details.focus()).get('text'))
 
-            # Ejecutamos consultas de los detalles de cada trabajador en base de datos
+            # Ejecutamos consultas de los AllDetails de cada trabajador en base de datos
             apoy = select(F'SELECT ID, FECH FROM APOYO WHERE IDAC = {id}', True)
             falt = select(F'SELECT ID, FECH FROM FALTA WHERE IDAC = {id}', True) 
             feri = select(F'SELECT ID, FECH FROM FERIADO WHERE IDAC = {id}', True) 
@@ -889,12 +889,12 @@ class App(Tk):
             for dato in cvac:
                 self.cvacaciones.insert('', END, text=dato[0], values=(dato[1], dato[2], dato[3]))     
           
-            self.men2_detalles.place(width=980, height=580) 
-            self.men2_detalles.grab_set()
+            self.men2_AllDetails.place(width=980, height=580) 
+            self.men2_AllDetails.grab_set()
 
-    def OcultarDetalles(self):
+    def HideDetails(self):
         
-        # Limpiamos los cuadros de la ventana detalles
+        # Limpiamos los cuadros de la ventana AllDetails
         self.apoyo.delete(*self.apoyo.get_children())
         self.falta.delete(*self.falta.get_children())
         self.feriado.delete(*self.feriado.get_children())
@@ -905,12 +905,12 @@ class App(Tk):
         self.dmedico.delete(*self.dmedico.get_children())
         self.cvacaciones.delete(*self.cvacaciones.get_children())
 
-        self.vIni['text'] = ''
-        self.vFin['text'] = ''
-        self.dmIn['text'] = ''
-        self.dmfi['text'] = ''
-        self.cvIn['text'] = ''
-        self.cvFi['text'] = ''
+        self.date01['text'] = ''
+        self.date02['text'] = ''
+        self.date03['text'] = ''
+        self.date04['text'] = ''
+        self.date05['text'] = ''
+        self.date06['text'] = ''
 
         self.adelantoImporte.delete(0, END)
         self.ingresoDetalle.delete(0, END)
@@ -922,11 +922,11 @@ class App(Tk):
         self.dmedicoTotal.delete(0, END)
         self.cvacacionesTotal.delete(0, END)
         
-        # Ocultamos la ventana detalles
-        self.men2_detalles.place_forget() 
-        self.men2_detalles.grab_release()   
+        # Ocultamos la ventana AllDetails
+        self.men2_AllDetails.place_forget() 
+        self.men2_AllDetails.grab_release()   
 
-    def QuitarSeleccion(self, e):
+    def RemoveSelection(self, e):
         
         # Quitar seleccion de otros treeview
         self.apoyo.selection_set('') 
@@ -939,28 +939,28 @@ class App(Tk):
         self.dmedico.selection_set('')
         self.cvacaciones.selection_set('')
 
-    def SeleccionarFecha(self, boton: str):
+    def SelectDate(self, boton: str):
 
-        fecha = self.cale.get_date()
+        fecha = self.calendario.get_date()
 
         if boton == 'vaca1':
-            self.vIni['text'] = fecha            
+            self.date01['text'] = fecha            
         elif boton == 'vaca2':
-            self.vFin['text'] = fecha
+            self.date02['text'] = fecha
         elif boton == 'dmed1':  
-            self.dmIn['text'] = fecha
+            self.date03['text'] = fecha
         elif boton == 'dmed2':  
-            self.dmfi['text'] = fecha
+            self.date04['text'] = fecha
         elif boton == 'cvac1':  
-            self.cvIn['text'] = fecha
+            self.date05['text'] = fecha
         elif boton == 'cvac2':  
-            self.cvFi['text'] = fecha
+            self.date06['text'] = fecha
 
-    def GrabarDetalles(self, widget: str):
+    def SaveDetails(self, widget: str):
 
         valores = self.details.item(self.details.focus())['values']
         id = int(self.details.item(self.details.focus()).get('text'))
-        fecha = self.cale.get_date()
+        fecha = self.calendario.get_date()
 
         if widget == 'APO':
             for row in self.apoyo.get_children():
@@ -981,7 +981,11 @@ class App(Tk):
                 if self.falta.item(row)['values'][0] == fecha:
                     return
         
-            valores[3] = int(valores[3]) + 1
+            if valores[3] == '':
+                valores[3] = 1
+            else:
+                valores[3] = int(valores[3]) + 1           
+
             insert(f'INSERT INTO FALTA (IDAC, FECH) VALUES ({id}, "{fecha}")')
             idRegistro = select(f'SELECT ID FROM FALTA ORDER BY ID DESC', False)
             self.falta.insert('', END, text=idRegistro[0], values=fecha)
@@ -991,7 +995,11 @@ class App(Tk):
                 if self.feriado.item(row)['values'][0] == fecha:
                     return
         
-            valores[4] = int(valores[4]) + 1
+            if valores[4] == '':
+                valores[4] = 1
+            else:
+                valores[4] = int(valores[4]) + 1           
+
             insert(f'INSERT INTO FERIADO (IDAC, FECH) VALUES ({id}, "{fecha}")')
             idRegistro = select(f'SELECT ID FROM FERIADO ORDER BY ID DESC', False)
             self.feriado.insert('', END, text=idRegistro[0], values=fecha)
@@ -1012,7 +1020,12 @@ class App(Tk):
                         return
 
                 monto = float(self.adelantoImporte.get())
-                valores[10] = f'{float(valores[10]) + monto:.2f}'
+
+                if valores[10] == '':
+                    valores[10] = f'{monto:.2f}'
+                else:                    
+                    valores[10] = f'{float(valores[10]) + monto:.2f}'
+
                 insert(f'INSERT INTO ADELANTO (IDAC, FECH, MONT) VALUES ({id}, "{fecha}", {monto})')
                 idRegistro = select(f'SELECT ID FROM ADELANTO ORDER BY ID DESC', False)
                 self.adelanto.insert('', END,text=idRegistro[0], values=(fecha, f'{monto:.2f}'))
@@ -1029,14 +1042,19 @@ class App(Tk):
                 messagebox.showinfo('INGRESO', 'Registra el importe del ingreso !')
             elif self.ingresoImporte.get().count('.') > 1:
                 self.ingresoImporte.focus_set()
-                messagebox.showinfo('INGRESO', 'Registra el importe del ingreso !')
+                messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !')
             elif not self.ingresoImporte.get().replace('.','').isnumeric():
                 self.ingresoImporte.focus_set()
-                messagebox.showinfo('INGRESO', 'Registra el importe del ingreso !')
+                messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !')
             else:
                 detalle = self.ingresoDetalle.get()
                 monto = float(self.ingresoImporte.get())
-                valores[5] = f'{float(valores[5]) + monto:.2f}'
+
+                if valores[5] == '':
+                    valores[5] = f'{monto:.2f}'
+                else:                    
+                    valores[5] = f'{float(valores[5]) + monto:.2f}'                   
+
                 insert(f'INSERT INTO INGRESO (IDAC, DETA, MONT) VALUES ({id}, "{detalle}", {monto})')
                 idRegistro = select(f'SELECT ID FROM INGRESO ORDER BY ID DESC', False)
                 self.ingreso.insert('', END, text=idRegistro[0], values=(self.ingresoDetalle.get(), f'{monto:.2f}'))
@@ -1054,14 +1072,19 @@ class App(Tk):
                 messagebox.showinfo('DESCUENTO', 'Registra el importe del descuento !')
             elif self.descuentoImporte.get().count('.') > 1:
                 self.descuentoImporte.focus_set()
-                messagebox.showinfo('DESCUENTO', 'Registra el importe del descuento !')
+                messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !')
             elif not self.descuentoImporte.get().replace('.','').isnumeric():
                 self.descuentoImporte.focus_set()
-                messagebox.showinfo('DESCUENTO', 'Registra el importe del descuento !')
+                messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !')
             else:
                 detalle = self.descuentoDetalle.get()
                 monto = float(self.descuentoImporte.get())
-                valores[6] = f'{float(valores[6]) + monto:.2f}'
+
+                if valores[6] == '':
+                    valores[6] = f'{monto:.2f}'
+                else:                    
+                    valores[6] = f'{float(valores[6]) + monto:.2f}'                  
+
                 insert(f'INSERT INTO DESCUENTO (IDAC, DETA, MONT) VALUES ({id}, "{detalle}", {monto})')
                 idRegistro = select(f'SELECT ID FROM DESCUENTO ORDER BY ID DESC', False)
                 self.descuento.insert('', END, text=idRegistro[0], values=(self.descuentoDetalle.get(), f'{monto:.2f}'))
@@ -1071,10 +1094,10 @@ class App(Tk):
         elif widget == 'VAC':
 
             # Validamos los cuadros de vacaciones si estan vacios enviar el foco           
-            if self.vIni['text'] == '':
+            if self.date01['text'] == '':
                 self.vacacionesTotal.focus_set() 
                 messagebox.showinfo('VACACIONES', 'Selecciona la fecha inicial de las vacaciones !')
-            elif self.vFin['text'] == '':
+            elif self.date02['text'] == '':
                 self.vacacionesTotal.focus_set() 
                 messagebox.showinfo('VACACIONES', 'Selecciona la fecha final de las vacaciones !')
             elif self.vacacionesTotal.get() == '':
@@ -1084,24 +1107,30 @@ class App(Tk):
                 self.vacacionesTotal.focus_set()   
                 messagebox.showinfo('VACACIONES', 'Registra correctamente el total de dias de las vacaciones !')
             else:
-                fechaI = self.vIni['text']
-                fechaF = self.vFin['text']
+                fechaI = self.date01['text']
+                fechaF = self.date02['text']
+
                 total =int(self.vacacionesTotal.get())
-                valores[8] = int(valores[8]) + total
+
+                if valores[8] == '':
+                    valores[8] = total
+                else:                    
+                    valores[8] = int(valores[8]) + total                
+
                 insert(F'INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{fechaI}", "{fechaF}", {total})')
                 idRegistro = select(F'SELECT ID FROM VACACIONES ORDER BY ID DESC', False)
                 self.vacaciones.insert('', END, text=idRegistro[0], values=(fechaI, fechaF, total))
-                self.vIni['text'] = ''
-                self.vFin['text'] = ''
+                self.date01['text'] = ''
+                self.date02['text'] = ''
                 self.vacacionesTotal.delete(0, END)
 
         elif widget == 'DME':
             
             # Validamos los cuadros de descanso medico si estan vacios enviar el foco
-            if self.dmIn['text'] == '':
+            if self.date03['text'] == '':
                 self.dmedicoDetalle.focus_set() 
                 messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha inicial del descanso medico !')
-            elif self.dmfi['text'] == '':
+            elif self.date04['text'] == '':
                 self.dmedicoDetalle.focus_set() 
                 messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha final del descanso medico !')
             elif self.dmedicoDetalle.get() == '':
@@ -1112,18 +1141,24 @@ class App(Tk):
                 messagebox.showinfo('DESCANSO MEDICO', 'Registra el total de dias del descanso medico !')
             elif not self.dmedicoTotal.get().isnumeric():
                 self.dmedicoTotal.focus_set()   
-                messagebox.showinfo('DESCANSO MEDICO', 'Registra el total de dias del descanso medico !')
+                messagebox.showinfo('DESCANSO MEDICO', 'Registra correctamente el total de dias del descanso medico !')
             else:
-                dmedI = self.dmIn['text']
-                dmedF = self.dmfi['text']
+                dmedI = self.date03['text']
+                dmedF = self.date04['text']
+                
                 detalle = self.dmedicoDetalle.get()
                 total =int(self.dmedicoTotal.get())
-                valores[7] = int(valores[7]) + total
+
+                if valores[7] == '':
+                    valores[7] = total
+                else:                    
+                    valores[7] = int(valores[7]) + total     
+
                 insert(f'INSERT INTO DMEDICO (IDAC, FINI, FFIN, DETA, DTOT) VALUES ({id}, "{dmedI}", "{dmedF}", "{detalle}", {total})')
                 idRegistro = select(f'SELECT ID FROM DMEDICO ORDER BY ID DESC', False)
                 self.dmedico.insert('', END, text=idRegistro[0], values=(dmedI, dmedF, detalle, total))
-                self.dmIn['text'] = ''
-                self.dmfi['text'] = ''
+                self.date03['text'] = ''
+                self.date04['text'] = ''
                 self.dmedicoDetalle.delete(0, END)
                 self.dmedicoTotal.delete(0, END)
                
@@ -1131,10 +1166,10 @@ class App(Tk):
         elif widget == 'CVA':
 
              # Validamos los cuadros de compra de vacaciones si estan vacios enviar el foco
-            if self.cvIn['text'] == '':
+            if self.date05['text'] == '':
                 self.cvacacionesTotal.focus_set() 
                 messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha inicial de la compra de vacaciones !')
-            elif self.cvFi['text'] == '':
+            elif self.date06['text'] == '':
                 self.cvacacionesTotal.focus_set() 
                 messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha final de la compra de vacaciones !')
             elif self.cvacacionesTotal.get() == '':
@@ -1142,81 +1177,123 @@ class App(Tk):
                 messagebox.showinfo('COMPRA DE VACACIONES', 'Registra el total de dias de la compra de vacaciones !')
             elif not self.cvacacionesTotal.get().isnumeric():
                 self.cvacacionesTotal.focus_set()   
-                messagebox.showinfo('COMPRA DE VACACIONES', 'Registra el total de dias de la compra de vacaciones !')
+                messagebox.showinfo('COMPRA DE VACACIONES', 'Registra correctamente el total de dias de la compra de vacaciones !')
             else:
-                cvacI = self.cvIn['text']
-                cvacF = self.cvFi['text']
+                cvacI = self.date05['text']
+                cvacF = self.date06['text']
+
                 total =int(self.cvacacionesTotal.get())
-                valores[9] = int(valores[9]) + total
+
+                if valores[9] == '':
+                    valores[9] = total
+                else:                    
+                    valores[9] = int(valores[9]) + total
+
                 insert(f'INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{cvacI}", "{cvacF}", {total})')
                 idRegistro = select(f'SELECT ID FROM CVACACIONES ORDER BY ID DESC', False)
                 self.cvacaciones.insert('', END, text=idRegistro[0], values=(cvacI, cvacF, total))
-                self.cvIn['text'] = ''
-                self.cvFi['text'] = ''
+                self.date05['text'] = ''
+                self.date06['text'] = ''
                 self.cvacacionesTotal.delete(0, END)               
 
         self.details.item(self.details.focus(), values=valores)
 
-    def EliminarDetalles(self):
+    def DeleteDetails(self):
 
         valores = self.details.item(self.details.focus())['values']
                 
         if self.apoyo.selection():
-            valores[2] = int(valores[2]) - 1
+            if valores[2] == 1:
+                valores[2] = ''
+            else:
+                valores[2] = int(valores[2]) - 1
+
             id = int(self.apoyo.item(self.apoyo.focus())['text'])
             delete(F'DELETE FROM APOYO WHERE ID = {id}', False)
             self.apoyo.delete(self.apoyo.focus())
   
         if self.falta.selection():
-            valores[3] = int(valores[3]) - 1
+            if valores[3] == 1:
+                valores[3] = ''
+            else:
+                valores[3] = int(valores[3]) - 1
+            
             id = int(self.falta.item(self.falta.focus())['text'])
             delete(F'DELETE FROM FALTA WHERE ID = {id}', False)
             self.falta.delete(self.falta.focus())      
 
         if self.feriado.selection():
-            valores[4] = int(valores[4]) - 1
+            if valores[4] == 1:
+                valores[4] = ''
+            else:
+                valores[4] = int(valores[4]) - 1
+
             id = int(self.feriado.item(self.feriado.focus())['text'])
             delete(F'DELETE FROM FERIADO WHERE ID = {id}', False)
             self.feriado.delete(self.feriado.focus())
 
         if self.adelanto.selection():
-            saldo = float(valores[10]) - float(self.adelanto.item(self.adelanto.focus())['values'][1])
-            valores[10] = f'{saldo:.2f}'
+            if float(valores[10]) == float(self.adelanto.item(self.adelanto.focus())['values'][1]):
+                valores[10] = ''
+            else:
+                saldo = float(valores[10]) - float(self.adelanto.item(self.adelanto.focus())['values'][1])
+                valores[10] = f'{saldo:.2f}'
+
             id = int(self.adelanto.item(self.adelanto.focus())['text'])
             delete(F'DELETE FROM ADELANTO WHERE ID = {id}', False)
             self.adelanto.delete(self.adelanto.focus())
             
         if self.ingreso.selection():
-            saldo = float(valores[5]) - float(self.ingreso.item(self.ingreso.focus())['values'][1])
-            valores[5] = f'{saldo:.2f}'
+            if float(valores[5]) == float(self.ingreso.item(self.ingreso.focus())['values'][1]):
+                valores[5] = ''
+            else:
+                saldo = float(valores[5]) - float(self.ingreso.item(self.ingreso.focus())['values'][1])
+                valores[5] = f'{saldo:.2f}'                
+
             id = int(self.ingreso.item(self.ingreso.focus())['text'])
             delete(F'DELETE FROM INGRESO WHERE ID = {id}', False)
             self.ingreso.delete(self.ingreso.focus())
 
         if self.descuento.selection():
-            saldo = float(valores[6]) - float(self.descuento.item(self.descuento.focus())['values'][1])
-            valores[6] = f'{saldo:.2f}'
+            if float(valores[6]) == float(self.descuento.item(self.descuento.focus())['values'][1]):
+                valores[6] = ''
+            else:
+                saldo = float(valores[6]) - float(self.descuento.item(self.descuento.focus())['values'][1])
+                valores[6] = f'{saldo:.2f}'
+
             id = int(self.descuento.item(self.descuento.focus())['text'])
             delete(F'DELETE FROM DESCUENTO WHERE ID = {id}', False)
             self.descuento.delete(self.descuento.focus())
 
         if self.vacaciones.selection():
-            dias = int(valores[8]) - int(self.vacaciones.item(self.vacaciones.focus())['values'][2])
-            valores[8] = dias
+            if int(valores[8]) == int(self.vacaciones.item(self.vacaciones.focus())['values'][2]):
+                valores[8] = ''
+            else:
+                dias = int(valores[8]) - int(self.vacaciones.item(self.vacaciones.focus())['values'][2])
+                valores[8] = dias            
+
             id = int(self.vacaciones.item(self.vacaciones.focus())['text'])
             delete(F'DELETE FROM VACACIONES WHERE ID = {id}', False)
             self.vacaciones.delete(self.vacaciones.focus())
 
         if self.dmedico.selection():
-            dias = int(valores[7]) - int(self.dmedico.item(self.dmedico.focus())['values'][3])
-            valores[7] = dias
+            if int(valores[7]) == int(self.dmedico.item(self.dmedico.focus())['values'][3]):
+                valores[7] = ''
+            else:
+                dias = int(valores[7]) - int(self.dmedico.item(self.dmedico.focus())['values'][3])
+                valores[7] = dias            
+
             id = int(self.dmedico.item(self.dmedico.focus())['text'])
             delete(F'DELETE FROM DMEDICO WHERE ID = {id}', False)
             self.dmedico.delete(self.dmedico.focus())
 
         if self.cvacaciones.selection():
-            dias = int(valores[9]) - int(self.cvacaciones.item(self.cvacaciones.focus())['values'][2])
-            valores[9] = dias
+            if int(valores[9]) == int(self.cvacaciones.item(self.cvacaciones.focus())['values'][2]):
+                valores[9] = ''
+            else:
+                dias = int(valores[9]) - int(self.cvacaciones.item(self.cvacaciones.focus())['values'][2])
+                valores[9] = dias            
+
             id = int(self.cvacaciones.item(self.cvacaciones.focus())['text'])
             delete(F'DELETE FROM CVACACIONES WHERE ID = {id}', False)
             self.cvacaciones.delete(self.cvacaciones.focus())
@@ -1298,14 +1375,11 @@ class App(Tk):
         scroll = Scrollbar(menu, orient='vertical', command=self.tre3.yview)
         scrol2 = Scrollbar(menu, orient='horizontal', command=self.tre3.xview)
         self.tre3.configure(yscrollcommand=scroll.set, xscrollcommand=scrol2.set)
-
-        # Evento de seleccion en treeview    
-        #self.tre3.bind('<Double-1>', self.AbrirDetalles)
-
-        # Posicionamiento de los elementos 
-        self.tre3.place(x=20, y=20, height=540, width=940)
+     
+        # Posicionamiento de los elementos         
         scroll.place(x=960, y=20, height=562)
         scrol2.place(x=20, y=560, width=900)
+        self.tre3.place(x=20, y=20, height=540, width=940)
 
         # Cargamos datos al treeview
         self.CargarPlanilla()
@@ -1383,9 +1457,9 @@ class App(Tk):
             diasNoComputables = diasDelMes - DiasComputables
 
             if DiasComputables > (diasDelMes / 2):
-                planillaBruta = sueldoPlanilla - (sueldoPlanilla / 30 * diasNoComputables) + asignacionFamiliar                
+                planillaBruta = sueldoPlanilla - (sueldoPlanilla / 30 * diasNoComputables) #+ asignacionFamiliar                
             else:                
-                planillaBruta = sueldoPlanilla / 30 * DiasComputables + asignacionFamiliar
+                planillaBruta = sueldoPlanilla / 30 * DiasComputables #+ asignacionFamiliar
 
             if diasLaborados > (diasDelMes / 2):
                 movilidadBruta = sueldoMovilidad - (sueldoMovilidad / 30 * diasNoComputables)
