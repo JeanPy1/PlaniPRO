@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, astuple
 
 @dataclass
 class datos:
@@ -23,3 +23,6 @@ class datos:
     celular     : str 
     distrito    : str 
     retiro      : str 
+
+    def convert(self, object: object) -> tuple:
+        return astuple(object)

@@ -309,7 +309,7 @@ class App(Tk):
         self.employee.delete(*self.employee.get_children())
         
         # Obtenemos datos de todos los trabajadores
-        datos = select('SELECT * FROM ACTIVO ORDER BY APAT ASC', True)
+        datos = select('SELECT ID, NDNI, APAT, AMAT, NOMB FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC', True)
 
         # cargamos datos al treeview
         for index, dato in enumerate(datos, 1):
@@ -481,7 +481,9 @@ class App(Tk):
                            self.area.get(),
                            self.celular.get(),
                            self.distrito.get(),
-                           self.retiro.get())          
+                           self.retiro.get())
+
+            values = persona.convert(persona)       
 
             # Id del trabajador seleccionado
             seleccion = self.employee.focus()
@@ -491,13 +493,8 @@ class App(Tk):
 
             # Insertar nuevo trabajador
             if self.buscar['state'] == 'normal':
-                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV,
-                            EAPO, TCOM, NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES (
-                        '{persona.dni}', '{persona.apPaterno}', '{persona.apMaterno}', '{persona.nombre}',
-                        '{persona.nacimiento}', '{persona.ingreso}', {persona.planilla}, {persona.asignacion},
-                         {persona.movilidad}, '{persona.aportacion}', '{persona.comision}', '{persona.cuspp}',
-                        '{persona.cargo}', '{persona.cuenta}', '{persona.area}', '{persona.codigo}', '{persona.revalidacion}',
-                        '{persona.categoria}', '{persona.celular}', '{persona.distrito}', '{persona.retiro}')'''
+                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, EAPO,
+                            TCOM, NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES {values}'''
                 insert(query)
 
             # Actualizar datos de trabajador
@@ -735,7 +732,7 @@ class App(Tk):
         self.details.delete(*self.details.get_children())
         
         # Obtenemos datos de todos los trabajadores
-        datos = select('SELECT ID, APAT, AMAT, NOMB FROM ACTIVO ORDER BY APAT ASC', True)
+        datos = select('SELECT ID, APAT, AMAT, NOMB FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC', True)
 
         # Insertamos datos al treeview
         for index, dato in enumerate(datos, 1):
