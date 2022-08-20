@@ -2,7 +2,7 @@ from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, mess
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
 from tkcalendar import Calendar
-from scripts import select, insert, update, delete, search, Edad, Tiempo, FechaValida, PlanillaMes, CompararFechas
+from scripts import select, insert, update, delete, search, Edad, Tiempo, FechaValida, PlanillaMes, CompararFechas, datos
 
 class App(Tk):
 
@@ -173,9 +173,9 @@ class App(Tk):
         Label(menu, bg='#F8FDFF', text='  Aportacion'         ).place(x=201, width=200, height=54)
         Label(menu, bg='#F8FDFF', text='  Comision'           ).place(x=312)
         Label(menu, bg='#F8FDFF', text='  C.u.s.p.p.'         ).place(x=201, y= 55, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Categor.'           ).place(x=201, y=110, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Revalida.'          ).place(x=265, y=110)
-        Label(menu, bg='#F8FDFF', text='  Codi.'              ).place(x=351, y=110)
+        Label(menu, bg='#F8FDFF', text='  Catego.'            ).place(x=327, y= 55)
+        Label(menu, bg='#F8FDFF', text='  Revalidacion'       ).place(x=201, y=110, width=200, height=54)        
+        Label(menu, bg='#F8FDFF', text='  Licencia'           ).place(x=297, y=110)
         Label(menu, bg='#F8FDFF', text='  Area'               ).place(x=201, y=165, width=200, height=54)
         Label(menu, bg='#F8FDFF', text='  Celular'            ).place(x=297, y=165)
         Label(menu, bg='#F8FDFF', text='  Distrito'           ).place(x=201, y=220, width=200, height=54)
@@ -190,7 +190,7 @@ class App(Tk):
         self.fechaNaci    = Entry(menu)
         self.fechaIngr    = Entry(menu)
         self.planilla     = Entry(menu)        
-        self.asignacion   = Combobox(menu, state='readonly', values=['SI', 'NO'])
+        self.asignacion   = Entry(menu)
         self.movilidad    = Entry(menu)
         self.cargo        = Combobox(menu, state='readonly', values=['INSPECTOR VIAL', 'OPERADOR DE GRUA LIVIANA', 'OPERADOR DE GRUA PESADA', ''])       
         self.cuenta       = Entry(menu)
@@ -224,10 +224,10 @@ class App(Tk):
         self.cuenta.place      (x= 10, y=518, width=180, height=24)
         self.aportacion.place  (x=211, y= 23, width=105, height=24) 
         self.comision.place    (x=322, y= 23, width= 69, height=24) 
-        self.cuspp.place       (x=211, y= 78, width=180, height=24)
-        self.categoria.place   (x=211, y=133, width= 58, height=24)
-        self.revalidacion.place(x=275, y=133, width= 80, height=24)
-        self.codigo.place      (x=361, y=133, width= 30, height=24)
+        self.cuspp.place       (x=211, y= 78, width=120, height=24)
+        self.categoria.place   (x=337, y= 78, width= 54, height=24)
+        self.revalidacion.place(x=211, y=133, width= 90, height=24)
+        self.codigo.place      (x=307, y=133, width= 84, height=24)
         self.area.place        (x=211, y=188, width= 90, height=24)
         self.celular.place     (x=307, y=188, width= 84, height=24)
         self.distrito.place    (x=211, y=243, width=180, height=24)
@@ -267,6 +267,7 @@ class App(Tk):
                 self.fechaNaci.insert(0, datos[5])
                 self.fechaIngr.insert(0, datos[6])
                 self.planilla.insert(0, datos[7])
+                self.asignacion.insert(0, datos[8])
                 self.movilidad.insert(0, datos[9])
                 self.aportacion.set(datos[10])
                 self.comision.set(datos[11])                                        
@@ -274,23 +275,18 @@ class App(Tk):
                 self.cargo.set(datos[13])
                 self.cuenta.insert(0, datos[14])                
                 self.area.set(datos[15])
-                self.codigo.insert(0, datos[16][:1])                    
+                self.codigo.insert(0, datos[16])                    
                 self.revalidacion.insert(0, datos[17])
                 self.categoria.set(datos[18])
                 self.celular.insert(0, datos[19])
                 self.distrito.set(datos[20])
                 self.retiro.insert(0, datos[21])
 
-                if datos[8] == 0:
-                    self.asignacion.set('NO')
-                else:
-                    self.asignacion.set('SI')
-
     def Remove(self):
 
         # Consulta para eliminar registro
         if self.employee.selection():
-            respuesta = messagebox.askyesno('ELIMINAR','Deseas eliminar al Trabajador?', default='no')
+            respuesta = messagebox.askyesno('ELIMINAR','SEGURO?', default='no')
 
             if respuesta:
                 # Id del trabajador
@@ -349,17 +345,17 @@ class App(Tk):
         # Validamos el numero de dni ingresado
         dni = self.buscarDni.get()
         if dni == '':
-            messagebox.showinfo('BUSCAR', 'Registra el numero DNI')    
+            messagebox.showinfo('BUSCAR', 'INGRESA EL NUMERO DE DNI')    
             self.buscarDni.focus()       
         elif len(dni) != 8 or not dni.isdigit():  
-            messagebox.showinfo('BUSCAR', 'Registra correctamente el numero DNI') 
+            messagebox.showinfo('BUSCAR', 'INGRESA CORRECTAMENTE EL NUMERO DE DNI') 
             self.buscarDni.focus()      
         else:
 
-            # Buscar datos del numero de dni
+            # Buscar datos del dni
             persona = search(dni)
 
-            if persona != None:
+            if persona:
                 self.numeroDni['text'] = persona['numeroDocumento']
                 self.apPaterno['text'] = persona['apellidoPaterno']
                 self.apMaterno['text'] = persona['apellidoMaterno']
@@ -367,7 +363,7 @@ class App(Tk):
                 self.buscarDni.delete(0, END)
                 self.fechaNaci.focus_set()
             else:                
-                messagebox.showinfo('BUSCAR', 'No se encontro el numero DNI')           
+                messagebox.showinfo('BUSCAR', 'NO SE ENCONTRO EL NUMERO DE DNI')           
                 self.buscarDni.focus()   
 
     def ShowDetails(self, e):
@@ -409,83 +405,52 @@ class App(Tk):
 
         # Validacion de dni
         if self.numeroDni['text'] == '':
-            messagebox.showinfo('GRABAR', 'Registra el DNI !')
-            self.numeroDni.focus()
+            messagebox.showinfo('GRABAR', 'REGISTRA EL DNI')
+            self.buscarDni.focus()
 
         # Validacion de fecha de nacimiento
         elif self.fechaNaci.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra el NACIMIENTO !')
+            messagebox.showinfo('GRABAR', 'REGISTRA EL NACIMIENTO')
             self.fechaNaci.focus()
         elif len(self.fechaNaci.get()) != 10 or not FechaValida(self.fechaNaci.get(), False):
-            messagebox.showinfo('GRABAR', 'Registra correctamente el NACIMIENTO !')
+            messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL NACIMIENTO')
             self.fechaNaci.focus()
 
         # Validacion de fecha de ingreso
         elif self.fechaIngr.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra el INGRESO !')
+            messagebox.showinfo('GRABAR', 'REGISTRA EL INGRESO')
             self.fechaIngr.focus()
         elif len(self.fechaIngr.get()) != 10 or not FechaValida(self.fechaIngr.get(), False):
-            messagebox.showinfo('GRABAR', 'Registra correctamente el INGRESO !')
+            messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL INGRESO')
             self.fechaIngr.focus()
 
         # Validacion de sueldo planilla
         elif self.planilla.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la PLANILLA !')
+            messagebox.showinfo('GRABAR', 'REGISTRA LA PLANILLA')
             self.planilla.focus()
         elif not self.planilla.get().replace('.','').isdigit() or self.planilla.get().count('.') > 1:
-            messagebox.showinfo('GRABAR', 'Registra correctamente la PLANILLA !')
+            messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE LA PLANILLA')
             self.planilla.focus()
 
         # Validacion de asignacion familiar
         elif self.asignacion.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la ASIGNACION !')
+            messagebox.showinfo('GRABAR', 'REGISTRA LA ASIGNACION')
+            self.asignacion.focus()
+        elif not self.asignacion.get().replace('.','').isdigit() or self.asignacion.get().count('.') > 1:
+            messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE LA ASIGNACION')
             self.asignacion.focus()
 
         # Validacion de movilidad
         elif self.movilidad.get() == '':
-            messagebox.showinfo('GRABAR', 'Registra la MOVILIDAD !')
+            messagebox.showinfo('GRABAR', 'REGISTRA LA MOVILIDAD')
             self.movilidad.focus()
         elif not self.movilidad.get().replace('.','').isdigit() or self.movilidad.get().count('.') > 1:
-            messagebox.showinfo('GRABAR', 'Registra correctamente la MOVILIDAD !')
-            self.movilidad.focus()        
+            messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE LA MOVILIDAD')
+            self.movilidad.focus()
 
-        # Validacion de cuenta bancaria
-        elif self.cuenta.get() != '' and not self.cuenta.get().isdigit():
-            messagebox.showinfo('GRABAR', 'Registra correctamente la CUENTA !')
-            self.cuenta.focus()
-
-        # Validacion del cusp de la entidad de aportacion
-        elif self.cuspp.get() != '' and not self.cuspp.get().isalnum():
-            messagebox.showinfo('GRABAR', 'Registra correctamente el CUSPP !')
-            self.cuspp.focus()
-
-        # Validacion de vencimiento de la licencia de conducir
-        elif self.revalidacion.get() != '' and len(self.revalidacion.get()) != 10:
-            messagebox.showinfo('GRABAR', 'Registra correctamente la REVALIDACION !')
-            self.revalidacion.focus()
-        elif self.revalidacion.get() != '' and not FechaValida(self.revalidacion.get(), True):
-            messagebox.showinfo('GRABAR', 'Registra correctamente la REVALIDACION !')
-            self.revalidacion.focus()
-
-        # Validacion del codigo de la licencia de conducir
-        elif self.codigo.get() != '' and len(self.codigo.get()) != 1:
-            messagebox.showinfo('GRABAR', 'Registra correctamente el CODIGO !')
-            self.codigo.focus()
-        elif self.codigo.get() != '' and not self.codigo.get().isalpha():
-            messagebox.showinfo('GRABAR', 'Registra correctamente el CODIGO !')
-            self.codigo.focus()
-
-        # Validacion del numero celular
-        elif self.celular.get() != '' and not self.celular.get().isdigit():
-            messagebox.showinfo('GRABAR', 'Registra correctamente el CELULAR !')
-            self.celular.focus()
-
-        # Validacion de fecha del cese
-        elif self.retiro.get() != '' and len(self.retiro.get()) != 10:
-            messagebox.showinfo('GRABAR', 'Registra correctamente el RETIRO !')
-            self.retiro.focus()
+        # Validacion de fecha del cese      
         elif self.retiro.get() != '' and not FechaValida(self.retiro.get(), True):
-            messagebox.showinfo('GRABAR', 'Registra correctamente el RETIRO !')
+            messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL RETIRO')
             self.retiro.focus()
         else:
 
@@ -493,40 +458,30 @@ class App(Tk):
             if self.buscar['state'] == 'normal':
                 for index in self.employee.get_children():
                     if f"{self.employee.item(index).get('values')[2]:0>8}" == self.numeroDni['text']:
-                        messagebox.showinfo('GRABAR', 'Ya esta REGISTRADO !')
-                        return
+                        messagebox.showinfo('GRABAR', 'DNI YA REGISTRADO')
+                        return            
 
-            # Guardar datos registrados en variables
-            ndni = self.numeroDni.cget('text')
-            apat = self.apPaterno.cget('text')
-            amat = self.apMaterno.cget('text')
-            nomb = self.nombre.cget('text')
-            naci = self.fechaNaci.get()
-            ingr = self.fechaIngr.get()
-            plan = float(self.planilla.get())
-            asig = 0
-            movi = 0
-            carg = self.cargo.get()
-            cuen = self.cuenta.get()
-            apor = self.aportacion.get()
-            comi = self.comision.get()
-            cusp = self.cuspp.get().upper()
-            lice = self.categoria.get()
-            venc = self.revalidacion.get()
-            codi = self.codigo.get().upper()
-            area = self.area.get()
-            celu = self.celular.get()
-            dist = self.distrito.get()
-            cese = self.retiro.get()
-
-            if codi:
-                codi = codi + ndni
-
-            if self.asignacion.get() == 'SI':
-                asig = 102.50           
-
-            if self.movilidad.get():
-                movi = float(self.movilidad.get())         
+            persona = datos(self.numeroDni.cget('text'),
+                           self.apPaterno.cget('text'),
+                           self.apMaterno.cget('text'),
+                           self.nombre.cget('text'),
+                           self.fechaNaci.get(),
+                           self.fechaIngr.get(),
+                           float(self.planilla.get()),
+                           float(self.asignacion.get()),
+                           float(self.movilidad.get()),
+                           self.cargo.get(),
+                           self.cuenta.get(),
+                           self.aportacion.get(),
+                           self.comision.get(),
+                           self.cuspp.get().upper(),
+                           self.categoria.get(),
+                           self.revalidacion.get(),
+                           self.codigo.get().upper(),
+                           self.area.get(),
+                           self.celular.get(),
+                           self.distrito.get(),
+                           self.retiro.get())          
 
             # Id del trabajador seleccionado
             seleccion = self.employee.focus()
@@ -536,17 +491,22 @@ class App(Tk):
 
             # Insertar nuevo trabajador
             if self.buscar['state'] == 'normal':
-                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, EAPO, TCOM,
-                        NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES (
-                        '{ndni}', '{apat}', '{amat}', '{nomb}', '{naci}', '{ingr}', {plan}, '{asig}', {movi}, '{apor}',
-                        '{comi}', '{cusp}', '{carg}', '{cuen}', '{area}', '{codi}', '{venc}', '{lice}', '{celu}', '{dist}', '{cese}')'''
+                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV,
+                            EAPO, TCOM, NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES (
+                        '{persona.dni}', '{persona.apPaterno}', '{persona.apMaterno}', '{persona.nombre}',
+                        '{persona.nacimiento}', '{persona.ingreso}', {persona.planilla}, {persona.asignacion},
+                         {persona.movilidad}, '{persona.aportacion}', '{persona.comision}', '{persona.cuspp}',
+                        '{persona.cargo}', '{persona.cuenta}', '{persona.area}', '{persona.codigo}', '{persona.revalidacion}',
+                        '{persona.categoria}', '{persona.celular}', '{persona.distrito}', '{persona.retiro}')'''
                 insert(query)
 
             # Actualizar datos de trabajador
             else:
-                query = f'''UPDATE ACTIVO SET FNAC = '{naci}', FING = '{ingr}', SPLA = {plan}, AFAM = '{asig}', SMOV = {movi},
-                        EAPO = '{apor}' , TCOM = '{comi}', NCUS = '{cusp}', PLAB = '{carg}', NCUE = '{cuen}', ALAB = '{area}',
-                        NLIC = '{codi}', VLIC = '{venc}', CLIC = '{lice}', NCEL = '{celu}', DRES = '{dist}', FCES = '{cese}'
+                query = f'''UPDATE ACTIVO SET FNAC = '{persona.nacimiento}', FING = '{persona.ingreso}', SPLA = {persona.planilla},
+                            AFAM = '{persona.asignacion}', SMOV = {persona.movilidad}, EAPO = '{persona.aportacion}',
+                            TCOM = '{persona.comision}', NCUS = '{persona.cuspp}', PLAB = '{persona.cargo}', NCUE = '{persona.cuenta}',
+                            ALAB = '{persona.area}', NLIC = '{persona.codigo}', VLIC = '{persona.revalidacion}', CLIC = '{persona.categoria}',
+                            NCEL = '{persona.celular}', DRES = '{persona.distrito}', FCES = '{persona.retiro}'
                         WHERE ID = {id}'''           
                 update(query)
 
