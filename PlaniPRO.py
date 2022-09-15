@@ -504,7 +504,7 @@ class App(Tk):
                             TCOM = '{persona.comision}', NCUS = '{persona.cuspp}', PLAB = '{persona.cargo}', NCUE = '{persona.cuenta}',
                             ALAB = '{persona.area}', NLIC = '{persona.codigo}', VLIC = '{persona.revalidacion}', CLIC = '{persona.categoria}',
                             NCEL = '{persona.celular}', DRES = '{persona.distrito}', FCES = '{persona.retiro}'
-                        WHERE ID = {id}'''           
+                            WHERE ID = {id}'''           
                 update(query)
 
             # Ordenamos los datos con el nuevo registro
@@ -611,59 +611,59 @@ class App(Tk):
         self.apoyo = Treeview(window, columns=('#1'))
         self.apoyo.column('#0', width=0)
         self.apoyo.column('#1', width=94, minwidth=94, anchor='center')
-        self.apoyo.heading('#1', text='FECHA')
+        self.apoyo.heading('#1', text='Fecha')
         self.falta = Treeview(window, columns=('#1'))
         self.falta.column('#0', width=0)
         self.falta.column('#1', width=94, minwidth=94, anchor='center')
-        self.falta.heading('#1', text='FECHA')
+        self.falta.heading('#1', text='Fecha')
         self.feriado = Treeview(window, columns=('#1'))
         self.feriado.column('#0', width=0)
         self.feriado.column('#1', width=94, minwidth=94, anchor='center')
-        self.feriado.heading('#1', text='FECHA')
+        self.feriado.heading('#1', text='Fecha')
         self.adelanto = Treeview(window, columns=('#1', '#2'))
         self.adelanto.column('#0', width=0)
         self.adelanto.column('#1', width=82, anchor='center')         
         self.adelanto.column('#2', width=71, anchor='e')
-        self.adelanto.heading('#1', text='FECHA')
-        self.adelanto.heading('#2', text='IMPORTE')        
+        self.adelanto.heading('#1', text='Fecha')
+        self.adelanto.heading('#2', text='Importe')        
         self.ingreso = Treeview(window, columns=('#1', '#2'))
         self.ingreso.column('#0', width=0)
         self.ingreso.column('#1', width=199, minwidth=199) 
         self.ingreso.column('#2', width= 60, minwidth= 60, anchor='e')
-        self.ingreso.heading('#1', text='DETALLE')
-        self.ingreso.heading('#2', text='IMPORTE')
+        self.ingreso.heading('#1', text='Fecha')
+        self.ingreso.heading('#2', text='Importe')
         self.descuento = Treeview(window, columns=('#1', '#2'))
         self.descuento.column('#0', width=0)
         self.descuento.column('#1', width=199, minwidth=199) 
         self.descuento.column('#2', width= 60, minwidth= 60, anchor='e')
-        self.descuento.heading('#1', text='DETALLE')
-        self.descuento.heading('#2', text='IMPORTE')        
+        self.descuento.heading('#1', text='Detalle')
+        self.descuento.heading('#2', text='Importe')        
         self.vacaciones = Treeview(window, columns=('#1', '#2', '#3'))
         self.vacaciones.column('#0', width=0)
         self.vacaciones.column('#1', width=84, minwidth=84) 
         self.vacaciones.column('#2', width=84, minwidth=84) 
         self.vacaciones.column('#3', width=46, minwidth=46, anchor='e') 
-        self.vacaciones.heading('#1', text='F. INICIAL')
-        self.vacaciones.heading('#2', text='F. FINAL')
-        self.vacaciones.heading('#3', text='DIAS')        
+        self.vacaciones.heading('#1', text='F. Inicial')
+        self.vacaciones.heading('#2', text='F. Final')
+        self.vacaciones.heading('#3', text='Dias')        
         self.dmedico = Treeview(window, columns=('#1', '#2', '#3', '#4'))
         self.dmedico.column('#0', width=0)
         self.dmedico.column('#1', width= 84, minwidth= 84) 
         self.dmedico.column('#2', width= 84, minwidth= 84) 
         self.dmedico.column('#3', width=314, minwidth=314) 
         self.dmedico.column('#4', width= 60, minwidth= 60, anchor='e') 
-        self.dmedico.heading('#1', text='F. INICIAL')
-        self.dmedico.heading('#2', text='F. FINAL')
-        self.dmedico.heading('#3', text='DETALLE')
-        self.dmedico.heading('#4', text='DIAS')
+        self.dmedico.heading('#1', text='F. Inicial')
+        self.dmedico.heading('#2', text='F. Final')
+        self.dmedico.heading('#3', text='Detalle')
+        self.dmedico.heading('#4', text='Dias')
         self.cvacaciones = Treeview(window, columns=('#1', '#2', '#3'))
         self.cvacaciones.column('#0', width=0)
         self.cvacaciones.column('#1', width=84, minwidth=84) 
         self.cvacaciones.column('#2', width=84, minwidth=84) 
         self.cvacaciones.column('#3', width=46, minwidth=46, anchor='e') 
-        self.cvacaciones.heading('#1', text='F. INICIAL')
-        self.cvacaciones.heading('#2', text='F. FINAL')
-        self.cvacaciones.heading('#3', text='DIAS')
+        self.cvacaciones.heading('#1', text='F. Inicial')
+        self.cvacaciones.heading('#2', text='F. Final')
+        self.cvacaciones.heading('#3', text='Dias')
 
         self.adelantoImporte  = Entry(window, justify='right')
         self.ingresoDetalle   = Entry(window)
@@ -1268,35 +1268,35 @@ class App(Tk):
                                                             '#21', '#22', '#23', '#24', '#25', '#26', '#27', '#28', '#29', '#30'))
         self.tre3.column('#0', width=0)
         self.tre3.column('#1', width=30, minwidth=30)
-        self.tre3.column('#2', width=250, minwidth=250)
-        self.tre3.column('#3', width=80, minwidth=80, anchor='e')  
-        self.tre3.column('#4', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#5', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#6', width=44, minwidth=44 , anchor='e') 
-        self.tre3.column('#7', width=44, minwidth=44 , anchor='e')
-        self.tre3.column('#8', width=80, minwidth=80 , anchor='e')        
-        self.tre3.column('#9', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#10', width=44, minwidth=44 , anchor='e')     
-        self.tre3.column('#11', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#12', width=44, minwidth=44 , anchor='e')
-        self.tre3.column('#13', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#14', width=44, minwidth=44 , anchor='e')
-        self.tre3.column('#15', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#16', width=44, minwidth=44 , anchor='e')
-        self.tre3.column('#17', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#18', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#19', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#20', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#21', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#22', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#23', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#24', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#25', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#26', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#27', width=80, minwidth=80 , anchor='e') 
-        self.tre3.column('#28', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#29', width=80, minwidth=80 , anchor='e')
-        self.tre3.column('#30', width=80, minwidth=80 , anchor='e')
+        self.tre3.column('#2', width=240, minwidth=240)
+        self.tre3.column('#3', width=70, minwidth=70, anchor='e')  
+        self.tre3.column('#4', width=60, minwidth=60, anchor='e')
+        self.tre3.column('#5', width=60, minwidth=60, anchor='e')
+        self.tre3.column('#6', width=30, minwidth=30, anchor='e') 
+        self.tre3.column('#7', width=30, minwidth=30, anchor='e')
+        self.tre3.column('#8', width=70, minwidth=70, anchor='e')        
+        self.tre3.column('#9', width=60, minwidth=60, anchor='e') 
+        self.tre3.column('#10', width=30, minwidth=30, anchor='e')     
+        self.tre3.column('#11', width=70, minwidth=70, anchor='e') 
+        self.tre3.column('#12', width=30, minwidth=30, anchor='e')
+        self.tre3.column('#13', width=70, minwidth=70, anchor='e') 
+        self.tre3.column('#14', width=30, minwidth=30, anchor='e')
+        self.tre3.column('#15', width=70, minwidth=70, anchor='e') 
+        self.tre3.column('#16', width=30, minwidth=30, anchor='e')
+        self.tre3.column('#17', width=60, minwidth=60, anchor='e') 
+        self.tre3.column('#18', width=70, minwidth=70, anchor='e')
+        self.tre3.column('#19', width=60, minwidth=60, anchor='e') 
+        self.tre3.column('#20', width=60, minwidth=60, anchor='e')
+        self.tre3.column('#21', width=60, minwidth=60, anchor='e') 
+        self.tre3.column('#22', width=60, minwidth=60, anchor='e')
+        self.tre3.column('#23', width=60, minwidth=60, anchor='e') 
+        self.tre3.column('#24', width=60, minwidth=60, anchor='e')
+        self.tre3.column('#25', width=60, minwidth=60, anchor='e') 
+        self.tre3.column('#26', width=60, minwidth=60, anchor='e')
+        self.tre3.column('#27', width=70, minwidth=70, anchor='e') 
+        self.tre3.column('#28', width=60, minwidth=60, anchor='e')
+        self.tre3.column('#29', width=60, minwidth=60, anchor='e')
+        self.tre3.column('#30', width=60, minwidth=60, anchor='e')
 
         self.tre3.heading('#1', text='N°')
         self.tre3.heading('#2', text='Apellidos y Nombre')
@@ -1334,9 +1334,14 @@ class App(Tk):
         self.tre3.configure(yscrollcommand=scroll.set, xscrollcommand=scrol2.set)
      
         # Posicionamiento de los elementos         
-        scroll.place(x=960, y=20, height=562)
-        scrol2.place(x=20, y=560, width=900)
-        self.tre3.place(x=20, y=20, height=540, width=940)
+        scroll.place(x=851, y=20, height=556)
+        scrol2.place(x=20, y=560, width=830)
+        self.tre3.place(x=20, y=20, height=540, width=830)
+        
+        Button(menu, text='GENERAR').place(x=890, y=20, width=90, height=30)
+        Button(menu, text='MODIFICAR').place(x=890, y=55, width=90, height=30)
+        Button(menu, text='REPORTE').place(x=890, y=90, width=90, height=30)
+        Button(menu, text='SALIR', command=lambda:menu.destroy(), bg='#DF2F2F').place(x=890, y=125, width=90, height=30)
 
         # Cargamos datos al treeview
         self.CargarPlanilla()
@@ -1353,16 +1358,16 @@ class App(Tk):
             return
 
         # Obtener datos para elaborar planilla
-        datos = select(f'SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES FROM ACTIVO', True)
-
+        datos = select(f'SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES FROM ACTIVO', True)        
+        
         for index, dato in enumerate(datos, 1):
             
             id = dato[0]
             nombreCompleto = f'{dato[1]} {dato[2]} {dato[3]}'
             fechaIngreso = dato[4]
-            sueldoPlanilla = int(dato[5])
+            sueldoPlanilla = float(dato[5])
             asignacionFamiliar = float(dato[6])
-            sueldoMovilidad = int(dato[7])
+            sueldoMovilidad = float(dato[7])
             totalSueldo = sueldoPlanilla + asignacionFamiliar + sueldoMovilidad
             entidadAportacion = dato[8]
             comisionAportacion = dato[9]
@@ -1378,7 +1383,7 @@ class App(Tk):
             diasDescansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
             totalAdelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
             totalXfuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
-            
+
             if totalIngresos:
                 totalIngresos = float(totalIngresos)
             else:
@@ -1504,6 +1509,13 @@ class App(Tk):
                                                     round(totalPlanillaBruta, 2), round(totalOnp, 2), round(totalComision, 2), round(totalPrima, 2),
                                                     round(totalAporte, 2), '', round(totalDescuentos, 2), round(totalApoyos, 2), round(totalIngresos, 2),
                                                     '', '', '', round(totalEssalud, 2)))
+        
+        self.tre3.insert('', END, values=('100', 'OROPEZA INCA JEANCARLOS ALBERTO', '1,900.00', '102.50', '350.00',
+                                                    '30', '10', '1,900.00', '350.00', '30', '1,900.00', '30', '1,900.00', 
+                                                    '30', '1,900.00','2', '250.00',
+                                                    '1,900.00', '320.00', '100.00', '100.00',
+                                                    '100.00', '100.00', '500.00', '600.00', '200.00',
+                                                    '', '', '', '125.00'))
 
 
     def Menu4(self):
@@ -1533,6 +1545,38 @@ class App(Tk):
         # Creamos los elementos del menu 1      
         menu = Frame(self)
 
+        Label(menu, anchor='center', text='Entidad\nAFP'  ).place(x=10, y=10, width=100, height=48)
+        Label(menu, anchor='center', text='Comision'  ).place(x=111, y=10, width=121, height=24)
+        Label(menu, anchor='center', text='Flujo'  ).place(x=111, y=34, width=60, height=24)
+        Label(menu, anchor='center', text='Mixta').place(x=172, y=34, width=60, height=24)
+        Label(menu, anchor='center', text='Prima\nSeguro').place(x=233, y=10, width=60, height=48)        
+        Label(menu, anchor='center', text='Aporte\nMensual').place(x=294, y=10, width=60, height=48)        
+        Label(menu, anchor='center', text='Sueldo\nMaximo').place(x=355, y=10, width=60, height=48)      
+        Label(menu, anchor='center', text='Fondo\nOnp').place(x=435, y=10, width=60, height=48)    
+        Label(menu, anchor='center', text='Essalud').place(x=496, y=10, width=60, height=48)    
+        Label(menu, anchor='center', text='Sueldo\nMinimo').place(x=557, y=10, width=60, height=48) 
+        Label(menu, anchor='center', text='Asigna.\nFamiliar').place(x=618, y=10, width=60, height=48) 
+        
+        Label(menu, text=' Habitat'  ).place(x=10, y= 59, width=100, height=24)
+        Label(menu, text=' Integra'  ).place(x=10, y= 84, width=100, height=24)
+        Label(menu, text=' Prima'    ).place(x=10, y=109, width=100, height=24)
+        Label(menu, text=' Profuturo').place(x=10, y=134, width=100, height=24)
+        Label(menu, anchor='e', text='1.47%').place(x=111, y= 59, width=60, height=24)
+        Label(menu, anchor='e', text='1.55%').place(x=111, y= 84, width=60, height=24)
+        Label(menu, anchor='e', text='1.60%').place(x=111, y=109, width=60, height=24)
+        Label(menu, anchor='e', text='1.69%').place(x=111, y=134, width=60, height=24)
+        Label(menu, anchor='e', text='0.23%').place(x=172, y= 59, width=60, height=24)
+        Label(menu, anchor='e', text='0.00%').place(x=172, y= 84, width=60, height=24)
+        Label(menu, anchor='e', text='0.18%').place(x=172, y=109, width=60, height=24)
+        Label(menu, anchor='e', text='0.28%').place(x=172, y=134, width=60, height=24)        
+        Label(menu, anchor='e', text='1.74%').place(x=233, y=59, width=60, height=99)        
+        Label(menu, anchor='e', text='10.00%').place(x=294, y=59, width=60, height=99)        
+        Label(menu, anchor='e', text='11,002.84').place(x=355, y=59, width=60, height=99)
+        Label(menu, anchor='e', text='13.00%').place(x=435, y=59, width=60, height=99)
+        Label(menu, anchor='e', text='9.00%').place(x=496, y=59, width=60, height=99)
+        Label(menu, anchor='e', text='1,025.00').place(x=557, y=59, width=60, height=99)
+        Label(menu, anchor='e', text='10.00%').place(x=618, y=59, width=60, height=99)
+        
         Button(menu, text='SALIR'    , bg='#DF2F2F', command=lambda:menu.destroy()).place(x=890, y=125, width=90, height=30)
 
         # Posicionamos la ventana principal
