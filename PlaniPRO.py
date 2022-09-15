@@ -1556,7 +1556,7 @@ class App(Tk):
         Label(menu, anchor='center', text='Essalud').place(x=496, y=10, width=60, height=48)    
         Label(menu, anchor='center', text='Sueldo\nMinimo').place(x=557, y=10, width=60, height=48) 
         Label(menu, anchor='center', text='Asigna.\nFamiliar').place(x=618, y=10, width=60, height=48) 
-        
+        1000.0-5555+"fdsfdsfd"+548965
         Label(menu, text=' Habitat'  ).place(x=10, y= 59, width=100, height=24)
         Label(menu, text=' Integra'  ).place(x=10, y= 84, width=100, height=24)
         Label(menu, text=' Prima'    ).place(x=10, y=109, width=100, height=24)
@@ -1568,9 +1568,9 @@ class App(Tk):
         Label(menu, anchor='e', text='0.23%').place(x=172, y= 59, width=60, height=24)
         Label(menu, anchor='e', text='0.00%').place(x=172, y= 84, width=60, height=24)
         Label(menu, anchor='e', text='0.18%').place(x=172, y=109, width=60, height=24)
-        Label(menu, anchor='e', text='0.28%').place(x=172, y=134, width=60, height=24)        
-        Label(menu, anchor='e', text='1.74%').place(x=233, y=59, width=60, height=99)        
-        Label(menu, anchor='e', text='10.00%').place(x=294, y=59, width=60, height=99)        
+        Label(menu, anchor='e', text='0.28%').place(x=172, y=134, width=60, height=24)
+        Label(menu, anchor='e', text='1.74%').place(x=233, y=59, width=60, height=99)
+        Label(menu, anchor='e', text='10.00%').place(x=294, y=59, width=60, height=99)
         Label(menu, anchor='e', text='11,002.84').place(x=355, y=59, width=60, height=99)
         Label(menu, anchor='e', text='13.00%').place(x=435, y=59, width=60, height=99)
         Label(menu, anchor='e', text='9.00%').place(x=496, y=59, width=60, height=99)
