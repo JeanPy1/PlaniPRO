@@ -2,7 +2,9 @@ from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, mess
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
 from tkcalendar import Calendar
-from scripts import select, insert, update, delete, search, Edad, Tiempo, FechaValida, PlanillaMes, CompararFechas, datos
+from scripts import select, insert, update, delete, BuscarDni, Edad, Tiempo, FechaValida, PlanillaMes, CompararFechas, datos
+
+from Menu1 import Menu1
 
 class App(Tk):
 
@@ -51,12 +53,14 @@ class App(Tk):
         Button(self, bg='#F0F0F0', image=img5, command=self.Menu5).place(y=400, width=100, height=100)
         Button(self, bg='#F0F0F0', image=img6, command=self.Menu6).place(y=500, width=100, height=100)
 
+        
+
         # Corremos programa
         self.mainloop()
 
-
+    
     def Menu1(self):
-
+        
         # Creamos los elementos del menu 1
         window = Frame(self)
 
@@ -314,7 +318,7 @@ class App(Tk):
         # cargamos datos al treeview
         for index, dato in enumerate(datos, 1):
             nombre = f'{dato[2]} {dato[3]} {dato[4]}'    
-            self.employee.insert('', END, text=dato[0], values=(index, nombre, dato[1]))   
+            self.employee.insert('', 'end', text=dato[0], values=(index, nombre, dato[1]))   
 
     def RemoveDetails(self):
 
@@ -353,7 +357,7 @@ class App(Tk):
         else:
 
             # Buscar datos del dni
-            persona = search(dni)
+            persona = BuscarDni(dni)
 
             if persona:
                 self.numeroDni['text'] = persona['numeroDocumento']
@@ -1531,13 +1535,16 @@ class App(Tk):
 
     def Menu5(self):
             
-            # Creamos los elementos del menu 1      
-            menu = Frame(self)
+        aaa = Menu1(self)
 
-            Button(menu, text='SALIR'    , bg='#DF2F2F', command=lambda:menu.destroy()).place(x=890, y=125, width=90, height=30)
+        return
+        # Creamos los elementos del menu 1      
+        menu = Frame(self)
 
-            # Posicionamos la ventana principal
-            menu.place(width=1000, height=600)
+        Button(menu, text='SALIR'    , bg='#DF2F2F', command=lambda:menu.destroy()).place(x=890, y=125, width=90, height=30)
+
+        # Posicionamos la ventana principal
+        menu.place(width=1000, height=600)
 
 
     def Menu6(self):
@@ -1590,5 +1597,13 @@ class App(Tk):
 
 
 
+   
+
+
+
+
+
+
+
 if __name__ == '__main__':
-    aplicacion = App()
+    aplicacion = App()      
