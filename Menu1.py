@@ -1,4 +1,5 @@
 from tkinter import Button, Label, Scrollbar, Button, Frame, Entry, messagebox
+import tkinter
 from tkinter.ttk import Treeview, Combobox
 from scripts.sql import select, insert, update, delete
 from scripts.BuscarDni import BuscarDni
@@ -28,68 +29,77 @@ class Menu1(Frame):
         scroll.place(x=396, y=20, height=550)
         self.DATOS.place(x=20, y=20, height=550)
 
-        Label(self, text='  Nacimiento'  ).place(x=437, y= 20, width=200, height=54)
-        Label(self, text='  Ingreso'     ).place(x=437, y= 75, width=200, height=54)
-        Label(self, text='  Planilla'    ).place(x=437, y=130, width=200, height=54)
-        Label(self, text='  Asignacion'  ).place(x=437, y=185, width=200, height=54)
-        Label(self, text='  Movilidad'   ).place(x=437, y=240, width=200, height=54)
-        Label(self, text='  Sueldo'      ).place(x=437, y=295, width=200, height=54)
-        Label(self, text='  Cargo'       ).place(x=437, y=350, width=200, height=54)
-        Label(self, text='  Aportacion'  ).place(x=437, y=405, width=200, height=54)
-        Label(self, text='  Comision'    ).place(x=437, y=460, width=200, height=54)
-        Label(self, text='  C.u.s.p.p.'  ).place(x=437, y=515, width=200, height=55)        
-        Label(self, text='  Cuenta'      ).place(x=638, y= 20, width=200, height=54)       
-        Label(self, text='  Licencia'    ).place(x=638, y= 75, width=200, height=54)
-        Label(self, text='  Categoria'   ).place(x=638, y=130, width=200, height=54)
-        Label(self, text='  Revalidacion').place(x=638, y=185, width=200, height=54)        
-        Label(self, text='  Area'        ).place(x=638, y=240, width=200, height=54)
-        Label(self, text='  Celular'     ).place(x=638, y=295, width=200, height=54)
-        Label(self, text='  Distrito'    ).place(x=638, y=350, width=200, height=54)
-        Label(self, text='  Edad'        ).place(x=638, y=405, width=200, height=54)
-        Label(self, text='  Tiempo'      ).place(x=638, y=460, width=200, height=54)
-        Label(self, text='  Retiro'      ).place(x=638, y=515, width=200, height=55)
 
-        self.NACIMIENTO   = Label(self, fg='#000000', anchor='e')
-        self.INGRESO      = Label(self, fg='#000000', anchor='e')
-        self.PLANILLA     = Label(self, fg='#000000', anchor='e')
-        self.ASIGNACION   = Label(self, fg='#000000', anchor='e')
-        self.MOVILIDAD    = Label(self, fg='#000000', anchor='e')
-        self.SUELDO       = Label(self, fg='#000000', anchor='e')
-        self.CARGO        = Label(self, fg='#000000', anchor='e')
-        self.APORTACION   = Label(self, fg='#000000', anchor='e')
-        self.COMISION     = Label(self, fg='#000000', anchor='e')        
-        self.CUSPP        = Label(self, fg='#000000', anchor='e')
-        self.CUENTA       = Label(self, fg='#000000', anchor='e')
-        self.LICENCIA     = Label(self, fg='#000000', anchor='e')
-        self.CATEGORIA    = Label(self, fg='#000000', anchor='e')
-        self.REVALIDACION = Label(self, fg='#000000', anchor='e')
-        self.AREA         = Label(self, fg='#000000', anchor='e')
-        self.CELULAR      = Label(self, fg='#000000', anchor='e')
-        self.DISTRITO     = Label(self, fg='#000000', anchor='e')
-        self.EDAD         = Label(self, fg='#000000', anchor='e')
-        self.TIEMPO       = Label(self, fg='#000000', anchor='e')
-        self.RETIRO       = Label(self, fg='#000000', anchor='e')
         
-        self.NACIMIENTO.place   (x=448, y= 44, width=182)
-        self.INGRESO.place      (x=448, y= 99, width=182)
-        self.PLANILLA.place     (x=448, y=154, width=182)
-        self.ASIGNACION.place   (x=448, y=209, width=182)
-        self.MOVILIDAD.place    (x=448, y=264, width=182)
-        self.SUELDO.place       (x=448, y=319, width=182)
-        self.CARGO.place        (x=448, y=374, width=182)
-        self.APORTACION.place   (x=448, y=429, width=182)
-        self.COMISION.place     (x=448, y=484, width=182)
-        self.CUSPP.place        (x=448, y=539, width=182)
-        self.CUENTA.place       (x=649, y= 44, width=182)
-        self.LICENCIA.place     (x=649, y= 99, width=182)
-        self.CATEGORIA.place    (x=649, y=154, width=182)
-        self.REVALIDACION.place (x=649, y=209, width=182)
-        self.AREA.place         (x=649, y=264, width=182)
-        self.CELULAR.place      (x=649, y=319, width=182)
-        self.DISTRITO.place     (x=649, y=374, width=182)
-        self.EDAD.place         (x=649, y=429, width=182)
-        self.TIEMPO.place       (x=649, y=484, width=182)
-        self.RETIRO.place       (x=649, y=539, width=182)
+
+        
+
+        titulos1 = ('Fecha de nacimiento', 'Fecha de ingreso', 'Planilla', 'Asignacion familiar', 'Movilidad',
+                   'Remuneracion total', 'Puesto laboral', 'Entidad de aportacion', 'Tipo de comision', 'C.u.s.p.p.')
+        titulos2 = ('Cuenta bancaria', 'Numero de licencia', 'Tipo de categoria', 'Fecha de revalidacion', 'Area de labor',
+                   'Numero de celular', 'distrito de residencia', 'Edad actual', 'Tiempo de permanencia', 'Fecha de retiro')
+
+        posicion = -35
+
+        for numero in range(10):
+
+            posicion+=55
+            Label(self, text=titulos1[numero]).place(x=437, y=posicion, width=200, height=54)
+            Label(self, text=titulos2[numero]).place(x=638, y=posicion, width=200, height=54)        
+        
+
+        self.NACIMIENTO = Label(self, fg='#000000', anchor='e')
+        self.INGRESO = Label(self, fg='#000000', anchor='e')
+        self.PLANILLA = Label(self, fg='#000000', anchor='e')
+        self.ASIGNACION = Label(self, fg='#000000', anchor='e')
+        self.MOVILIDAD = Label(self, fg='#000000', anchor='e')
+        self.SUELDO = Label(self, fg='#000000', anchor='e')
+        self.CARGO = Label(self, fg='#000000', anchor='e')
+        self.APORTACION = Label(self, fg='#000000', anchor='e')
+        self.COMISION = Label(self, fg='#000000', anchor='e')        
+        self.CUSPP = Label(self, fg='#000000', anchor='e')
+        self.CUENTA = Label(self, fg='#000000', anchor='e')
+        self.LICENCIA = Label(self, fg='#000000', anchor='e')
+        self.CATEGORIA = Label(self, fg='#000000', anchor='e')
+        self.REVALIDACION = Label(self, fg='#000000', anchor='e')
+        self.AREA = Label(self, fg='#000000', anchor='e')
+        self.CELULAR = Label(self, fg='#000000', anchor='e')
+        self.DISTRITO = Label(self, fg='#000000', anchor='e')
+        self.EDAD = Label(self, fg='#000000', anchor='e')
+        self.TIEMPO = Label(self, fg='#000000', anchor='e')
+        self.RETIRO = Label(self, fg='#000000', anchor='e')
+
+        lista = (self.NACIMIENTO, self.INGRESO, self.PLANILLA, self.ASIGNACION, self.MOVILIDAD,
+                 self.SUELDO, self.CARGO, self.APORTACION, self.COMISION, self.CUSPP)
+
+        posicion = -11
+        for numero in range(10):
+            posicion+=55
+            lista[numero].place(x=448, y=posicion, width=182)
+        
+        
+        
+
+        #self.NACIMIENTO.place   (x=448, y= 44, width=182)
+        #self.INGRESO.place      (x=448, y= 99, width=182)
+        #self.PLANILLA.place     (x=448, y=154, width=182)
+        #self.ASIGNACION.place   (x=448, y=209, width=182)
+        #self.MOVILIDAD.place    (x=448, y=264, width=182)
+        #self.SUELDO.place       (x=448, y=319, width=182)
+        #self.CARGO.place        (x=448, y=374, width=182)
+        #self.APORTACION.place   (x=448, y=429, width=182)
+        #self.COMISION.place     (x=448, y=484, width=182)
+        #self.CUSPP.place        (x=448, y=539, width=182)
+        #self.CUENTA.place       (x=649, y= 44, width=182)
+        #self.LICENCIA.place     (x=649, y= 99, width=182)
+        #self.CATEGORIA.place    (x=649, y=154, width=182)
+        #self.REVALIDACION.place (x=649, y=209, width=182)
+        #self.AREA.place         (x=649, y=264, width=182)
+        #self.CELULAR.place      (x=649, y=319, width=182)
+        #self.DISTRITO.place     (x=649, y=374, width=182)
+        #self.EDAD.place         (x=649, y=429, width=182)
+        #self.TIEMPO.place       (x=649, y=484, width=182)
+        #self.RETIRO.place       (x=649, y=539, width=182)
 
         # Botones de gestion
         Button(self, text='AGREGAR'  , command=self.Agregar   ).place(x=890, y=20, width=90, height=30)
@@ -103,60 +113,58 @@ class Menu1(Frame):
         # Posicionamos la ventana principal
         self.place(width=1000, height=600)
 
-    def Agregar(self):
+    def Agregar(self):       
+     
+        contenedor = Frame(self)
+        Label(contenedor, bg='#F8FDFF', text='  Buscar Dni'         ).place(       width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Numero Dni'         ).place(y= 55, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Apellido Paterno'   ).place(y=110, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Apellido Materno'   ).place(y=165, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Nombre'             ).place(y=220, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Fecha de Nacimiento').place(y=275, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Fecha de Ingreso'   ).place(y=330, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Planilla'           ).place(y=385, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  A. Fami.'           ).place(x= 62, y=385)
+        Label(contenedor, bg='#F8FDFF', text='  Movili.'            ).place(x=123, y=385)
+        Label(contenedor, bg='#F8FDFF', text='  Cargo Laboral'      ).place(y=440, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Cuenta Bancaria'    ).place(y=495, width=200, height=55)
+        Label(contenedor, bg='#F8FDFF', text='  Aportacion'         ).place(x=201, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Comision'           ).place(x=312)
+        Label(contenedor, bg='#F8FDFF', text='  C.u.s.p.p.'         ).place(x=201, y= 55, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Catego.'            ).place(x=327, y= 55)
+        Label(contenedor, bg='#F8FDFF', text='  Revalidacion'       ).place(x=201, y=110, width=200, height=54)        
+        Label(contenedor, bg='#F8FDFF', text='  Licencia'           ).place(x=297, y=110)
+        Label(contenedor, bg='#F8FDFF', text='  Area'               ).place(x=201, y=165, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Celular'            ).place(x=297, y=165)
+        Label(contenedor, bg='#F8FDFF', text='  Distrito'           ).place(x=201, y=220, width=200, height=54)
+        Label(contenedor, bg='#F8FDFF', text='  Fecha de Cese'      ).place(x=201, y=275, width=200, height=54)                
        
-        # Creamos los elementos del menu 1 agregar
-        menu = Frame(self)
-
-        Label(menu, bg='#F8FDFF', text='  Buscar Dni'         ).place(       width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Numero Dni'         ).place(y= 55, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Apellido Paterno'   ).place(y=110, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Apellido Materno'   ).place(y=165, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Nombre'             ).place(y=220, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Fecha de Nacimiento').place(y=275, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Fecha de Ingreso'   ).place(y=330, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Planilla'           ).place(y=385, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  A. Fami.'           ).place(x= 62, y=385)
-        Label(menu, bg='#F8FDFF', text='  Movili.'            ).place(x=123, y=385)
-        Label(menu, bg='#F8FDFF', text='  Cargo Laboral'      ).place(y=440, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Cuenta Bancaria'    ).place(y=495, width=200, height=55)
-        Label(menu, bg='#F8FDFF', text='  Aportacion'         ).place(x=201, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Comision'           ).place(x=312)
-        Label(menu, bg='#F8FDFF', text='  C.u.s.p.p.'         ).place(x=201, y= 55, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Catego.'            ).place(x=327, y= 55)
-        Label(menu, bg='#F8FDFF', text='  Revalidacion'       ).place(x=201, y=110, width=200, height=54)        
-        Label(menu, bg='#F8FDFF', text='  Licencia'           ).place(x=297, y=110)
-        Label(menu, bg='#F8FDFF', text='  Area'               ).place(x=201, y=165, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Celular'            ).place(x=297, y=165)
-        Label(menu, bg='#F8FDFF', text='  Distrito'           ).place(x=201, y=220, width=200, height=54)
-        Label(menu, bg='#F8FDFF', text='  Fecha de Cese'      ).place(x=201, y=275, width=200, height=54)                
-       
-        self.buscar       = Button(menu, text='BUSCAR', bg='#88C7FF', command=self.SearchDni)
-        self.buscarDni    = Entry(menu)     
-        self.numeroDni    = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')        
-        self.apPaterno    = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.apMaterno    = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.nombre       = Label(menu, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.fechaNaci    = Entry(menu)
-        self.fechaIngr    = Entry(menu)
-        self.planilla     = Entry(menu)        
-        self.asignacion   = Entry(menu)
-        self.movilidad    = Entry(menu)
-        self.cargo        = Combobox(menu, state='readonly', values=['INSPECTOR VIAL', 'OPERADOR DE GRUA LIVIANA', 'OPERADOR DE GRUA PESADA', ''])       
-        self.cuenta       = Entry(menu)
-        self.aportacion   = Combobox(menu, state='readonly', values=['ONP', 'HABITAT', 'INTEGRA', 'PRIMA', 'PROFUTURO',''])
-        self.comision     = Combobox(menu, state='readonly', values=['FLUJO', 'MIXTA', ''])
-        self.cuspp        = Entry(menu)
-        self.categoria    = Combobox(menu, state='readonly', values=['AIIA', 'AIIB', 'AIIIA', 'AIIIB', 'AIIIC', ''])       
-        self.revalidacion = Entry(menu)
-        self.codigo       = Entry(menu)
-        self.area         = Combobox(menu, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA', ''])       
-        self.celular      = Entry(menu)
-        self.distrito     = Combobox(menu, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS', 'LOS OLIVOS',
+        self.buscar       = Button(contenedor, text='BUSCAR', bg='#88C7FF', command=self.SearchDni)
+        self.buscarDni    = Entry(contenedor)     
+        self.numeroDni    = Label(contenedor, bg='#FFFFFF', fg='#000000', anchor='w')        
+        self.apPaterno    = Label(contenedor, bg='#FFFFFF', fg='#000000', anchor='w')
+        self.apMaterno    = Label(contenedor, bg='#FFFFFF', fg='#000000', anchor='w')
+        self.nombre       = Label(contenedor, bg='#FFFFFF', fg='#000000', anchor='w')
+        self.fechaNaci    = Entry(contenedor)
+        self.fechaIngr    = Entry(contenedor)
+        self.planilla     = Entry(contenedor)        
+        self.asignacion   = Entry(contenedor)
+        self.movilidad    = Entry(contenedor)
+        self.cargo        = Combobox(contenedor, state='readonly', values=['INSPECTOR VIAL', 'OPERADOR DE GRUA LIVIANA', 'OPERADOR DE GRUA PESADA', ''])       
+        self.cuenta       = Entry(contenedor)
+        self.aportacion   = Combobox(contenedor, state='readonly', values=['ONP', 'HABITAT', 'INTEGRA', 'PRIMA', 'PROFUTURO',''])
+        self.comision     = Combobox(contenedor, state='readonly', values=['FLUJO', 'MIXTA', ''])
+        self.cuspp        = Entry(contenedor)
+        self.categoria    = Combobox(contenedor, state='readonly', values=['AIIA', 'AIIB', 'AIIIA', 'AIIIB', 'AIIIC', ''])       
+        self.revalidacion = Entry(contenedor)
+        self.codigo       = Entry(contenedor)
+        self.area         = Combobox(contenedor, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA', ''])       
+        self.celular      = Entry(contenedor)
+        self.distrito     = Combobox(contenedor, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS', 'LOS OLIVOS',
                                         'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO', 'SAN JUAN DE LURIGANCHO',
                                         'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO',
                                         'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO', ''])      
-        self.retiro = Entry(menu)                       
+        self.retiro = Entry(contenedor)                       
 
         # Posicionamiento de los elementos      
         self.buscar.place      (x=136, y= 23, width= 54, height=24)    
@@ -184,18 +192,18 @@ class Menu1(Frame):
         self.retiro.place      (x=211, y=298, width=180, height=24)         
             
         # Creamos los botones principales
-        Button(menu, text='GRABAR', command=self.SaveEmployee).place(x=453, width=90, height=30)     
-        Button(menu, text='SALIR' , command=lambda:menu.destroy(), bg='#DF2F2F').place(x=453, y=35, width=90, height=30)
+        Button(contenedor, text='GRABAR', command=self.SaveEmployee).place(x=453, width=90, height=30)     
+        Button(contenedor, text='SALIR' , command=lambda:contenedor.destroy(), bg='#DF2F2F').place(x=453, y=35, width=90, height=30)
 
         # Foco en cuadro de busqueda y Superponemos la ventana principal
         self.buscarDni.focus_set()
-        menu.grab_set()
+        contenedor.grab_set()
         
-        # Asignamos variablo global a menu para destruir
-        self.agregar = menu
+        # Asignamos variablo global a contenedor para destruir
+        self.agregar = contenedor
 
         # Posicionamos la ventana principal
-        menu.place(x=437, y=20, width=563, height=550)
+        contenedor.place(x=437, y=20, width=563, height=550)
 
     def Modify(self):
         
