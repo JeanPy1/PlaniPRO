@@ -1,8 +1,7 @@
 from tkinter import Button, Label, Scrollbar, Button, Frame, Entry, messagebox
-import tkinter
 from tkinter.ttk import Treeview, Combobox
 from scripts.sql import select, insert, update, delete
-from scripts.BuscarDni import BuscarDni
+from scripts.BuscarDni import BuscarDatosDni
 from scripts.edad import Edad, Tiempo, FechaValida
 from scripts.trabajador import datos
 
@@ -11,7 +10,6 @@ class Menu1(Frame):
     def __init__(self, contenedor):
 
         super().__init__(contenedor)
-
         self.DATOS = Treeview(self, columns=('#1', '#2', '#3'))
         self.DATOS.column('#0', width=0)
         self.DATOS.column('#1', width=30, minwidth=30, anchor='center')
@@ -23,284 +21,70 @@ class Menu1(Frame):
 
         scroll = Scrollbar(self, orient='vertical', command=self.DATOS.yview)
         self.DATOS.configure(yscrollcommand=scroll.set)
+        self.DATOS.bind('<<TreeviewSelect>>', self.MostrarDetalles)
+        scroll.place(x=396, y=30, height=548)
+        self.DATOS.place(x=20, y=30, height=548)               
 
-        self.DATOS.bind('<<TreeviewSelect>>', self.ShowDetails)
+        titulos1 = (' Fecha de nacimiento', ' Fecha de ingreso', ' Planilla', ' Asignacion familiar', ' Movilidad',
+                    ' Remuneracion total', ' Puesto laboral', ' Entidad de aportacion', ' Tipo de comision')
+        titulos2 = (' C.u.s.p.p.', ' Cuenta bancaria', ' Numero de licencia', ' Tipo de categoria', ' Fecha de revalidacion',
+                    ' Area de labor', ' Numero de celular', ' distrito de residencia', ' Fecha de retiro')
+                
+        columna1 = []
+        columna2 = []
 
-        scroll.place(x=396, y=20, height=550)
-        self.DATOS.place(x=20, y=20, height=550)
+        posicion = -31
+        for numero in range(9):
+            posicion+=61
+            Label(self, text=titulos1[numero]).place(x=430, y=posicion, width=205, height=60)
+            Label(self, text=titulos2[numero]).place(x=636, y=posicion, width=205, height=60)  
 
+            columna1.append(Label(self, fg='#000000', anchor='e'))   
+            columna1[numero].place(x=435, y=posicion+28, width=195)
+            columna2.append(Label(self, fg='#000000', anchor='e'))
+            columna2[numero].place(x=641, y=posicion+28, width=195)          
+            
+        self.DATOS_DETALLES = columna1 + columna2    
 
-        
-
-        
-
-        titulos1 = ('Fecha de nacimiento', 'Fecha de ingreso', 'Planilla', 'Asignacion familiar', 'Movilidad',
-                   'Remuneracion total', 'Puesto laboral', 'Entidad de aportacion', 'Tipo de comision', 'C.u.s.p.p.')
-        titulos2 = ('Cuenta bancaria', 'Numero de licencia', 'Tipo de categoria', 'Fecha de revalidacion', 'Area de labor',
-                   'Numero de celular', 'distrito de residencia', 'Edad actual', 'Tiempo de permanencia', 'Fecha de retiro')
-
-        posicion = -35
-
-        for numero in range(10):
-
-            posicion+=55
-            Label(self, text=titulos1[numero]).place(x=437, y=posicion, width=200, height=54)
-            Label(self, text=titulos2[numero]).place(x=638, y=posicion, width=200, height=54)        
-        
-
-        self.NACIMIENTO = Label(self, fg='#000000', anchor='e')
-        self.INGRESO = Label(self, fg='#000000', anchor='e')
-        self.PLANILLA = Label(self, fg='#000000', anchor='e')
-        self.ASIGNACION = Label(self, fg='#000000', anchor='e')
-        self.MOVILIDAD = Label(self, fg='#000000', anchor='e')
-        self.SUELDO = Label(self, fg='#000000', anchor='e')
-        self.CARGO = Label(self, fg='#000000', anchor='e')
-        self.APORTACION = Label(self, fg='#000000', anchor='e')
-        self.COMISION = Label(self, fg='#000000', anchor='e')        
-        self.CUSPP = Label(self, fg='#000000', anchor='e')
-        self.CUENTA = Label(self, fg='#000000', anchor='e')
-        self.LICENCIA = Label(self, fg='#000000', anchor='e')
-        self.CATEGORIA = Label(self, fg='#000000', anchor='e')
-        self.REVALIDACION = Label(self, fg='#000000', anchor='e')
-        self.AREA = Label(self, fg='#000000', anchor='e')
-        self.CELULAR = Label(self, fg='#000000', anchor='e')
-        self.DISTRITO = Label(self, fg='#000000', anchor='e')
-        self.EDAD = Label(self, fg='#000000', anchor='e')
-        self.TIEMPO = Label(self, fg='#000000', anchor='e')
-        self.RETIRO = Label(self, fg='#000000', anchor='e')
-
-        lista = (self.NACIMIENTO, self.INGRESO, self.PLANILLA, self.ASIGNACION, self.MOVILIDAD,
-                 self.SUELDO, self.CARGO, self.APORTACION, self.COMISION, self.CUSPP)
-
-        posicion = -11
-        for numero in range(10):
-            posicion+=55
-            lista[numero].place(x=448, y=posicion, width=182)
-        
-        
-        
-
-        #self.NACIMIENTO.place   (x=448, y= 44, width=182)
-        #self.INGRESO.place      (x=448, y= 99, width=182)
-        #self.PLANILLA.place     (x=448, y=154, width=182)
-        #self.ASIGNACION.place   (x=448, y=209, width=182)
-        #self.MOVILIDAD.place    (x=448, y=264, width=182)
-        #self.SUELDO.place       (x=448, y=319, width=182)
-        #self.CARGO.place        (x=448, y=374, width=182)
-        #self.APORTACION.place   (x=448, y=429, width=182)
-        #self.COMISION.place     (x=448, y=484, width=182)
-        #self.CUSPP.place        (x=448, y=539, width=182)
-        #self.CUENTA.place       (x=649, y= 44, width=182)
-        #self.LICENCIA.place     (x=649, y= 99, width=182)
-        #self.CATEGORIA.place    (x=649, y=154, width=182)
-        #self.REVALIDACION.place (x=649, y=209, width=182)
-        #self.AREA.place         (x=649, y=264, width=182)
-        #self.CELULAR.place      (x=649, y=319, width=182)
-        #self.DISTRITO.place     (x=649, y=374, width=182)
-        #self.EDAD.place         (x=649, y=429, width=182)
-        #self.TIEMPO.place       (x=649, y=484, width=182)
-        #self.RETIRO.place       (x=649, y=539, width=182)
-
-        # Botones de gestion
-        Button(self, text='AGREGAR'  , command=self.Agregar   ).place(x=890, y=20, width=90, height=30)
-        Button(self, text='MODIFICAR', command=self.Modify).place(x=890, y=55, width=90, height=30)
-        Button(self, text='ELIMINAR' , command=self.Remove).place(x=890, y=90, width=90, height=30)
-        Button(self, text='SALIR'    , command=lambda:self.destroy(), bg='#DF2F2F').place(x=890, y=125, width=90, height=30)
-
-        # Cargamos datos al treeview
-        self.LoadEmployee()
-
-        # Posicionamos la ventana principal
+        Button(self, text='AGREGAR', command=self.Agregar).place(x=890, y=30, width=90, height=30)
+        Button(self, text='MODIFICAR', command=self.Modificar).place(x=890, y=65, width=90, height=30)
+        Button(self, text='ELIMINAR', command=self.Eliminar).place(x=890, y=100, width=90, height=30)
+        Button(self, text='SALIR', command=lambda:self.destroy(), bg='#DF2F2F').place(x=890, y=135, width=90, height=30)
+ 
+        self.CargarTrabajadores()
         self.place(width=1000, height=600)
 
-    def Agregar(self):       
-     
-        contenedor = Frame(self)
-        Label(contenedor, bg='#F8FDFF', text='  Buscar Dni'         ).place(       width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Numero Dni'         ).place(y= 55, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Apellido Paterno'   ).place(y=110, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Apellido Materno'   ).place(y=165, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Nombre'             ).place(y=220, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Fecha de Nacimiento').place(y=275, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Fecha de Ingreso'   ).place(y=330, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Planilla'           ).place(y=385, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  A. Fami.'           ).place(x= 62, y=385)
-        Label(contenedor, bg='#F8FDFF', text='  Movili.'            ).place(x=123, y=385)
-        Label(contenedor, bg='#F8FDFF', text='  Cargo Laboral'      ).place(y=440, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Cuenta Bancaria'    ).place(y=495, width=200, height=55)
-        Label(contenedor, bg='#F8FDFF', text='  Aportacion'         ).place(x=201, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Comision'           ).place(x=312)
-        Label(contenedor, bg='#F8FDFF', text='  C.u.s.p.p.'         ).place(x=201, y= 55, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Catego.'            ).place(x=327, y= 55)
-        Label(contenedor, bg='#F8FDFF', text='  Revalidacion'       ).place(x=201, y=110, width=200, height=54)        
-        Label(contenedor, bg='#F8FDFF', text='  Licencia'           ).place(x=297, y=110)
-        Label(contenedor, bg='#F8FDFF', text='  Area'               ).place(x=201, y=165, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Celular'            ).place(x=297, y=165)
-        Label(contenedor, bg='#F8FDFF', text='  Distrito'           ).place(x=201, y=220, width=200, height=54)
-        Label(contenedor, bg='#F8FDFF', text='  Fecha de Cese'      ).place(x=201, y=275, width=200, height=54)                
-       
-        self.buscar       = Button(contenedor, text='BUSCAR', bg='#88C7FF', command=self.SearchDni)
-        self.buscarDni    = Entry(contenedor)     
-        self.numeroDni    = Label(contenedor, bg='#FFFFFF', fg='#000000', anchor='w')        
-        self.apPaterno    = Label(contenedor, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.apMaterno    = Label(contenedor, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.nombre       = Label(contenedor, bg='#FFFFFF', fg='#000000', anchor='w')
-        self.fechaNaci    = Entry(contenedor)
-        self.fechaIngr    = Entry(contenedor)
-        self.planilla     = Entry(contenedor)        
-        self.asignacion   = Entry(contenedor)
-        self.movilidad    = Entry(contenedor)
-        self.cargo        = Combobox(contenedor, state='readonly', values=['INSPECTOR VIAL', 'OPERADOR DE GRUA LIVIANA', 'OPERADOR DE GRUA PESADA', ''])       
-        self.cuenta       = Entry(contenedor)
-        self.aportacion   = Combobox(contenedor, state='readonly', values=['ONP', 'HABITAT', 'INTEGRA', 'PRIMA', 'PROFUTURO',''])
-        self.comision     = Combobox(contenedor, state='readonly', values=['FLUJO', 'MIXTA', ''])
-        self.cuspp        = Entry(contenedor)
-        self.categoria    = Combobox(contenedor, state='readonly', values=['AIIA', 'AIIB', 'AIIIA', 'AIIIB', 'AIIIC', ''])       
-        self.revalidacion = Entry(contenedor)
-        self.codigo       = Entry(contenedor)
-        self.area         = Combobox(contenedor, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA', ''])       
-        self.celular      = Entry(contenedor)
-        self.distrito     = Combobox(contenedor, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS', 'LOS OLIVOS',
-                                        'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO', 'SAN JUAN DE LURIGANCHO',
-                                        'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO',
-                                        'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO', ''])      
-        self.retiro = Entry(contenedor)                       
+    def CargarTrabajadores(self):
 
-        # Posicionamiento de los elementos      
-        self.buscar.place      (x=136, y= 23, width= 54, height=24)    
-        self.buscarDni.place   (x= 10, y= 23, width=120, height=24)    
-        self.numeroDni.place   (x= 10, y= 78, width=180, height=24)
-        self.apPaterno.place   (x= 10, y=133, width=180, height=24)
-        self.apMaterno.place   (x= 10, y=188, width=180, height=24)
-        self.nombre.place      (x= 10, y=243, width=180, height=24)        
-        self.fechaNaci.place   (x= 10, y=298, width=180, height=24)        
-        self.fechaIngr.place   (x= 10, y=353, width=180, height=24)
-        self.planilla.place    (x= 10, y=408, width= 56, height=24)  
-        self.asignacion.place  (x= 72, y=408, width= 56, height=24)      
-        self.movilidad.place   (x=134, y=408, width= 56, height=24) 
-        self.cargo.place       (x= 10, y=463, width=180, height=24)        
-        self.cuenta.place      (x= 10, y=518, width=180, height=24)
-        self.aportacion.place  (x=211, y= 23, width=105, height=24) 
-        self.comision.place    (x=322, y= 23, width= 69, height=24) 
-        self.cuspp.place       (x=211, y= 78, width=120, height=24)
-        self.categoria.place   (x=337, y= 78, width= 54, height=24)
-        self.revalidacion.place(x=211, y=133, width= 90, height=24)
-        self.codigo.place      (x=307, y=133, width= 84, height=24)
-        self.area.place        (x=211, y=188, width= 90, height=24)
-        self.celular.place     (x=307, y=188, width= 84, height=24)
-        self.distrito.place    (x=211, y=243, width=180, height=24)
-        self.retiro.place      (x=211, y=298, width=180, height=24)         
-            
-        # Creamos los botones principales
-        Button(contenedor, text='GRABAR', command=self.SaveEmployee).place(x=453, width=90, height=30)     
-        Button(contenedor, text='SALIR' , command=lambda:contenedor.destroy(), bg='#DF2F2F').place(x=453, y=35, width=90, height=30)
-
-        # Foco en cuadro de busqueda y Superponemos la ventana principal
-        self.buscarDni.focus_set()
-        contenedor.grab_set()
-        
-        # Asignamos variablo global a contenedor para destruir
-        self.agregar = contenedor
-
-        # Posicionamos la ventana principal
-        contenedor.place(x=437, y=20, width=563, height=550)
-
-    def Modify(self):
-        
-        # Cargamos datos del trabajador a la ventana agregar
-        if self.DATOS.selection():            
-                
-                # Id del trabajador           
-                id = int(self.DATOS.item(self.DATOS.focus()).get('text'))
-                datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
-
-                # Mostramos datos del trabajador
-                self.Add()     
-                self.buscar.configure(state='disabled')
-                self.buscarDni.configure(state='disabled')
-                self.numeroDni['text'] = datos[1]
-                self.apPaterno['text'] = datos[2]
-                self.apMaterno['text'] = datos[3]
-                self.nombre['text'] = datos[4]
-                self.fechaNaci.insert(0, datos[5])
-                self.fechaIngr.insert(0, datos[6])
-                self.planilla.insert(0, datos[7])
-                self.asignacion.insert(0, datos[8])
-                self.movilidad.insert(0, datos[9])
-                self.aportacion.set(datos[10])
-                self.comision.set(datos[11])                                        
-                self.cuspp.insert(0, datos[12])
-                self.cargo.set(datos[13])
-                self.cuenta.insert(0, datos[14])                
-                self.area.set(datos[15])
-                self.codigo.insert(0, datos[16])                    
-                self.revalidacion.insert(0, datos[17])
-                self.categoria.set(datos[18])
-                self.celular.insert(0, datos[19])
-                self.distrito.set(datos[20])
-                self.retiro.insert(0, datos[21])
-
-    def Remove(self):
-
-        # Consulta para eliminar registro
-        if self.DATOS.selection():
-            respuesta = messagebox.askyesno('ELIMINAR','SEGURO?', default='no')
-
-            if respuesta:
-                # Id del trabajador
-                id = int(self.DATOS.item(self.DATOS.focus()).get('text'))
-
-                # Enviamos registro a cesado
-                if self.retiro['text'] != '':
-                    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
-
-                # Eliminamos sus datos
-                delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)
-
-                # Limpiamos y cargamos AllDetails
-                self.RemoveDetails()
-                self.ShowDetails()
-
-    def LoadEmployee(self):
-        
-        # Limpiamos el treeview
         self.DATOS.delete(*self.DATOS.get_children())
-        
-        # Obtenemos datos de todos los trabajadores
         datos = select('SELECT ID, NDNI, APAT, AMAT, NOMB FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC', True)
 
-        # cargamos datos al treeview
         for index, dato in enumerate(datos, 1):
             nombre = f'{dato[2]} {dato[3]} {dato[4]}'    
             self.DATOS.insert('', 'end', text=dato[0], values=(index, nombre, dato[1]))   
 
-    def RemoveDetails(self):
+    def MostrarDetalles(self, e):                
+       
+        if self.DATOS.selection():     
 
-            # Limpiamos los cuadros de AllDetails
-            self.NACIMIENTO['text'] = ''
-            self.INGRESO['text'] = ''
-            self.PLANILLA['text'] = ''
-            self.ASIGNACION['text'] = ''
-            self.MOVILIDAD['text'] = ''
-            self.SUELDO['text'] = ''
-            self.CARGO['text'] = ''
-            self.APORTACION['text'] = ''
-            self.COMISION['text'] = ''            
-            self.CUSPP['text'] = ''
-            self.CUENTA['text'] = ''
-            self.LICENCIA['text'] = ''
-            self.CATEGORIA['text'] = ''
-            self.REVALIDACION['text'] = ''
-            self.AREA['text'] = ''
-            self.CELULAR['text'] = ''
-            self.DISTRITO['text'] = ''
-            self.EDAD['text'] = ''
-            self.TIEMPO['text'] = ''
-            self.RETIRO['text'] = ''
+            self.BorrarDetalles()                      
+            id = int(self.DATOS.item(self.DATOS.focus()).get('text'))               
+            datos = select(f'''SELECT FNAC, FING, SPLA, AFAM, SMOV, PLAB, EAPO, TCOM, NCUS, NCUE, NLIC,
+                                      CLIC, VLIC, ALAB, NCEL, DRES, FCES FROM ACTIVO WHERE ID = {id}''', False)
+            
+            detalles = list(datos)
+            detalles.insert(5, datos[2] + datos[3] + datos[4])            
+            
+            for index, label in enumerate(self.DATOS_DETALLES):
+                label['text'] = detalles[index]    
 
-    def SearchDni(self):
+    def BorrarDetalles(self):
+
+        for label in self.DATOS_DETALLES:
+            label['text'] = ''   
+
+    def BuscarDni(self):
       
-        # Validamos el numero de dni ingresado
         dni = self.buscarDni.get()
         if dni == '':
             messagebox.showinfo('BUSCAR', 'INGRESA EL NUMERO DE DNI')    
@@ -309,9 +93,8 @@ class Menu1(Frame):
             messagebox.showinfo('BUSCAR', 'INGRESA CORRECTAMENTE EL NUMERO DE DNI') 
             self.buscarDni.focus()      
         else:
-
-            # Buscar datos del dni
-            persona = BuscarDni(dni)
+           
+            persona = BuscarDatosDni(dni)
 
             if persona:
                 self.numeroDni['text'] = persona['numeroDocumento']
@@ -323,41 +106,6 @@ class Menu1(Frame):
             else:                
                 messagebox.showinfo('BUSCAR', 'NO SE ENCONTRO EL NUMERO DE DNI')           
                 self.buscarDni.focus()   
-
-    def ShowDetails(self, e):
-                
-        # Mostramos AllDetails del trabajador selecionado
-        if self.DATOS.selection():     
-
-            self.RemoveDetails()
-            
-            # Id del trabajador             
-            id = int(self.DATOS.item(self.DATOS.focus()).get('text'))
-            
-            # Obtener sus datos
-            datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
-
-            # Mostramos AllDetails del trabajador en los cuadros          
-            self.NACIMIENTO['text']   = datos[5]
-            self.INGRESO['text']      = datos[6]
-            self.PLANILLA['text']     = f'{datos[7]:,.2f}'
-            self.ASIGNACION['text']   = f'{datos[8]:,.2f}'
-            self.MOVILIDAD['text']    = f'{datos[9]:,.2f}'
-            self.SUELDO['text']       = f'{datos[7] + datos[8] + datos[9]:,.2f}'
-            self.CARGO['text']        = datos[13]
-            self.APORTACION['text']   = datos[10]
-            self.COMISION['text']     = datos[11]
-            self.CUSPP['text']        = datos[12]
-            self.CUENTA['text']       = datos[14]
-            self.LICENCIA['text']     = datos[16]
-            self.CATEGORIA['text']    = datos[18]
-            self.REVALIDACION['text'] = datos[17]
-            self.AREA['text']         = datos[15]
-            self.CELULAR['text']      = datos[19]
-            self.DISTRITO['text']     = datos[20]
-            self.EDAD['text']         = Edad(datos[5])
-            self.TIEMPO['text']       = Tiempo(datos[6])
-            self.RETIRO['text']       = datos[21]
 
     def SaveEmployee(self):
 
@@ -466,8 +214,8 @@ class Menu1(Frame):
                 update(query)
 
             # Ordenamos los datos con el nuevo registro
-            self.LoadEmployee()
-            self.RemoveDetails()
+            self.CargarTrabajadores()
+            self.BorrarDetalles()
 
             # Devolvemos la seleccion del trabajador
             if seleccion:
@@ -479,4 +227,151 @@ class Menu1(Frame):
             # Cerrar ventana                           
             self.agregar.destroy()
 
+    def Agregar(self):       
+     
+
+
+        contenedor = Frame(self)
+
+        titulos1 = (' Buscar Dni', ' Numero Dni', ' Apellido Paterno', ' Apellido Materno', ' Nombre',
+                    ' Fecha de Nacimiento', ' Fecha de Ingreso', ' Planilla', ' Cargo Laboral')                    
+        titulos2 = (' Cuenta Bancaria', ' Aportacion', ' Comision', ' C.u.s.p.p.', 'Licencia', ' Revalidacion', ' Area', ' Distrito', ' Fecha de Cese')
+
+        posicion = -61
+        for numero in range(9):
+            posicion+=61
+            Label(contenedor, text=titulos1[numero]).place(x=  0, y=posicion, width=205, height=60)
+            Label(contenedor, text=titulos2[numero]).place(x=206, y=posicion, width=205, height=60) 
+       
+        #Label(contenedor, text='  A. Fami.'           ).place(x= 62, y=385)
+        #Label(contenedor, text='  Movili.'            ).place(x=123, y=385)
+        #Label(contenedor, text='  Comision'           ).place(x=312)
+        #Label(contenedor, text='  Catego.'            ).place(x=327, y= 55)      
+        #Label(contenedor, text='  Licencia'           ).place(x=297, y=110)
+        #Label(contenedor, text='  Celular'            ).place(x=297, y=165)            
+       
+        self.buscar       = Button(contenedor, text='BUSCAR', bg='#88C7FF', command=self.BuscarDni)
+        self.buscarDni    = Entry(contenedor, relief='ridge', bd=2)     
+        self.numeroDni    = Label(contenedor, fg='#000000', anchor='w')        
+        self.apPaterno    = Label(contenedor, fg='#000000', anchor='w')
+        self.apMaterno    = Label(contenedor, fg='#000000', anchor='w')
+        self.nombre       = Label(contenedor, fg='#000000', anchor='w')
+        self.fechaNaci    = Entry(contenedor, relief='ridge', bd=2)   
+        self.fechaIngr    = Entry(contenedor, relief='ridge', bd=2)   
+        self.planilla     = Entry(contenedor, relief='ridge', bd=2)           
+        self.asignacion   = Entry(contenedor, relief='ridge', bd=2)   
+        self.movilidad    = Entry(contenedor, relief='ridge', bd=2)   
+        self.cargo        = Combobox(contenedor, state='readonly', values=['INSPECTOR VIAL', 'OPERADOR DE GRUA LIVIANA', 'OPERADOR DE GRUA PESADA', ''])       
+        self.cuenta       = Entry(contenedor, relief='ridge', bd=2)   
+        self.aportacion   = Combobox(contenedor, state='readonly', values=['ONP', 'HABITAT', 'INTEGRA', 'PRIMA', 'PROFUTURO',''])
+        self.comision     = Combobox(contenedor, state='readonly', values=['FLUJO', 'MIXTA', ''])
+        self.cuspp        = Entry(contenedor, relief='ridge', bd=2)   
+        self.codigo       = Entry(contenedor, relief='ridge', bd=2) 
+        self.categoria    = Combobox(contenedor, state='readonly', values=['AIIA', 'AIIB', 'AIIIA', 'AIIIB', 'AIIIC', ''])       
+        self.revalidacion = Entry(contenedor, relief='ridge', bd=2)             
+        self.area         = Combobox(contenedor, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA', ''])       
+        self.celular      = Entry(contenedor, relief='ridge', bd=2)   
+        self.distrito     = Combobox(contenedor, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS', 'LOS OLIVOS',
+                                        'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO', 'SAN JUAN DE LURIGANCHO',
+                                        'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO',
+                                        'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO', ''])      
+        self.retiro = Entry(contenedor, relief='ridge', bd=2)                       
+
+        # Posicionamiento de los elementos      
+        self.buscar.place      (x=136, y= 24, width= 54, height=28)    
+        self.buscarDni.place   (x=  5, y= 24, width=120, height=28)    
+        self.numeroDni.place   (x=  5, y= 85, width=195, height=28)
+        self.apPaterno.place   (x=  5, y=146, width=195, height=28)
+        self.apMaterno.place   (x=  5, y=207, width=195, height=28)
+        self.nombre.place      (x=  5, y=268, width=195, height=28)        
+        self.fechaNaci.place   (x=  5, y=329, width=195, height=28)        
+        self.fechaIngr.place   (x=  5, y=390, width=195, height=28)
+        self.planilla.place    (x=  5, y=451, width= 56, height=28)  
+        self.asignacion.place  (x= 72, y=451, width= 56, height=28)      
+        self.movilidad.place   (x=134, y=451, width= 56, height=28) 
+        self.cargo.place       (x=  5, y=512, width=195, height=28)        
+        
+        self.cuenta.place      (x=211, y= 24, width=195, height=28)
+        self.aportacion.place  (x=211, y= 85, width=195, height=28) 
+        self.comision.place    (x=211, y=146, width=195, height=28)
+        self.cuspp.place       (x=211, y=207, width=195, height=28)
+        self.codigo.place      (x=211, y=268, width= 84, height=28)
+        #self.categoria.place   (x=337, y= 78, width= 54, height=28)
+        self.revalidacion.place(x=211, y=329, width= 90, height=28)        
+        self.area.place        (x=211, y=390, width= 90, height=28)
+        #self.celular.place     (x=307, y=188, width= 84, height=28)
+        self.distrito.place    (x=211, y=451, width=195, height=28)
+        self.retiro.place      (x=211, y=512, width=195, height=28)         
+            
+        # Creamos los botones principales
+        Button(contenedor, text='GRABAR', command=self.SaveEmployee).place(x=460, width=90, height=30)     
+        Button(contenedor, text='SALIR' , command=lambda:contenedor.destroy(), bg='#DF2F2F').place(x=460, y=35, width=90, height=30)
+
+        # Foco en cuadro de busqueda y Superponemos la ventana principal
+        self.buscarDni.focus_set()
+        contenedor.grab_set()
+        
+        # Asignamos variablo global a contenedor para destruir
+        self.agregar = contenedor
+
+        # Posicionamos la ventana principal
+        contenedor.place(x=430, y=30, width=550, height=548)
+
+    def Modificar(self):
+        
+        # Cargamos datos del trabajador a la ventana agregar
+        if self.DATOS.selection():            
+                
+                # Id del trabajador           
+                id = int(self.DATOS.item(self.DATOS.focus()).get('text'))
+                datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
+
+                # Mostramos datos del trabajador
+                self.Add()     
+                self.buscar.configure(state='disabled')
+                self.buscarDni.configure(state='disabled')
+                self.numeroDni['text'] = datos[1]
+                self.apPaterno['text'] = datos[2]
+                self.apMaterno['text'] = datos[3]
+                self.nombre['text'] = datos[4]
+                self.fechaNaci.insert(0, datos[5])
+                self.fechaIngr.insert(0, datos[6])
+                self.planilla.insert(0, datos[7])
+                self.asignacion.insert(0, datos[8])
+                self.movilidad.insert(0, datos[9])
+                self.aportacion.set(datos[10])
+                self.comision.set(datos[11])                                        
+                self.cuspp.insert(0, datos[12])
+                self.cargo.set(datos[13])
+                self.cuenta.insert(0, datos[14])                
+                self.area.set(datos[15])
+                self.codigo.insert(0, datos[16])                    
+                self.revalidacion.insert(0, datos[17])
+                self.categoria.set(datos[18])
+                self.celular.insert(0, datos[19])
+                self.distrito.set(datos[20])
+                self.retiro.insert(0, datos[21])
+
+    def Eliminar(self):
+       
+        if self.DATOS.selection():
+            respuesta = messagebox.askyesno('ELIMINAR','SEGURO?', default='no')
+
+            if respuesta:
+              
+                id = int(self.DATOS.item(self.DATOS.focus()).get('text'))                
+                if self.DATOS_DETALLES[19] != '':
+                    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
+
+                delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)               
+                
+                self.BorrarDetalles()
+                self.CargarTrabajadores()
+   
+  
+    
+
+           
+           
+    
 

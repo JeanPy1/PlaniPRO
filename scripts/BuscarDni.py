@@ -1,6 +1,6 @@
 from requests import get
 
-def BuscarDni(dni: str):
+def BuscarDatosDni(dni: str):
 
     parametros = {'numero': dni}
     url = 'https://api.apis.net.pe/v1/dni'

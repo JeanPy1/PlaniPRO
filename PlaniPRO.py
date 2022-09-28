@@ -2,7 +2,7 @@ from tkinter import Button, Entry, Frame, Label, PhotoImage, Scrollbar, Tk, mess
 from tkinter.constants import END
 from tkinter.ttk import Treeview, Style, Combobox
 from tkcalendar import Calendar
-from scripts import select, insert, update, delete, BuscarDni, Edad, Tiempo, FechaValida, PlanillaMes, CompararFechas, datos
+from scripts import select, insert, update, delete, Edad, Tiempo, FechaValida, PlanillaMes, CompararFechas, datos
 
 from Menu1 import Menu1
 
