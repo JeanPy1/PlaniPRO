@@ -27,8 +27,8 @@ class Menu1(Frame):
 
         titulos1 = (' Fecha de nacimiento', ' Fecha de ingreso', ' Planilla', ' Asignacion familiar', ' Movilidad',
                     ' Remuneracion total', ' Puesto laboral', ' Entidad de aportacion', ' Tipo de comision')
-        titulos2 = (' C.u.s.p.p.', ' Cuenta bancaria', ' Numero de licencia', ' Tipo de categoria', ' Fecha de revalidacion',
-                    ' Area de labor', ' Numero de celular', ' distrito de residencia', ' Fecha de retiro')
+        titulos2 = (' Codigo cuspp', ' Cuenta bancaria', ' Numero de licencia', ' Tipo de categoria', ' Fecha de revalidacion',
+                    ' Area de labor', ' Numero de celular', ' Distrito de residencia', ' Fecha de retiro')
                 
         columna1 = []
         columna2 = []
@@ -227,15 +227,14 @@ class Menu1(Frame):
             # Cerrar ventana                           
             self.agregar.destroy()
 
-    def Agregar(self):       
-     
-
+    def Agregar(self):
 
         contenedor = Frame(self)
 
-        titulos1 = (' Buscar Dni', ' Numero Dni', ' Apellido Paterno', ' Apellido Materno', ' Nombre',
-                    ' Fecha de Nacimiento', ' Fecha de Ingreso', ' Planilla', ' Cargo Laboral')                    
-        titulos2 = (' Cuenta Bancaria', ' Aportacion', ' Comision', ' C.u.s.p.p.', 'Licencia', ' Revalidacion', ' Area', ' Distrito', ' Fecha de Cese')
+        titulos1 = (' Buscar dni', ' Numero dni', ' Apellido paterno', ' Apellido materno', ' Nombres',
+                    ' Fecha de nacimiento', ' Fecha de ingreso', ' Planilla', ' Puesto laboral')                    
+        titulos2 = (' Cuenta bancaria', ' Entidad de aportacion', ' Tipo de comision', ' Codigo cuspp', ' No. de licencia',
+                    ' Fecha de revalidacion', ' Area de labor', ' Distrito de residencia', ' Fecha de retiro')
 
         posicion = -61
         for numero in range(9):
@@ -243,12 +242,10 @@ class Menu1(Frame):
             Label(contenedor, text=titulos1[numero]).place(x=  0, y=posicion, width=205, height=60)
             Label(contenedor, text=titulos2[numero]).place(x=206, y=posicion, width=205, height=60) 
        
-        #Label(contenedor, text='  A. Fami.'           ).place(x= 62, y=385)
-        #Label(contenedor, text='  Movili.'            ).place(x=123, y=385)
-        #Label(contenedor, text='  Comision'           ).place(x=312)
-        #Label(contenedor, text='  Catego.'            ).place(x=327, y= 55)      
-        #Label(contenedor, text='  Licencia'           ).place(x=297, y=110)
-        #Label(contenedor, text='  Celular'            ).place(x=297, y=165)            
+        Label(contenedor, text=' Asigna.').place(x=68, y=427)
+        Label(contenedor, text=' Movili.').place(x=134, y=427)        
+        Label(contenedor, text=' Tipo categoria').place(x=306, y=244)      
+        Label(contenedor, text=' Numero celular').place(x=306, y=366)            
        
         self.buscar       = Button(contenedor, text='BUSCAR', bg='#88C7FF', command=self.BuscarDni)
         self.buscarDni    = Entry(contenedor, relief='ridge', bd=2)     
@@ -278,28 +275,27 @@ class Menu1(Frame):
         self.retiro = Entry(contenedor, relief='ridge', bd=2)                       
 
         # Posicionamiento de los elementos      
-        self.buscar.place      (x=136, y= 24, width= 54, height=28)    
-        self.buscarDni.place   (x=  5, y= 24, width=120, height=28)    
+        self.buscar.place      (x=139, y= 24, width= 61, height=28)    
+        self.buscarDni.place   (x=  5, y= 24, width=129, height=28)    
         self.numeroDni.place   (x=  5, y= 85, width=195, height=28)
         self.apPaterno.place   (x=  5, y=146, width=195, height=28)
         self.apMaterno.place   (x=  5, y=207, width=195, height=28)
         self.nombre.place      (x=  5, y=268, width=195, height=28)        
         self.fechaNaci.place   (x=  5, y=329, width=195, height=28)        
         self.fechaIngr.place   (x=  5, y=390, width=195, height=28)
-        self.planilla.place    (x=  5, y=451, width= 56, height=28)  
-        self.asignacion.place  (x= 72, y=451, width= 56, height=28)      
-        self.movilidad.place   (x=134, y=451, width= 56, height=28) 
+        self.planilla.place    (x=  5, y=451, width= 63, height=28)  
+        self.asignacion.place  (x= 73, y=451, width= 61, height=28)      
+        self.movilidad.place   (x=139, y=451, width= 61, height=28) 
         self.cargo.place       (x=  5, y=512, width=195, height=28)        
-        
         self.cuenta.place      (x=211, y= 24, width=195, height=28)
         self.aportacion.place  (x=211, y= 85, width=195, height=28) 
         self.comision.place    (x=211, y=146, width=195, height=28)
         self.cuspp.place       (x=211, y=207, width=195, height=28)
-        self.codigo.place      (x=211, y=268, width= 84, height=28)
-        #self.categoria.place   (x=337, y= 78, width= 54, height=28)
-        self.revalidacion.place(x=211, y=329, width= 90, height=28)        
-        self.area.place        (x=211, y=390, width= 90, height=28)
-        #self.celular.place     (x=307, y=188, width= 84, height=28)
+        self.codigo.place      (x=211, y=268, width= 95, height=28)
+        self.categoria.place   (x=311, y=268, width= 95, height=28)
+        self.revalidacion.place(x=211, y=329, width=195, height=28)        
+        self.area.place        (x=211, y=390, width= 95, height=28)
+        self.celular.place     (x=311, y=390, width= 95, height=28)
         self.distrito.place    (x=211, y=451, width=195, height=28)
         self.retiro.place      (x=211, y=512, width=195, height=28)         
             
