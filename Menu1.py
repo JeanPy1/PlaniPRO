@@ -323,7 +323,7 @@ class Menu1(Frame):
                 datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
 
                 # Mostramos datos del trabajador
-                self.Add()     
+                self.Agregar()     
                 self.buscar.configure(state='disabled')
                 self.buscarDni.configure(state='disabled')
                 self.numeroDni['text'] = datos[1]
