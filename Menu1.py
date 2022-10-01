@@ -2,36 +2,35 @@ from tkinter import Button, Label, Scrollbar, Button, Frame, Entry, messagebox
 from tkinter.ttk import Treeview, Combobox
 from scripts.sql import select, insert, update, delete
 from scripts.BuscarDni import BuscarDatosDni
-from scripts.edad import Edad, Tiempo, FechaValida
-from scripts.trabajador import datos
+from scripts.edad import FechaValida
 
 class Menu1(Frame):
 
     def __init__(self, contenedor):
 
         super().__init__(contenedor)
-        self.DATOS = Treeview(self, columns=('#1', '#2', '#3'))
-        self.DATOS.column('#0', width=0)
-        self.DATOS.column('#1', width=30, minwidth=30, anchor='center')
-        self.DATOS.column('#2', width=270, minwidth=270)
-        self.DATOS.column('#3', width=70, minwidth=70, anchor='center')
-        self.DATOS.heading('#1', text='N°')
-        self.DATOS.heading('#2', text='Apellidos y Nombre')
-        self.DATOS.heading('#3', text='Dni')
+        self.TRABAJADORES = Treeview(self, columns=('#1', '#2', '#3'))
+        self.TRABAJADORES.column('#0', width=0)
+        self.TRABAJADORES.column('#1', width=30, minwidth=30, anchor='center')
+        self.TRABAJADORES.column('#2', width=270, minwidth=270)
+        self.TRABAJADORES.column('#3', width=70, minwidth=70, anchor='center')
+        self.TRABAJADORES.heading('#1', text='N°')
+        self.TRABAJADORES.heading('#2', text='Apellidos y Nombre')
+        self.TRABAJADORES.heading('#3', text='Dni')
 
-        scroll = Scrollbar(self, orient='vertical', command=self.DATOS.yview)
-        self.DATOS.configure(yscrollcommand=scroll.set)
-        self.DATOS.bind('<<TreeviewSelect>>', self.MostrarDetalles)
+        scroll = Scrollbar(self, orient='vertical', command=self.TRABAJADORES.yview)
+        self.TRABAJADORES.configure(yscrollcommand=scroll.set)
+        self.TRABAJADORES.bind('<<TreeviewSelect>>', self.MostrarDetalles)
         scroll.place(x=396, y=30, height=548)
-        self.DATOS.place(x=20, y=30, height=548)               
+        self.TRABAJADORES.place(x=20, y=30, height=548)               
 
         titulos1 = (' Fecha de nacimiento', ' Fecha de ingreso', ' Planilla', ' Asignacion familiar', ' Movilidad',
                     ' Remuneracion total', ' Puesto laboral', ' Entidad de aportacion', ' Tipo de comision')
         titulos2 = (' Codigo cuspp', ' Cuenta bancaria', ' Numero de licencia', ' Tipo de categoria', ' Fecha de revalidacion',
                     ' Area de labor', ' Numero de celular', ' Distrito de residencia', ' Fecha de retiro')
                 
-        columna1 = []
-        columna2 = []
+        detalles1 = []
+        detalles2 = []
 
         posicion = -31
         for numero in range(9):
@@ -39,12 +38,12 @@ class Menu1(Frame):
             Label(self, text=titulos1[numero]).place(x=430, y=posicion, width=205, height=60)
             Label(self, text=titulos2[numero]).place(x=636, y=posicion, width=205, height=60)  
 
-            columna1.append(Label(self, fg='#000000', anchor='e'))   
-            columna1[numero].place(x=435, y=posicion+28, width=195)
-            columna2.append(Label(self, fg='#000000', anchor='e'))
-            columna2[numero].place(x=641, y=posicion+28, width=195)          
+            detalles1.append(Label(self, fg='#000000', anchor='e'))   
+            detalles1[numero].place(x=435, y=posicion+28, width=195)
+            detalles2.append(Label(self, fg='#000000', anchor='e'))
+            detalles2[numero].place(x=641, y=posicion+28, width=195)          
             
-        self.DATOS_DETALLES = columna1 + columna2    
+        self.DETALLES = detalles1 + detalles2    
 
         Button(self, text='AGREGAR', command=self.Agregar).place(x=890, y=30, width=90, height=30)
         Button(self, text='MODIFICAR', command=self.Modificar).place(x=890, y=65, width=90, height=30)
@@ -56,31 +55,31 @@ class Menu1(Frame):
 
     def CargarTrabajadores(self):
 
-        self.DATOS.delete(*self.DATOS.get_children())
+        self.TRABAJADORES.delete(*self.TRABAJADORES.get_children())
         datos = select('SELECT ID, NDNI, APAT, AMAT, NOMB FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC', True)
 
         for index, dato in enumerate(datos, 1):
             nombre = f'{dato[2]} {dato[3]} {dato[4]}'    
-            self.DATOS.insert('', 'end', text=dato[0], values=(index, nombre, dato[1]))   
+            self.TRABAJADORES.insert('', 'end', text=dato[0], values=(index, nombre, dato[1]))
 
-    def MostrarDetalles(self, e):                
+    def MostrarDetalles(self, e):
        
-        if self.DATOS.selection():     
+        if self.TRABAJADORES.selection():     
 
             self.BorrarDetalles()                      
-            id = int(self.DATOS.item(self.DATOS.focus()).get('text'))               
+            id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))               
             datos = select(f'''SELECT FNAC, FING, SPLA, AFAM, SMOV, PLAB, EAPO, TCOM, NCUS, NCUE, NLIC,
                                       CLIC, VLIC, ALAB, NCEL, DRES, FCES FROM ACTIVO WHERE ID = {id}''', False)
             
             detalles = list(datos)
             detalles.insert(5, datos[2] + datos[3] + datos[4])            
             
-            for index, label in enumerate(self.DATOS_DETALLES):
+            for index, label in enumerate(self.DETALLES):
                 label['text'] = detalles[index]    
 
     def BorrarDetalles(self):
 
-        for label in self.DATOS_DETALLES:
+        for label in self.DETALLES:
             label['text'] = ''   
 
     def BuscarDni(self):
@@ -107,7 +106,7 @@ class Menu1(Frame):
                 messagebox.showinfo('BUSCAR', 'NO SE ENCONTRO EL NUMERO DE DNI')           
                 self.buscarDni.focus()   
 
-    def SaveEmployee(self):
+    def GrabarDatos(self):
 
         # Validacion de dni
         if self.numeroDni['text'] == '':
@@ -158,74 +157,67 @@ class Menu1(Frame):
         elif self.retiro.get() != '' and not FechaValida(self.retiro.get(), True):
             messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL RETIRO')
             self.retiro.focus()
-        else:
+        else:                     
+            
+            datosTrabajador = ( self.numeroDni['text'],         self.apPaterno['text'],
+                                self.apMaterno['text'],         self.nombre['text'],
+                                self.fechaNaci.get(),           self.fechaIngr.get(),
+                                float(self.planilla.get()),     float(self.asignacion.get()),
+                                float(self.movilidad.get()),    self.cargo.get(),
+                                self.cuenta.get(),              self.aportacion.get(),
+                                self.comision.get(),            self.cuspp.get().upper(),
+                                self.categoria.get(),           self.revalidacion.get(),
+                                self.codigo.get().upper(),      self.area.get(),
+                                self.celular.get(),             self.distrito.get(),
+                                self.retiro.get())
 
-            # Verificacion de dni ya registrado
             if self.buscar['state'] == 'normal':
-                for index in self.DATOS.get_children():
-                    if f"{self.DATOS.item(index).get('values')[2]:0>8}" == self.numeroDni['text']:
+
+                for index in self.TRABAJADORES.get_children():
+                    if f"{self.TRABAJADORES.item(index).get('values')[2]:0>8}" == self.numeroDni['text']:
                         messagebox.showinfo('GRABAR', 'DNI YA REGISTRADO')
                         return            
 
-            persona = datos(self.numeroDni.cget('text'),
-                           self.apPaterno.cget('text'),
-                           self.apMaterno.cget('text'),
-                           self.nombre.cget('text'),
-                           self.fechaNaci.get(),
-                           self.fechaIngr.get(),
-                           float(self.planilla.get()),
-                           float(self.asignacion.get()),
-                           float(self.movilidad.get()),
-                           self.cargo.get(),
-                           self.cuenta.get(),
-                           self.aportacion.get(),
-                           self.comision.get(),
-                           self.cuspp.get().upper(),
-                           self.categoria.get(),
-                           self.revalidacion.get(),
-                           self.codigo.get().upper(),
-                           self.area.get(),
-                           self.celular.get(),
-                           self.distrito.get(),
-                           self.retiro.get())
-
-            values = persona.convert(persona)       
-
-            # Id del trabajador seleccionado
-            seleccion = self.DATOS.focus()
-
-            if seleccion:
-                id = int(self.DATOS.item(seleccion).get('text'))
-
-            # Insertar nuevo trabajador
-            if self.buscar['state'] == 'normal':
-                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, EAPO,
-                            TCOM, NCUS, PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES {values}'''
+                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, PLAB,
+                                                NCUE, EAPO, TCOM, NCUS, CLIC, VLIC, NLIC, ALAB, NCEL, DRES, FCES) 
+                            VALUES {datosTrabajador}'''
                 insert(query)
 
-            # Actualizar datos de trabajador
-            else:
-                query = f'''UPDATE ACTIVO SET FNAC = '{persona.nacimiento}', FING = '{persona.ingreso}', SPLA = {persona.planilla},
-                            AFAM = '{persona.asignacion}', SMOV = {persona.movilidad}, EAPO = '{persona.aportacion}',
-                            TCOM = '{persona.comision}', NCUS = '{persona.cuspp}', PLAB = '{persona.cargo}', NCUE = '{persona.cuenta}',
-                            ALAB = '{persona.area}', NLIC = '{persona.codigo}', VLIC = '{persona.revalidacion}', CLIC = '{persona.categoria}',
-                            NCEL = '{persona.celular}', DRES = '{persona.distrito}', FCES = '{persona.retiro}'
-                            WHERE ID = {id}'''           
+                seleccion = self.TRABAJADORES.focus()
+                if seleccion:
+                    id = int(self.TRABAJADORES.item(seleccion).get('text'))  
+
+                self.CargarTrabajadores()
+
+                if seleccion:        
+                    for index in self.TRABAJADORES.get_children():
+                        if int(self.TRABAJADORES.item(index).get('text')) == id:
+                            self.TRABAJADORES.selection_set(index)
+                            self.TRABAJADORES.focus(index)
+                            break
+
+            else:                
+
+                query = f'''UPDATE ACTIVO SET   FNAC = '{datosTrabajador[4]}',   FING = '{datosTrabajador[5]}', 
+                                                SPLA =  {datosTrabajador[6]},    AFAM = '{datosTrabajador[7]}', 
+                                                SMOV =  {datosTrabajador[8]},    EAPO = '{datosTrabajador[9]}',
+                                                TCOM = '{datosTrabajador[10]}',  NCUS = '{datosTrabajador[11]}', 
+                                                PLAB = '{datosTrabajador[12]}',  NCUE = '{datosTrabajador[13]}',
+                                                ALAB = '{datosTrabajador[14]}',  NLIC = '{datosTrabajador[15]}', 
+                                                VLIC = '{datosTrabajador[16]}',  CLIC = '{datosTrabajador[17]}',
+                                                NCEL = '{datosTrabajador[18]}',  DRES = '{datosTrabajador[19]}', 
+                                                FCES = '{datosTrabajador[20]}'   WHERE NDNI = {datosTrabajador[0]}'''           
                 update(query)
 
-            # Ordenamos los datos con el nuevo registro
-            self.CargarTrabajadores()
-            self.BorrarDetalles()
+                detalles = list(datosTrabajador)
+                detalles.insert(9, datosTrabajador[6] + datosTrabajador[7] + datosTrabajador[8])
+                detalles.insert(14, detalles.pop(11))               
+                detalles.insert(15, detalles.pop(17))
 
-            # Devolvemos la seleccion del trabajador
-            if seleccion:
-                for index in self.DATOS.get_children():
-                    if int(self.DATOS.item(index).get('text')) == id:
-                        self.DATOS.selection_set(index)
-                        self.DATOS.focus(index)
+                for index, label in enumerate(self.DETALLES):
+                    label['text'] = detalles[index+4]
 
-            # Cerrar ventana                           
-            self.agregar.destroy()
+            self.menuAgregar.destroy()
 
     def Agregar(self):
 
@@ -300,7 +292,7 @@ class Menu1(Frame):
         self.retiro.place      (x=211, y=512, width=195, height=28)         
             
         # Creamos los botones principales
-        Button(contenedor, text='GRABAR', command=self.SaveEmployee).place(x=460, width=90, height=30)     
+        Button(contenedor, text='GRABAR', command=self.GrabarDatos).place(x=460, width=90, height=30)     
         Button(contenedor, text='SALIR' , command=lambda:contenedor.destroy(), bg='#DF2F2F').place(x=460, y=35, width=90, height=30)
 
         # Foco en cuadro de busqueda y Superponemos la ventana principal
@@ -308,7 +300,7 @@ class Menu1(Frame):
         contenedor.grab_set()
         
         # Asignamos variablo global a contenedor para destruir
-        self.agregar = contenedor
+        self.menuAgregar = contenedor
 
         # Posicionamos la ventana principal
         contenedor.place(x=430, y=30, width=550, height=548)
@@ -316,14 +308,15 @@ class Menu1(Frame):
     def Modificar(self):
         
         # Cargamos datos del trabajador a la ventana agregar
-        if self.DATOS.selection():            
+        if self.TRABAJADORES.selection():            
                 
                 # Id del trabajador           
-                id = int(self.DATOS.item(self.DATOS.focus()).get('text'))
+                id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
                 datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
-
+                print(datos)
                 # Mostramos datos del trabajador
-                self.Agregar()     
+                self.Agregar()
+
                 self.buscar.configure(state='disabled')
                 self.buscarDni.configure(state='disabled')
                 self.numeroDni['text'] = datos[1]
@@ -335,32 +328,33 @@ class Menu1(Frame):
                 self.planilla.insert(0, datos[7])
                 self.asignacion.insert(0, datos[8])
                 self.movilidad.insert(0, datos[9])
-                self.aportacion.set(datos[10])
-                self.comision.set(datos[11])                                        
-                self.cuspp.insert(0, datos[12])
-                self.cargo.set(datos[13])
-                self.cuenta.insert(0, datos[14])                
-                self.area.set(datos[15])
-                self.codigo.insert(0, datos[16])                    
-                self.revalidacion.insert(0, datos[17])
-                self.categoria.set(datos[18])
+                self.aportacion.set(datos[12])
+                self.comision.set(datos[13])
+                self.cuspp.insert(0, datos[14])
+                self.cargo.set(datos[10])
+                self.cuenta.insert(0, datos[11])
+                self.area.set(datos[18])
+                self.codigo.insert(0, datos[17])
+                self.revalidacion.insert(0, datos[16])
+                self.categoria.set(datos[15])
                 self.celular.insert(0, datos[19])
                 self.distrito.set(datos[20])
                 self.retiro.insert(0, datos[21])
 
     def Eliminar(self):
-       
-        if self.DATOS.selection():
+
+        if self.TRABAJADORES.selection():
             respuesta = messagebox.askyesno('ELIMINAR','SEGURO?', default='no')
 
             if respuesta:
-              
-                id = int(self.DATOS.item(self.DATOS.focus()).get('text'))                
-                if self.DATOS_DETALLES[19] != '':
+                id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
+
+                print(self.DETALLES[17])
+                if self.DETALLES[17] != '':
                     insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
 
-                delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)               
-                
+                delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)
+
                 self.BorrarDetalles()
                 self.CargarTrabajadores()
    
