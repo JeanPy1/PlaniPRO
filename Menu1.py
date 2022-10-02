@@ -208,9 +208,9 @@ class Menu1(Frame):
 
                 detalles = list(datosTrabajador)
                 detalles.insert(9, datosTrabajador[6] + datosTrabajador[7] + datosTrabajador[8])
-                detalles.insert(14, detalles.pop(11))               
-                detalles.insert(15, detalles.pop(17))
-
+                detalles.insert(10, detalles.pop(13))    
+                detalles.insert(18, detalles.pop(15))   
+                
                 for index, label in enumerate(self.DETALLES):
                     label['text'] = detalles[index+4]
 
