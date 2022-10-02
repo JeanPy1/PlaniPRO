@@ -163,11 +163,11 @@ class Menu1(Frame):
                                 self.apMaterno['text'],         self.nombre['text'],
                                 self.fechaNaci.get(),           self.fechaIngr.get(),
                                 float(self.planilla.get()),     float(self.asignacion.get()),
-                                float(self.movilidad.get()),    self.cargo.get(),
-                                self.cuenta.get(),              self.aportacion.get(),
+                                float(self.movilidad.get()),    self.aportacion.get(),
                                 self.comision.get(),            self.cuspp.get().upper(),
-                                self.categoria.get(),           self.revalidacion.get(),
-                                self.codigo.get().upper(),      self.area.get(),
+                                self.cargo.get(),               self.cuenta.get(),
+                                self.area.get(),                self.codigo.get().upper(),                                
+                                self.revalidacion.get(),        self.categoria.get(),
                                 self.celular.get(),             self.distrito.get(),
                                 self.retiro.get())
 
@@ -178,18 +178,15 @@ class Menu1(Frame):
                         messagebox.showinfo('GRABAR', 'DNI YA REGISTRADO')
                         return            
 
-                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, PLAB,
-                                                NCUE, EAPO, TCOM, NCUS, CLIC, VLIC, NLIC, ALAB, NCEL, DRES, FCES) 
-                            VALUES {datosTrabajador}'''
+                query = f'''INSERT INTO ACTIVO (NDNI, APAT, AMAT, NOMB, FNAC, FING, SPLA, AFAM, SMOV, EAPO, TCOM, NCUS,
+                            PLAB, NCUE, ALAB, NLIC, VLIC, CLIC, NCEL, DRES, FCES) VALUES {datosTrabajador}'''
                 insert(query)
-
-                seleccion = self.TRABAJADORES.focus()
-                if seleccion:
-                    id = int(self.TRABAJADORES.item(seleccion).get('text'))  
-
+                
                 self.CargarTrabajadores()
 
+                seleccion = self.TRABAJADORES.focus()
                 if seleccion:        
+                    id = int(self.TRABAJADORES.item(seleccion).get('text'))
                     for index in self.TRABAJADORES.get_children():
                         if int(self.TRABAJADORES.item(index).get('text')) == id:
                             self.TRABAJADORES.selection_set(index)
@@ -313,8 +310,7 @@ class Menu1(Frame):
                 # Id del trabajador           
                 id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
                 datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
-                print(datos)
-                # Mostramos datos del trabajador
+                
                 self.Agregar()
 
                 self.buscar.configure(state='disabled')
@@ -328,15 +324,15 @@ class Menu1(Frame):
                 self.planilla.insert(0, datos[7])
                 self.asignacion.insert(0, datos[8])
                 self.movilidad.insert(0, datos[9])
-                self.aportacion.set(datos[12])
-                self.comision.set(datos[13])
-                self.cuspp.insert(0, datos[14])
-                self.cargo.set(datos[10])
-                self.cuenta.insert(0, datos[11])
-                self.area.set(datos[18])
-                self.codigo.insert(0, datos[17])
-                self.revalidacion.insert(0, datos[16])
-                self.categoria.set(datos[15])
+                self.aportacion.set(datos[10])
+                self.comision.set(datos[11])
+                self.cuspp.insert(0, datos[12])
+                self.cargo.set(datos[13])
+                self.cuenta.insert(0, datos[14])
+                self.area.set(datos[15])
+                self.codigo.insert(0, datos[16])
+                self.revalidacion.insert(0, datos[17])
+                self.categoria.set(datos[18])
                 self.celular.insert(0, datos[19])
                 self.distrito.set(datos[20])
                 self.retiro.insert(0, datos[21])
@@ -349,7 +345,6 @@ class Menu1(Frame):
             if respuesta:
                 id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
 
-                print(self.DETALLES[17])
                 if self.DETALLES[17] != '':
                     insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
 
@@ -358,8 +353,6 @@ class Menu1(Frame):
                 self.BorrarDetalles()
                 self.CargarTrabajadores()
    
-  
-    
 
            
            
