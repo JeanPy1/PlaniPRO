@@ -8,15 +8,14 @@ class Menu1(Frame):
 
     def __init__(self, contenedor):
 
-        super().__init__(contenedor)
-        self.TRABAJADORES = Treeview(self, columns=('#1', '#2', '#3'))
-        self.TRABAJADORES.column('#0', width=0)
+        super().__init__(contenedor)   
+        self.TRABAJADORES = Treeview(self, columns=('#1', '#2', '#3'))       
         self.TRABAJADORES.column('#1', width=30, minwidth=30, anchor='center')
         self.TRABAJADORES.column('#2', width=270, minwidth=270)
         self.TRABAJADORES.column('#3', width=70, minwidth=70, anchor='center')
         self.TRABAJADORES.heading('#1', text='N°')
-        self.TRABAJADORES.heading('#2', text='Apellidos y Nombre')
-        self.TRABAJADORES.heading('#3', text='Dni')
+        self.TRABAJADORES.heading('#2', text='APELLIDOS Y NOMBRE')
+        self.TRABAJADORES.heading('#3', text='DNI')
 
         scroll = Scrollbar(self, orient='vertical', command=self.TRABAJADORES.yview)
         self.TRABAJADORES.configure(yscrollcommand=scroll.set)
