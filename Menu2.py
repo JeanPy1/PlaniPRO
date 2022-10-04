@@ -44,77 +44,42 @@ class Menu2(Frame):
     def CargarTrabajadores(self):
 
         self.TRABAJADORES.delete(*self.TRABAJADORES.get_children())
-        datos = select('SELECT ID, APAT, AMAT, NOMB FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC', True)
+        trabajadores = select('SELECT ID, APAT, AMAT, NOMB FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC', True)
 
         # Insertamos datos al treeview
-        for index, dato in enumerate(datos, 1):
-            id = dato[0]           
-            nombreCompleto = f'{dato[1]} {dato[2]} {dato[3]}'  
+        for index, trabajador in enumerate(trabajadores, 1):
+            id = trabajador[0]           
+            nombreCompleto = f'{trabajador[1]} {trabajador[2]} {trabajador[3]}'  
 
-            apoyos = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {id}', False)
-            faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)         
-            feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)   
-            ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)
-            descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)
-            descansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)
-            vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)
-            compraVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)
-            adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)
-            porFuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)
+            apoyos = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {id}', False)[0]
+            faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0]         
+            feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0]   
+            ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
+            descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]
+            descansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
+            vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
+            compraVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
+            adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
+            porFuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
 
-            if apoy[0] == 0:
-                apoy = ''
-            else:
-                apoy = apoy[0]
-
-            if falt[0] == 0:
-                falt = ''
-            else:
-                falt = falt[0]   
-
-            if feri[0] == 0:
-                feri = ''
-            else:
-                feri = feri[0]  
-
-            if ingr[0]:
-                ingr = f'{ingr[0]:.2f}'
-            else:
-                ingr = ''
-
-            if desc[0]:
-                desc = f'{desc[0]:.2f}'
-            else:
-                desc = ''   
-
-            if dmed[0]:
-                dmed = dmed[0]
-            else:
-                dmed = ''                
-
-            if vaca[0]:
-                vaca = vaca[0]
-            else:
-                vaca = ''
-                
-            if cvac[0]:
-                cvac = cvac[0]
-            else:
-                cvac = ''
-                
-            if adel[0]:
-                adel = f'{adel[0]:.2f}'
-            else:
-                adel = ''                
-
-            if xfue[0]:
-                xfue = f'{xfue[0]:.2f}'
-            else:
-                xfue = ''                
+            if not apoyos: apoyos = ''            
+            if not faltas: faltas = ''
+            if not feriados: feriados = ''
+            if not descansoMedico: descansoMedico = ''
+            if not vacaciones: vacaciones = ''
+            if not compraVacaciones: compraVacaciones = ''
             
-            self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombre, apoy, falt, feri, ingr, desc, dmed, vaca, cvac, adel, xfue)) 
-
-
+            if not ingresos: ingresos = ''
+            else: ingresos = f'{ingresos:.2f}'
+            if not descuentos: descuentos = ''
+            else: descuentos = f'{descuentos:.2f}'  
+            if not adelantos: adelantos = ''
+            else: adelantos = f'{adelantos:.2f}'  
+            if not porFuera: porFuera = ''
+            else: porFuera = f'{porFuera:.2f}'         
+            
+            self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyos, faltas, feriados, ingresos,
+                                            descuentos, descansoMedico, vacaciones, compraVacaciones, adelantos, porFuera))
 
 
     def AllTRABAJADORES(self):

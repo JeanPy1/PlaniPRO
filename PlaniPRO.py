@@ -1,6 +1,6 @@
 from tkinter import Button, Frame, Label, PhotoImage, Scrollbar, Tk
 from tkinter.ttk import Treeview, Style
-from scripts import select, PlanillaMes, CompararFechas
+
 
 from Menu1 import Menu1
 from Menu2 import Menu2
