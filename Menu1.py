@@ -7,8 +7,8 @@ from scripts.edad import FechaValida
 class Menu1(Frame):
 
     def __init__(self, contenedor):
+        super().__init__(contenedor)
 
-        super().__init__(contenedor)   
         self.TRABAJADORES = Treeview(self, columns=('#1', '#2', '#3'))       
         self.TRABAJADORES.column('#1', width=30, minwidth=30, anchor='center')
         self.TRABAJADORES.column('#2', width=270, minwidth=270)
