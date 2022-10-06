@@ -85,15 +85,15 @@ class Menu2(Frame):
             #for boton in range(9):
             #    Button(contenedor, text='APOYO', command=lambda:self.SaveTRABAJADORES('APO')).place(x=286, y= 20, width=100, height=22)       
 
-            Button(contenedor, text='APOYO'            , command=lambda:self.SaveTRABAJADORES('APO')).place(x=286, y= 20, width=100, height=22)
-            Button(contenedor, text='FALTA'            , command=lambda:self.SaveTRABAJADORES('FAL')).place(x=406, y= 20, width=100, height=22)
-            Button(contenedor, text='FERIADO'          , command=lambda:self.SaveTRABAJADORES('FER')).place(x=526, y= 20, width=100, height=22)
-            Button(contenedor, text='ADELANTO'         , command=lambda:self.SaveTRABAJADORES('ADE')).place(x=646, y= 20, width=160, height=22)
-            Button(contenedor, text='INGRESO'          , command=lambda:self.SaveTRABAJADORES('ING')).place(x= 20, y=237, width=265, height=22)
-            Button(contenedor, text='DESCUENTO'        , command=lambda:self.SaveTRABAJADORES('DES')).place(x=303, y=237, width=266, height=22)
-            Button(contenedor, text='VACACIONES'       , command=lambda:self.SaveTRABAJADORES('VAC')).place(x=586, y=237, width=220, height=22)
-            Button(contenedor, text='DESCANSO MEDICO'  , command=lambda:self.SaveTRABAJADORES('DME')).place(x= 20, y=418, width=548, height=22)
-            Button(contenedor, text='COMPRA VACACIONES', command=lambda:self.SaveTRABAJADORES('CVA')).place(x=586, y=418, width=220, height=22)
+            #Button(contenedor, text='APOYO'            , command=lambda:self.SaveTRABAJADORES('APO')).place(x=286, y= 20, width=100, height=22)
+            #Button(contenedor, text='FALTA'            , command=lambda:self.SaveTRABAJADORES('FAL')).place(x=406, y= 20, width=100, height=22)
+            #Button(contenedor, text='FERIADO'          , command=lambda:self.SaveTRABAJADORES('FER')).place(x=526, y= 20, width=100, height=22)
+            #Button(contenedor, text='ADELANTO'         , command=lambda:self.SaveTRABAJADORES('ADE')).place(x=646, y= 20, width=160, height=22)
+            #Button(contenedor, text='INGRESO'          , command=lambda:self.SaveTRABAJADORES('ING')).place(x= 20, y=237, width=265, height=22)
+            #Button(contenedor, text='DESCUENTO'        , command=lambda:self.SaveTRABAJADORES('DES')).place(x=303, y=237, width=266, height=22)
+            #Button(contenedor, text='VACACIONES'       , command=lambda:self.SaveTRABAJADORES('VAC')).place(x=586, y=237, width=220, height=22)
+            #Button(contenedor, text='DESCANSO MEDICO'  , command=lambda:self.SaveTRABAJADORES('DME')).place(x= 20, y=418, width=548, height=22)
+            #Button(contenedor, text='COMPRA VACACIONES', command=lambda:self.SaveTRABAJADORES('CVA')).place(x=586, y=418, width=220, height=22)
 
             self.fecha = []
             posicion = (20, 111, 221, 312, 422, 513, 623, 704, 820)
@@ -110,17 +110,17 @@ class Menu2(Frame):
                 
 
             self.apoyo = Treeview(contenedor, columns=('#1'))
-            self.apoyo.column('#0', width=0)
-            self.apoyo.column('#1', width=94, minwidth=94, anchor='center')
-            self.apoyo.heading('#1', text='Fecha')
+            
+            self.apoyo.column('#1', width=84, minwidth=84, anchor='center')
+            self.apoyo.heading('#1', text='APOYO', command=lambda:self.SaveTRABAJADORES('APO'))
             self.falta = Treeview(contenedor, columns=('#1'))
             self.falta.column('#0', width=0)
-            self.falta.column('#1', width=94, minwidth=94, anchor='center')
-            self.falta.heading('#1', text='Fecha')
+            self.falta.column('#1', width=84, minwidth=84, anchor='center')
+            self.falta.heading('#1', text='FALTA', command=lambda:self.SaveTRABAJADORES('FAL'))
             self.feriado = Treeview(contenedor, columns=('#1'))
             self.feriado.column('#0', width=0)
             self.feriado.column('#1', width=94, minwidth=94, anchor='center')
-            self.feriado.heading('#1', text='Fecha')
+            self.feriado.heading('#1', text='FERIADO', command=lambda:self.SaveTRABAJADORES('FER'))
             self.adelanto = Treeview(contenedor, columns=('#1', '#2'))
             self.adelanto.column('#0', width=0)
             self.adelanto.column('#1', width=82, anchor='center')         
@@ -131,7 +131,7 @@ class Menu2(Frame):
             self.ingreso.column('#0', width=0)
             self.ingreso.column('#1', width=199, minwidth=199) 
             self.ingreso.column('#2', width= 60, minwidth= 60, anchor='e')
-            self.ingreso.heading('#1', text='Fecha')
+            self.ingreso.heading('#1', text='Detalle')
             self.ingreso.heading('#2', text='Importe')
             self.descuento = Treeview(contenedor, columns=('#1', '#2'))
             self.descuento.column('#0', width=0)
@@ -155,7 +155,7 @@ class Menu2(Frame):
             self.dmedico.column('#4', width= 60, minwidth= 60, anchor='e') 
             self.dmedico.heading('#1', text='F. Inicial')
             self.dmedico.heading('#2', text='F. Final')
-            self.dmedico.heading('#3', text='Detalle')
+            
             self.dmedico.heading('#4', text='Dias')
             self.cvacaciones = Treeview(contenedor, columns=('#1', '#2', '#3'))
             self.cvacaciones.column('#0', width=0)
@@ -218,7 +218,7 @@ class Menu2(Frame):
             Button(contenedor, text='SALIR', bg='#DF2F2F', command=lambda: contenedor.destroy()).place(x=890, y=55, width=90, height=30)
 
             self.CargarDetalles()                
-            
+            print(self.apoyo.winfo_reqwidth())
             contenedor.place(width=1000, height=600)         
 
     
