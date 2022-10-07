@@ -109,56 +109,64 @@ class Menu2(Frame):
                 
                 
 
-            self.apoyo = Treeview(contenedor, columns=('#1'))
-            
+            self.apoyo = Treeview(contenedor, columns=('#1'))            
             self.apoyo.column('#1', width=84, minwidth=84, anchor='center')
-            self.apoyo.heading('#1', text='APOYO', command=lambda:self.SaveTRABAJADORES('APO'))
-            self.falta = Treeview(contenedor, columns=('#1'))
-            self.falta.column('#0', width=0)
+            self.apoyo.heading('#1', text='APOYO', command=lambda:self.mama(self.apoyo))
+
+            self.falta = Treeview(contenedor, columns=('#1'))          
             self.falta.column('#1', width=84, minwidth=84, anchor='center')
-            self.falta.heading('#1', text='FALTA', command=lambda:self.SaveTRABAJADORES('FAL'))
-            self.feriado = Treeview(contenedor, columns=('#1'))
-            self.feriado.column('#0', width=0)
+            self.falta.heading('#1', text='FALTA', command=lambda:self.mama(self.falta))
+
+            self.feriado = Treeview(contenedor, columns=('#1'))           
             self.feriado.column('#1', width=94, minwidth=94, anchor='center')
-            self.feriado.heading('#1', text='FERIADO', command=lambda:self.SaveTRABAJADORES('FER'))
-            self.adelanto = Treeview(contenedor, columns=('#1', '#2'))
-            self.adelanto.column('#0', width=0)
+            self.feriado.heading('#1', text='FERIADO', command=lambda:self.mama(self.feriado))
+
+        
+
+           
+            #self.adelanto = Treeview(contenedor, columns=('#1', '#2'))           
+            #self.adelanto.column('#1', width=82, anchor='center')         
+            #self.adelanto.column('#2', width=71, anchor='e')
+            #self.adelanto.heading('#1', text='Fecha')
+            #self.adelanto.heading('#2', text='Importe')    
+
+            self.adelanto = Treeview(contenedor, columns=('#1', '#2'))           
             self.adelanto.column('#1', width=82, anchor='center')         
             self.adelanto.column('#2', width=71, anchor='e')
-            self.adelanto.heading('#1', text='Fecha')
-            self.adelanto.heading('#2', text='Importe')        
-            self.ingreso = Treeview(contenedor, columns=('#1', '#2'))
-            self.ingreso.column('#0', width=0)
+            self.adelanto.heading('#1', text='ADELANTO')
+            self.adelanto.heading('#2', text='Importe')   
+
+
+            
+            self.ingreso = Treeview(contenedor, columns=('#1', '#2'))          
             self.ingreso.column('#1', width=199, minwidth=199) 
             self.ingreso.column('#2', width= 60, minwidth= 60, anchor='e')
             self.ingreso.heading('#1', text='Detalle')
             self.ingreso.heading('#2', text='Importe')
+
             self.descuento = Treeview(contenedor, columns=('#1', '#2'))
-            self.descuento.column('#0', width=0)
             self.descuento.column('#1', width=199, minwidth=199) 
             self.descuento.column('#2', width= 60, minwidth= 60, anchor='e')
             self.descuento.heading('#1', text='Detalle')
-            self.descuento.heading('#2', text='Importe')        
-            self.vacaciones = Treeview(contenedor, columns=('#1', '#2', '#3'))
-            self.vacaciones.column('#0', width=0)
+            self.descuento.heading('#2', text='Importe')     
+
+            self.vacaciones = Treeview(contenedor, columns=('#1', '#2', '#3'))           
             self.vacaciones.column('#1', width=84, minwidth=84) 
             self.vacaciones.column('#2', width=84, minwidth=84) 
             self.vacaciones.column('#3', width=46, minwidth=46, anchor='e') 
             self.vacaciones.heading('#1', text='F. Inicial')
             self.vacaciones.heading('#2', text='F. Final')
             self.vacaciones.heading('#3', text='Dias')        
-            self.dmedico = Treeview(contenedor, columns=('#1', '#2', '#3', '#4'))
-            self.dmedico.column('#0', width=0)
+
+            self.dmedico = Treeview(contenedor, columns=('#1', '#2', '#3'))
             self.dmedico.column('#1', width= 84, minwidth= 84) 
-            self.dmedico.column('#2', width= 84, minwidth= 84) 
-            self.dmedico.column('#3', width=314, minwidth=314) 
-            self.dmedico.column('#4', width= 60, minwidth= 60, anchor='e') 
+            self.dmedico.column('#2', width= 84, minwidth= 84)           
+            self.dmedico.column('#3', width= 60, minwidth= 60, anchor='e') 
             self.dmedico.heading('#1', text='F. Inicial')
-            self.dmedico.heading('#2', text='F. Final')
-            
-            self.dmedico.heading('#4', text='Dias')
+            self.dmedico.heading('#2', text='F. Final')            
+            self.dmedico.heading('#3', text='Dias')
+
             self.cvacaciones = Treeview(contenedor, columns=('#1', '#2', '#3'))
-            self.cvacaciones.column('#0', width=0)
             self.cvacaciones.column('#1', width=84, minwidth=84) 
             self.cvacaciones.column('#2', width=84, minwidth=84) 
             self.cvacaciones.column('#3', width=46, minwidth=46, anchor='e') 
@@ -217,10 +225,10 @@ class Menu2(Frame):
             Button(contenedor, text='ELIMINAR', command=self.DeleteTRABAJADORES).place(x=890, y=20, width=90, height=30)     
             Button(contenedor, text='SALIR', bg='#DF2F2F', command=lambda: contenedor.destroy()).place(x=890, y=55, width=90, height=30)
 
-            self.CargarDetalles()                
-            print(self.apoyo.winfo_reqwidth())
-            contenedor.place(width=1000, height=600)         
-
+            self.CargarDetalles()    
+            contenedor.place(width=1000, height=600)  
+            print(self.apoyo.winfo_name()[1:])
+            print(self.falta.winfo_name()[1:])
     
     def CargarDetalles(self):      
                   
@@ -283,23 +291,35 @@ class Menu2(Frame):
         e.widget['text'] = fecha
             
 
-    def SelectDate(self, boton: str):
 
-        fecha = self.calendario.get_date()
 
-        if boton == 'vaca1':
-            self.fecha[0]['text'] = fecha            
-        elif boton == 'vaca2':
-            self.date02['text'] = fecha
-        elif boton == 'dmed1':  
-            self.date03['text'] = fecha
-        elif boton == 'dmed2':  
-            self.date04['text'] = fecha
-        elif boton == 'cvac1':  
-            self.date05['text'] = fecha
-        elif boton == 'cvac2':  
-            self.date06['text'] = fecha
+    def mama(self, widget):      
 
+        
+        valores = self.TRABAJADORES.item(self.TRABAJADORES.focus())['values']
+        id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
+        fecha = self.calendario.get_date()       
+        nombre = self.apoyo.winfo_name()[1:]
+        detalle = {'treeview': 'APOYO', 'treeview2': 'FALTA', 'treeview3': 'FERIADO'}
+        posicion = {'treeview': 2, 'treeview2': 3, 'treeview3': 4}
+       
+        if nombre == 'treeview' or nombre == 'treeview2' or nombre == 'treeview3':          
+            for row in widget.get_children():
+                if widget.item(row)['values'][0] == fecha:                   
+                    return
+
+            insert(f'INSERT INTO {detalle[nombre]} (IDAC, FECH) VALUES ({id}, "{fecha}")')
+            idRegistro = select(f'SELECT ID FROM {detalle[nombre]} ORDER BY ID DESC', False)    
+
+            widget.insert('', 'end', text=idRegistro[0], values=fecha)
+
+            valores[posicion[nombre]] = len(widget.get_children())
+
+            self.TRABAJADORES.item(self.TRABAJADORES.focus(), values=valores)
+        
+       
+   
+   
     def SaveTRABAJADORES(self, widget: str):
 
         valores = self.TRABAJADORES.item(self.TRABAJADORES.focus())['values']
