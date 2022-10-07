@@ -130,11 +130,10 @@ class Menu2(Frame):
             #self.adelanto.heading('#1', text='Fecha')
             #self.adelanto.heading('#2', text='Importe')    
 
-            self.adelanto = Treeview(contenedor, columns=('#1', '#2'))           
-            self.adelanto.column('#1', width=82, anchor='center')         
-            self.adelanto.column('#2', width=71, anchor='e')
-            self.adelanto.heading('#1', text='ADELANTO')
-            self.adelanto.heading('#2', text='Importe')   
+            self.adelanto = Treeview(contenedor, columns=('#1'))           
+            self.adelanto.column('#1', width=154, anchor='center')  
+            self.adelanto.heading('#1', text='ADELANTO', command=lambda:self.mama(self.adelanto))
+
 
 
             
@@ -227,9 +226,11 @@ class Menu2(Frame):
 
             self.CargarDetalles()    
             contenedor.place(width=1000, height=600)  
-            print(self.apoyo.winfo_name()[1:])
-            print(self.falta.winfo_name()[1:])
-    
+            
+            self.adelanto.insert('', 'end', values='500.00------01/01/2020')
+
+
+
     def CargarDetalles(self):      
                   
         id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
@@ -299,10 +300,10 @@ class Menu2(Frame):
         valores = self.TRABAJADORES.item(self.TRABAJADORES.focus())['values']
         id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
         fecha = self.calendario.get_date()       
-        nombre = self.apoyo.winfo_name()[1:]
+        nombre = widget.winfo_name()[1:]
         detalle = {'treeview': 'APOYO', 'treeview2': 'FALTA', 'treeview3': 'FERIADO'}
         posicion = {'treeview': 2, 'treeview2': 3, 'treeview3': 4}
-       
+        print(nombre)
         if nombre == 'treeview' or nombre == 'treeview2' or nombre == 'treeview3':          
             for row in widget.get_children():
                 if widget.item(row)['values'][0] == fecha:                   
