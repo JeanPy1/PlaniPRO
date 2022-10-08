@@ -101,10 +101,6 @@ class Menu2(Frame):
                 label = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')                
                 label.place(x=posicion[numero], y=267, width=90, height=18)                             
                 label.bind('<Button-1>', self.prueba)
-                
-                
-                
-                
                 self.fecha.append(label)  
                 
                 
@@ -121,57 +117,29 @@ class Menu2(Frame):
             self.feriado.column('#1', width=94, minwidth=94, anchor='center')
             self.feriado.heading('#1', text='FERIADO', command=lambda:self.mama(self.feriado))
 
-        
-
-           
-            #self.adelanto = Treeview(contenedor, columns=('#1', '#2'))           
-            #self.adelanto.column('#1', width=82, anchor='center')         
-            #self.adelanto.column('#2', width=71, anchor='e')
-            #self.adelanto.heading('#1', text='Fecha')
-            #self.adelanto.heading('#2', text='Importe')    
-
             self.adelanto = Treeview(contenedor, columns=('#1'))           
             self.adelanto.column('#1', width=154, anchor='center')  
             self.adelanto.heading('#1', text='ADELANTO', command=lambda:self.mama(self.adelanto))
-
-
-
             
-            self.ingreso = Treeview(contenedor, columns=('#1', '#2'))          
-            self.ingreso.column('#1', width=199, minwidth=199) 
-            self.ingreso.column('#2', width= 60, minwidth= 60, anchor='e')
-            self.ingreso.heading('#1', text='Detalle')
-            self.ingreso.heading('#2', text='Importe')
+            self.ingreso = Treeview(contenedor, columns=('#1'))          
+            self.ingreso.column('#1', width=199, minwidth=199, anchor='center')             
+            self.ingreso.heading('#1', text='INGRESO', command=lambda:self.mama(self.ingreso))
+            
+            self.descuento = Treeview(contenedor, columns=('#1'))
+            self.descuento.column('#1', width=199, minwidth=199, anchor='center')             
+            self.descuento.heading('#1', text='DESCUENTO', command=lambda:self.mama(self.descuento))
 
-            self.descuento = Treeview(contenedor, columns=('#1', '#2'))
-            self.descuento.column('#1', width=199, minwidth=199) 
-            self.descuento.column('#2', width= 60, minwidth= 60, anchor='e')
-            self.descuento.heading('#1', text='Detalle')
-            self.descuento.heading('#2', text='Importe')     
+            self.vacaciones = Treeview(contenedor, columns=('#1'))           
+            self.vacaciones.column('#1', width=250, minwidth=250, anchor='center')            
+            self.vacaciones.heading('#1', text='VACACIONES', command=lambda:self.mama(self.vacaciones))           
 
-            self.vacaciones = Treeview(contenedor, columns=('#1', '#2', '#3'))           
-            self.vacaciones.column('#1', width=84, minwidth=84) 
-            self.vacaciones.column('#2', width=84, minwidth=84) 
-            self.vacaciones.column('#3', width=46, minwidth=46, anchor='e') 
-            self.vacaciones.heading('#1', text='F. Inicial')
-            self.vacaciones.heading('#2', text='F. Final')
-            self.vacaciones.heading('#3', text='Dias')        
+            self.dmedico = Treeview(contenedor, columns=('#1'))
+            self.dmedico.column('#1', width= 250, minwidth= 250, anchor='center')           
+            self.dmedico.heading('#1', text='DESCANSO MEDICO', command=lambda:self.mama(self.dmedico))      
 
-            self.dmedico = Treeview(contenedor, columns=('#1', '#2', '#3'))
-            self.dmedico.column('#1', width= 84, minwidth= 84) 
-            self.dmedico.column('#2', width= 84, minwidth= 84)           
-            self.dmedico.column('#3', width= 60, minwidth= 60, anchor='e') 
-            self.dmedico.heading('#1', text='F. Inicial')
-            self.dmedico.heading('#2', text='F. Final')            
-            self.dmedico.heading('#3', text='Dias')
-
-            self.cvacaciones = Treeview(contenedor, columns=('#1', '#2', '#3'))
-            self.cvacaciones.column('#1', width=84, minwidth=84) 
-            self.cvacaciones.column('#2', width=84, minwidth=84) 
-            self.cvacaciones.column('#3', width=46, minwidth=46, anchor='e') 
-            self.cvacaciones.heading('#1', text='F. Inicial')
-            self.cvacaciones.heading('#2', text='F. Final')
-            self.cvacaciones.heading('#3', text='Dias')
+            self.cvacaciones = Treeview(contenedor, columns=('#1'))
+            self.cvacaciones.column('#1', width=250, minwidth=250, anchor='center')  
+            self.cvacaciones.heading('#1', text='COMPRA VACACIONES', command=lambda:self.mama(self.cvacaciones))
 
             #self.adelantoImporte  = Entry(contenedor, justify='right')
             #self.ingresoDetalle   = Entry(contenedor)
@@ -225,11 +193,7 @@ class Menu2(Frame):
             Button(contenedor, text='SALIR', bg='#DF2F2F', command=lambda: contenedor.destroy()).place(x=890, y=55, width=90, height=30)
 
             self.CargarDetalles()    
-            contenedor.place(width=1000, height=600)  
-            
-            self.adelanto.insert('', 'end', values='500.00------01/01/2020')
-
-
+            contenedor.place(width=1000, height=600)      
 
     def CargarDetalles(self):      
                   
@@ -241,7 +205,7 @@ class Menu2(Frame):
         ingr = select(F'SELECT ID, DETA, MONT FROM INGRESO WHERE IDAC = {id}', True)
         desc = select(F'SELECT ID, DETA, MONT FROM DESCUENTO WHERE IDAC = {id}', True) 
         vaca = select(F'SELECT ID, FINI, FFIN, DTOT FROM VACACIONES WHERE IDAC = {id}', True) 
-        dmed = select(F'SELECT ID, FINI, FFIN, DETA, DTOT FROM DMEDICO WHERE IDAC = {id}', True)
+        dmed = select(F'SELECT ID, FINI, FFIN, DTOT FROM DMEDICO WHERE IDAC = {id}', True)
         cvac = select(F'SELECT ID, FINI, FFIN, DTOT FROM CVACACIONES WHERE IDAC = {id}', True) 
 
         for dato in apoy:
@@ -254,22 +218,22 @@ class Menu2(Frame):
             self.feriado.insert('', 'end', text=dato[0], values=(dato[1]))    
 
         for dato in adel:
-            self.adelanto.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))      
+            self.adelanto.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]:.2f}'))      
 
         for dato in ingr:
-            self.ingreso.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))    
+            self.ingreso.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]:.2f}'))    
 
         for dato in desc:
-            self.descuento.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}')) 
+            self.descuento.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]:.2f}')) 
 
         for dato in vaca:
-            self.vacaciones.insert('', 'end', text=dato[0], values=(dato[1], dato[2], dato[3])) 
+            self.vacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]}____{dato[3]}')) 
 
         for dato in dmed:
-            self.dmedico.insert('', 'end', text=dato[0], values=(dato[1], dato[2], dato[3], dato[4])) 
+            self.dmedico.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]}____{dato[3]}')) 
 
         for dato in cvac:
-            self.cvacaciones.insert('', 'end', text=dato[0], values=(dato[1], dato[2], dato[3]))   
+            self.cvacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]}____{dato[3]}'))   
    
 
     def RemoveSelection(self, e):
@@ -598,10 +562,11 @@ class Menu2(Frame):
             self.feriado.delete(self.feriado.focus())
 
         if self.adelanto.selection():
-            if float(valores[10]) == float(self.adelanto.item(self.adelanto.focus())['values'][1]):
+            monto = float(self.adelanto.item(self.adelanto.focus())['values'][0][14:])
+            if float(valores[10]) == monto:
                 valores[10] = ''
             else:
-                saldo = float(valores[10]) - float(self.adelanto.item(self.adelanto.focus())['values'][1])
+                saldo = float(valores[10]) - monto
                 valores[10] = f'{saldo:.2f}'
 
             id = int(self.adelanto.item(self.adelanto.focus())['text'])
