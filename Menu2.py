@@ -114,12 +114,14 @@ class Menu2(Frame):
             self.falta.heading('#1', text='FALTA', command=lambda:self.mama(self.falta))
 
             self.feriado = Treeview(contenedor, columns=('#1'))           
-            self.feriado.column('#1', width=94, minwidth=94, anchor='center')
+            self.feriado.column('#1', width=84, minwidth=84, anchor='center')
             self.feriado.heading('#1', text='FERIADO', command=lambda:self.mama(self.feriado))
 
-            self.adelanto = Treeview(contenedor, columns=('#1'))           
-            self.adelanto.column('#1', width=154, anchor='center')  
+            self.adelanto = Treeview(contenedor, columns=('#1', '#2'))           
+            self.adelanto.column('#1', width=84, anchor='center')  
+            self.adelanto.column('#2', width=54, anchor='center') 
             self.adelanto.heading('#1', text='ADELANTO', command=lambda:self.mama(self.adelanto))
+            self.adelanto.heading('#2', text='MONTO', command=lambda:self.mama(self.adelanto))
             
             self.ingreso = Treeview(contenedor, columns=('#1'))          
             self.ingreso.column('#1', width=199, minwidth=199, anchor='center')             
@@ -218,22 +220,22 @@ class Menu2(Frame):
             self.feriado.insert('', 'end', text=dato[0], values=(dato[1]))    
 
         for dato in adel:
-            self.adelanto.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]:.2f}'))      
+            self.adelanto.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))      
 
         for dato in ingr:
-            self.ingreso.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]:.2f}'))    
+            self.ingreso.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]:.2f}',))    
 
-        for dato in desc:
-            self.descuento.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]:.2f}')) 
+        for dato in desc:  
+            self.descuento.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]:.2f}',)) 
 
         for dato in vaca:
-            self.vacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]}____{dato[3]}')) 
+            self.vacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]}    {dato[3]}',)) 
 
         for dato in dmed:
-            self.dmedico.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]}____{dato[3]}')) 
+            self.dmedico.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]}    {dato[3]}',)) 
 
         for dato in cvac:
-            self.cvacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]}____{dato[2]}____{dato[3]}'))   
+            self.cvacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]}    {dato[3]}',))   
    
 
     def RemoveSelection(self, e):
@@ -562,7 +564,7 @@ class Menu2(Frame):
             self.feriado.delete(self.feriado.focus())
 
         if self.adelanto.selection():
-            monto = float(self.adelanto.item(self.adelanto.focus())['values'][0][14:])
+            monto = float(self.adelanto.item(self.adelanto.focus())['values'][1])
             if float(valores[10]) == monto:
                 valores[10] = ''
             else:
