@@ -2,7 +2,7 @@
 from tkinter import Button, Entry, Frame, Label, Scrollbar, messagebox
 from tkinter.ttk import Treeview
 from tkcalendar import Calendar
-from scripts.sql import select, insert, update, delete
+from scripts.sql import select, insert, delete
 
 class Menu2(Frame):
 
@@ -46,150 +46,142 @@ class Menu2(Frame):
             apoyos = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {id}', False)[0]
             faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0]         
             feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0]   
-            ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
-            descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]
-            descansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
-            vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
-            compraVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
             adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
             porFuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
+            ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
+            descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]
+            vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
+            compraVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
+            descansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
 
             if not apoyos: apoyos = ''            
             if not faltas: faltas = ''
-            if not feriados: feriados = ''
-            if not descansoMedico: descansoMedico = ''
+            if not feriados: feriados = ''            
             if not vacaciones: vacaciones = ''
             if not compraVacaciones: compraVacaciones = ''
+            if not descansoMedico: descansoMedico = ''
             
-            if not ingresos: ingresos = ''
-            else: ingresos = f'{ingresos:.2f}'
-            if not descuentos: descuentos = ''
-            else: descuentos = f'{descuentos:.2f}'  
             if not adelantos: adelantos = ''
             else: adelantos = f'{adelantos:.2f}'  
             if not porFuera: porFuera = ''
-            else: porFuera = f'{porFuera:.2f}'         
+            else: porFuera = f'{porFuera:.2f}'        
+            if not ingresos: ingresos = ''
+            else: ingresos = f'{ingresos:.2f}'
+            if not descuentos: descuentos = ''
+            else: descuentos = f'{descuentos:.2f}'             
             
             self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyos, faltas, feriados, ingresos,
                                             descuentos, descansoMedico, vacaciones, compraVacaciones, adelantos, porFuera))
-
 
     def Detalles(self):        
         
         if self.TRABAJADORES.selection():  
             contenedor = Frame(self)   
-            self.calendario = Calendar(contenedor, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2', borderwidth=0)
-            self.calendario.place(x=20, y=30)
-            #titulo = ('APOYO', 'FALTA', 'FERIADO', 'ADELANTO', 'INGRESO', 'DESCUENTO', 'VACACIONES', 'DESCANSO MEDICO', 'COMPRA VACACIONES')
-            
-            #for boton in range(9):
-            #    Button(contenedor, text='APOYO', command=lambda:self.SaveTRABAJADORES('APO')).place(x=286, y= 20, width=100, height=22)       
-
-            #Button(contenedor, text='APOYO'            , command=lambda:self.SaveTRABAJADORES('APO')).place(x=286, y= 20, width=100, height=22)
-            #Button(contenedor, text='FALTA'            , command=lambda:self.SaveTRABAJADORES('FAL')).place(x=406, y= 20, width=100, height=22)
-            #Button(contenedor, text='FERIADO'          , command=lambda:self.SaveTRABAJADORES('FER')).place(x=526, y= 20, width=100, height=22)
-            #Button(contenedor, text='ADELANTO'         , command=lambda:self.SaveTRABAJADORES('ADE')).place(x=646, y= 20, width=160, height=22)
-            #Button(contenedor, text='INGRESO'          , command=lambda:self.SaveTRABAJADORES('ING')).place(x= 20, y=237, width=265, height=22)
-            #Button(contenedor, text='DESCUENTO'        , command=lambda:self.SaveTRABAJADORES('DES')).place(x=303, y=237, width=266, height=22)
-            #Button(contenedor, text='VACACIONES'       , command=lambda:self.SaveTRABAJADORES('VAC')).place(x=586, y=237, width=220, height=22)
-            #Button(contenedor, text='DESCANSO MEDICO'  , command=lambda:self.SaveTRABAJADORES('DME')).place(x= 20, y=418, width=548, height=22)
-            #Button(contenedor, text='COMPRA VACACIONES', command=lambda:self.SaveTRABAJADORES('CVA')).place(x=586, y=418, width=220, height=22)
+            self.calendario = Calendar(contenedor, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2')
+            self.calendario.place(x=20, y=30, width=240, height=230)  
 
             self.fecha = []
-            posicion = (20, 111, 221, 312, 422, 513, 623, 704, 820)
-            for numero in range(9):
+            self.entrys =[]
+            posicionX = (571, 714, 21, 156, 300, 435, 579, 714)
+            posicionY = (243, 243, 560, 560, 560, 560, 560, 560)
+            posicionXX = (648, 791, 21, 373, 439, 791)
+            posicionYY = (243, 243, 401, 401, 401, 401)
+            for numero in range(8):
                 label = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')                
-                label.place(x=posicion[numero], y=267, width=90, height=18)                             
+                label.place(x=posicionX[numero], y=posicionY[numero], width=74, height=17)                       
                 label.bind('<Button-1>', self.prueba)
-                self.fecha.append(label)  
+                self.fecha.append(label)   
                 
-                
+                if numero <  6:
+                    entry = Entry(contenedor, cursor='hand2', bg='yellow')                
+                    entry.place(x=posicionXX[numero], y=posicionYY[numero], width=54, height=17)   
+                    self.entrys.append(entry) 
+
+            self.fecha[2].place(width=132)
+            self.fecha[3].place(width=132)
+            self.fecha[4].place(width=132)
+            self.fecha[5].place(width=132)
+            self.fecha[6].place(width=132)
+            self.fecha[7].place(width=131)
+
+            self.entrys[2].place(width=349)
+            self.entrys[4].place(width=349)
 
             self.apoyo = Treeview(contenedor, columns=('#1'))            
             self.apoyo.column('#1', width=84, minwidth=84, anchor='center')
             self.apoyo.heading('#1', text='APOYO', command=lambda:self.mama(self.apoyo))
+            self.apoyo.place(x=270, y=30, height=230)            
 
-            self.falta = Treeview(contenedor, columns=('#1'))          
+            self.falta = Treeview(contenedor, columns=('#1'))
             self.falta.column('#1', width=84, minwidth=84, anchor='center')
             self.falta.heading('#1', text='FALTA', command=lambda:self.mama(self.falta))
+            self.falta.place(x=370, y=30, height=230)
 
             self.feriado = Treeview(contenedor, columns=('#1'))           
             self.feriado.column('#1', width=84, minwidth=84, anchor='center')
             self.feriado.heading('#1', text='FERIADO', command=lambda:self.mama(self.feriado))
+            self.feriado.place(x=470, y= 30, height=230)
 
             self.adelanto = Treeview(contenedor, columns=('#1', '#2'))           
-            self.adelanto.column('#1', width=84, anchor='center')  
-            self.adelanto.column('#2', width=54, anchor='center') 
+            self.adelanto.column('#1', width=74, minwidth=74, anchor='center')  
+            self.adelanto.column('#2', width=53, minwidth=53, anchor='center')             
             self.adelanto.heading('#1', text='ADELANTO', command=lambda:self.mama(self.adelanto))
             self.adelanto.heading('#2', text='MONTO', command=lambda:self.mama(self.adelanto))
-            
-            self.ingreso = Treeview(contenedor, columns=('#1'))          
-            self.ingreso.column('#1', width=199, minwidth=199, anchor='center')             
+            self.adelanto.place(x=570, y=30, height=210) 
+
+            self.porFuera = Treeview(contenedor, columns=('#1', '#2'))           
+            self.porFuera.column('#1', width=74, minwidth=74, anchor='center')  
+            self.porFuera.column('#2', width=53, minwidth=53, anchor='center')             
+            self.porFuera.heading('#1', text='POR FUERA', command=lambda:self.mama(self.porFuera))
+            self.porFuera.heading('#2', text='MONTO', command=lambda:self.mama(self.porFuera))
+            self.porFuera.place(x=713, y=30, height=210)  
+
+            self.ingreso = Treeview(contenedor, columns=('#1', '#2'))          
+            self.ingreso.column('#1', width=349, minwidth=349, anchor='center')  
+            self.ingreso.column('#2', width=53, minwidth=53, anchor='center')              
             self.ingreso.heading('#1', text='INGRESO', command=lambda:self.mama(self.ingreso))
+            self.ingreso.heading('#2', text='MONTO', command=lambda:self.mama(self.ingreso))
+            self.ingreso.place(x=20, y=288, height=110)
             
-            self.descuento = Treeview(contenedor, columns=('#1'))
-            self.descuento.column('#1', width=199, minwidth=199, anchor='center')             
+            self.descuento = Treeview(contenedor, columns=('#1', '#2'))
+            self.descuento.column('#1', width=349, minwidth=349, anchor='center')      
+            self.descuento.column('#2', width=53, minwidth=53, anchor='center')             
             self.descuento.heading('#1', text='DESCUENTO', command=lambda:self.mama(self.descuento))
+            self.descuento.heading('#2', text='MONTO', command=lambda:self.mama(self.descuento))
+            self.descuento.place(x=438, y=288, height=110)
 
-            self.vacaciones = Treeview(contenedor, columns=('#1'))           
-            self.vacaciones.column('#1', width=250, minwidth=250, anchor='center')            
-            self.vacaciones.heading('#1', text='VACACIONES', command=lambda:self.mama(self.vacaciones))           
+            self.vacaciones = Treeview(contenedor, columns=('#1', '#2'))           
+            self.vacaciones.column('#1', width=213, minwidth=213, anchor='center')  
+            self.vacaciones.column('#2', width=50, minwidth=50, anchor='center')
+            self.vacaciones.heading('#1', text='VACACIONES', command=lambda:self.mama(self.vacaciones))        
+            self.vacaciones.heading('#2', text='DIAS', command=lambda:self.mama(self.vacaciones))       
+            self.vacaciones.place (x=20, y=447, height=110)               
 
-            self.dmedico = Treeview(contenedor, columns=('#1'))
-            self.dmedico.column('#1', width= 250, minwidth= 250, anchor='center')           
-            self.dmedico.heading('#1', text='DESCANSO MEDICO', command=lambda:self.mama(self.dmedico))      
+            self.cvacaciones = Treeview(contenedor, columns=('#1', '#2'))
+            self.cvacaciones.column('#1', width=213, minwidth=213, anchor='center')  
+            self.cvacaciones.column('#2', width=50, minwidth=50, anchor='center') 
+            self.cvacaciones.heading('#1', text='COMPRA DE VACACIONES', command=lambda:self.mama(self.cvacaciones))
+            self.cvacaciones.heading('#2', text='DIAS', command=lambda:self.mama(self.cvacaciones))
+            self.cvacaciones.place(x=299, y=447, height=110)
 
-            self.cvacaciones = Treeview(contenedor, columns=('#1'))
-            self.cvacaciones.column('#1', width=250, minwidth=250, anchor='center')  
-            self.cvacaciones.heading('#1', text='COMPRA VACACIONES', command=lambda:self.mama(self.cvacaciones))
-
-            #self.adelantoImporte  = Entry(contenedor, justify='right')
-            #self.ingresoDetalle   = Entry(contenedor)
-            #self.ingresoImporte   = Entry(contenedor, justify='right')
-            #self.descuentoDetalle = Entry(contenedor)
-            #self.descuentoImporte = Entry(contenedor, justify='right')        
-           
+            self.dmedico = Treeview(contenedor, columns=('#1', '#2'))
+            self.dmedico.column('#1', width=212, minwidth=212, anchor='center')    
+            self.dmedico.column('#2', width=50, minwidth=50, anchor='center')   
+            self.dmedico.heading('#1', text='DESCANSO MEDICO', command=lambda:self.mama(self.dmedico))   
+            self.dmedico.heading('#2', text='DIAS', command=lambda:self.mama(self.dmedico))  
+            self.dmedico.place(x=578, y=447, height=110)
 
             # Evento de click del treeview para quitar seleccion
             self.apoyo.bind('<Button-1>', self.RemoveSelection)
             self.falta.bind('<Button-1>', self.RemoveSelection) 
             self.feriado.bind('<Button-1>', self.RemoveSelection)
             self.adelanto.bind('<Button-1>', self.RemoveSelection)
+            self.porFuera.bind('<Button-1>', self.RemoveSelection)
             self.ingreso.bind('<Button-1>', self.RemoveSelection)
             self.descuento.bind('<Button-1>', self.RemoveSelection)
-            self.vacaciones.bind('<Button-1>', self.RemoveSelection)
-            self.dmedico.bind('<Button-1>', self.RemoveSelection)
+            self.vacaciones.bind('<Button-1>', self.RemoveSelection)            
             self.cvacaciones.bind('<Button-1>', self.RemoveSelection)
-
-            # Posicionamos todos los elementos
-            
-
-            self.apoyo.place      (x=286, y= 52, height=150)
-            self.falta.place      (x=406, y= 52, height=150)
-            self.feriado.place    (x=526, y= 52, height=150)
-            self.adelanto.place   (x=646, y= 72, height=130)   
-            self.ingreso.place    (x= 20, y=289, height= 90)
-            self.descuento.place  (x=303, y=289, height= 90)
-            self.vacaciones.place (x=586, y=289, height= 90)
-            self.dmedico.place    (x= 20, y=470, height= 90)
-            self.cvacaciones.place(x=586, y=470, height= 90)
-
-            #self.date01.place(x=586, y=267, width=86, height=17)
-            #self.date02.place(x=673, y=267, width=83, height=17)
-            #self.date03.place(x= 20, y=447, width=86, height=17)
-            #self.date04.place(x=107, y=447, width=83, height=17)
-            #self.date05.place(x=586, y=447, width=86, height=17)
-            #self.date06.place(x=673, y=447, width=83, height=17)
-
-            #self.adelantoImporte.place (x=732, y= 50, width= 73, height=17)   
-            #self.ingresoDetalle.place  (x= 20, y=267, width=201, height=17)        
-            #self.ingresoImporte.place  (x=222, y=267, width= 63, height=17)
-            #self.descuentoDetalle.place(x=303, y=267, width=201, height=17)        
-            #self.descuentoImporte.place(x=505, y=267, width= 63, height=17)        
-            #self.vacacionesTotal.place (x=757, y=267, width= 49, height=17)
-            #self.dmedicoDetalle.place  (x=191, y=447, width=313, height=17)
-            #self.dmedicoTotal.place    (x=505, y=447, width= 63, height=17)
-            #self.cvacacionesTotal.place(x=757, y=447, width= 49, height=17) 
+            self.dmedico.bind('<Button-1>', self.RemoveSelection)
 
             Button(contenedor, text='ELIMINAR', command=self.DeleteTRABAJADORES).place(x=890, y=20, width=90, height=30)     
             Button(contenedor, text='SALIR', bg='#DF2F2F', command=lambda: contenedor.destroy()).place(x=890, y=55, width=90, height=30)
@@ -204,11 +196,12 @@ class Menu2(Frame):
         falt = select(F'SELECT ID, FECH FROM FALTA WHERE IDAC = {id}', True) 
         feri = select(F'SELECT ID, FECH FROM FERIADO WHERE IDAC = {id}', True) 
         adel = select(F'SELECT ID, FECH, MONT FROM ADELANTO WHERE IDAC = {id}', True) 
+        xfue = select(F'SELECT ID, FECH, MONT FROM XFUERA WHERE IDAC = {id}', True) 
         ingr = select(F'SELECT ID, DETA, MONT FROM INGRESO WHERE IDAC = {id}', True)
         desc = select(F'SELECT ID, DETA, MONT FROM DESCUENTO WHERE IDAC = {id}', True) 
-        vaca = select(F'SELECT ID, FINI, FFIN, DTOT FROM VACACIONES WHERE IDAC = {id}', True) 
-        dmed = select(F'SELECT ID, FINI, FFIN, DTOT FROM DMEDICO WHERE IDAC = {id}', True)
+        vaca = select(F'SELECT ID, FINI, FFIN, DTOT FROM VACACIONES WHERE IDAC = {id}', True)         
         cvac = select(F'SELECT ID, FINI, FFIN, DTOT FROM CVACACIONES WHERE IDAC = {id}', True) 
+        dmed = select(F'SELECT ID, FINI, FFIN, DTOT FROM DMEDICO WHERE IDAC = {id}', True)
 
         for dato in apoy:
             self.apoyo.insert('', 'end', text=dato[0], values=(dato[1])) 
@@ -222,44 +215,44 @@ class Menu2(Frame):
         for dato in adel:
             self.adelanto.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))      
 
+        for dato in xfue:
+            self.porFuera.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))      
+
         for dato in ingr:
-            self.ingreso.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]:.2f}',))    
+            self.ingreso.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))  
 
         for dato in desc:  
-            self.descuento.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]:.2f}',)) 
+            self.descuento.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}')) 
 
         for dato in vaca:
-            self.vacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]}    {dato[3]}',)) 
-
-        for dato in dmed:
-            self.dmedico.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]}    {dato[3]}',)) 
+            self.vacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))         
 
         for dato in cvac:
-            self.cvacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]}    {dato[2]}    {dato[3]}',))   
-   
+            self.cvacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))  
 
+        for dato in dmed:
+            self.dmedico.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))  
+   
     def RemoveSelection(self, e):
         
         # Quitar seleccion de otros treeview
         self.apoyo.selection_set('') 
         self.falta.selection_set('')      
         self.feriado.selection_set('')       
-        self.adelanto.selection_set('')        
+        self.adelanto.selection_set('')  
+        self.porFuera.selection_set('')  
         self.ingreso.selection_set('')
         self.descuento.selection_set('')
-        self.vacaciones.selection_set('')
-        self.dmedico.selection_set('')
+        self.vacaciones.selection_set('')        
         self.cvacaciones.selection_set('')
+        self.dmedico.selection_set('')
 
 
     def prueba(self, e):
 
         fecha = self.calendario.get_date()       
         e.widget['text'] = fecha
-            
-
-
-
+    
     def mama(self, widget):      
 
         
@@ -283,10 +276,7 @@ class Menu2(Frame):
             valores[posicion[nombre]] = len(widget.get_children())
 
             self.TRABAJADORES.item(self.TRABAJADORES.focus(), values=valores)
-        
-       
-   
-   
+           
     def SaveTRABAJADORES(self, widget: str):
 
         valores = self.TRABAJADORES.item(self.TRABAJADORES.focus())['values']
