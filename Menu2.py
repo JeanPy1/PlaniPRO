@@ -1,8 +1,8 @@
-
 from tkinter import Button, Entry, Frame, Label, Scrollbar, messagebox
 from tkinter.ttk import Treeview
 from tkcalendar import Calendar
 from scripts.sql import select, insert, delete
+from scripts.edad import CompararFechas, TotalDias
 
 class Menu2(Frame):
 
@@ -73,121 +73,135 @@ class Menu2(Frame):
             self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyos, faltas, feriados, ingresos,
                                             descuentos, descansoMedico, vacaciones, compraVacaciones, adelantos, porFuera))
 
-    def Detalles(self):        
-        
+    def Detalles(self):
+
         if not self.TRABAJADORES.selection(): return
 
         contenedor = Frame(self)   
         self.calendario = Calendar(contenedor, menuselectmode='day', date_pattern='dd/MM/yyyy', cursor='hand2')
-        self.calendario.place(x=20, y=30, width=240, height=230)  
-
-        self.fecha = []
-        self.entrys =[]
-        posicionX = (571, 714, 21, 156, 300, 435, 579, 714)
-        posicionY = (243, 243, 560, 560, 560, 560, 560, 560)
-        posicionXX = (648, 791, 21, 373, 439, 791)
-        posicionYY = (243, 243, 401, 401, 401, 401)
-        for numero in range(8):
-            label = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')                
-            label.place(x=posicionX[numero], y=posicionY[numero], width=74, height=17)                       
-            label.bind('<Button-1>', self.prueba)
-            self.fecha.append(label)   
-            
-            if numero <  6:
-                entry = Entry(contenedor, cursor='hand2', bg='yellow')                
-                entry.place(x=posicionXX[numero], y=posicionYY[numero], width=54, height=17)   
-                self.entrys.append(entry) 
-
-        self.fecha[2].place(width=132)
-        self.fecha[3].place(width=132)
-        self.fecha[4].place(width=132)
-        self.fecha[5].place(width=132)
-        self.fecha[6].place(width=132)
-        self.fecha[7].place(width=131)
-
-        self.entrys[2].place(width=349)
-        self.entrys[4].place(width=349)
+        self.calendario.place(x=20, y=30, width=240, height=230)
 
         self.apoyo = Treeview(contenedor, columns=('#1'))            
         self.apoyo.column('#1', width=84, minwidth=84, anchor='center')
-        self.apoyo.heading('#1', text='APOYO', command=lambda:self.mama(self.apoyo))
+        self.apoyo.heading('#1', text='APOYO', command=lambda:self.RegistrarDetalle(1))
         self.apoyo.place(x=270, y=30, height=230)            
 
         self.falta = Treeview(contenedor, columns=('#1'))
         self.falta.column('#1', width=84, minwidth=84, anchor='center')
-        self.falta.heading('#1', text='FALTA', command=lambda:self.mama(self.falta))
+        self.falta.heading('#1', text='FALTA', command=lambda:self.RegistrarDetalle(2))
         self.falta.place(x=370, y=30, height=230)
 
         self.feriado = Treeview(contenedor, columns=('#1'))           
         self.feriado.column('#1', width=84, minwidth=84, anchor='center')
-        self.feriado.heading('#1', text='FERIADO', command=lambda:self.mama(self.feriado))
+        self.feriado.heading('#1', text='FERIADO', command=lambda:self.RegistrarDetalle(3))
         self.feriado.place(x=470, y= 30, height=230)
 
         self.adelanto = Treeview(contenedor, columns=('#1', '#2'))           
         self.adelanto.column('#1', width=74, minwidth=74, anchor='center')  
         self.adelanto.column('#2', width=53, minwidth=53, anchor='center')             
-        self.adelanto.heading('#1', text='ADELANTO', command=lambda:self.mama(self.adelanto))
-        self.adelanto.heading('#2', text='MONTO', command=lambda:self.mama(self.adelanto))
+        self.adelanto.heading('#1', text='ADELANTO', command=lambda:self.RegistrarDetalle(4))
+        self.adelanto.heading('#2', text='MONTO', command=lambda:self.RegistrarDetalle(4))
         self.adelanto.place(x=570, y=30, height=210) 
 
         self.porFuera = Treeview(contenedor, columns=('#1', '#2'))           
         self.porFuera.column('#1', width=74, minwidth=74, anchor='center')  
         self.porFuera.column('#2', width=53, minwidth=53, anchor='center')             
-        self.porFuera.heading('#1', text='POR FUERA', command=lambda:self.mama(self.porFuera))
-        self.porFuera.heading('#2', text='MONTO', command=lambda:self.mama(self.porFuera))
+        self.porFuera.heading('#1', text='POR FUERA', command=lambda:self.RegistrarDetalle(5))
+        self.porFuera.heading('#2', text='MONTO', command=lambda:self.RegistrarDetalle(5))
         self.porFuera.place(x=713, y=30, height=210)  
 
         self.ingreso = Treeview(contenedor, columns=('#1', '#2'))          
-        self.ingreso.column('#1', width=349, minwidth=349, anchor='center')  
+        self.ingreso.column('#1', width=349, minwidth=349)  
         self.ingreso.column('#2', width=53, minwidth=53, anchor='center')              
-        self.ingreso.heading('#1', text='INGRESO', command=lambda:self.mama(self.ingreso))
-        self.ingreso.heading('#2', text='MONTO', command=lambda:self.mama(self.ingreso))
+        self.ingreso.heading('#1', text='INGRESO', command=lambda:self.RegistrarDetalle(6))
+        self.ingreso.heading('#2', text='MONTO', command=lambda:self.RegistrarDetalle(6))
         self.ingreso.place(x=20, y=288, height=110)
-        
+
         self.descuento = Treeview(contenedor, columns=('#1', '#2'))
-        self.descuento.column('#1', width=349, minwidth=349, anchor='center')      
+        self.descuento.column('#1', width=349, minwidth=349)      
         self.descuento.column('#2', width=53, minwidth=53, anchor='center')             
-        self.descuento.heading('#1', text='DESCUENTO', command=lambda:self.mama(self.descuento))
-        self.descuento.heading('#2', text='MONTO', command=lambda:self.mama(self.descuento))
+        self.descuento.heading('#1', text='DESCUENTO', command=lambda:self.RegistrarDetalle(7))
+        self.descuento.heading('#2', text='MONTO', command=lambda:self.RegistrarDetalle(7))
         self.descuento.place(x=438, y=288, height=110)
 
         self.vacaciones = Treeview(contenedor, columns=('#1', '#2'))           
         self.vacaciones.column('#1', width=213, minwidth=213, anchor='center')  
         self.vacaciones.column('#2', width=50, minwidth=50, anchor='center')
-        self.vacaciones.heading('#1', text='VACACIONES', command=lambda:self.mama(self.vacaciones))        
-        self.vacaciones.heading('#2', text='DIAS', command=lambda:self.mama(self.vacaciones))       
+        self.vacaciones.heading('#1', text='VACACIONES', command=lambda:self.RegistrarDetalle(8))       
+        self.vacaciones.heading('#2', text='DIAS', command=lambda:self.RegistrarDetalle(8))    
         self.vacaciones.place (x=20, y=447, height=110)               
 
         self.cvacaciones = Treeview(contenedor, columns=('#1', '#2'))
         self.cvacaciones.column('#1', width=213, minwidth=213, anchor='center')  
         self.cvacaciones.column('#2', width=50, minwidth=50, anchor='center') 
-        self.cvacaciones.heading('#1', text='COMPRA DE VACACIONES', command=lambda:self.mama(self.cvacaciones))
-        self.cvacaciones.heading('#2', text='DIAS', command=lambda:self.mama(self.cvacaciones))
+        self.cvacaciones.heading('#1', text='COMPRA DE VACACIONES', command=lambda:self.RegistrarDetalle(9))
+        self.cvacaciones.heading('#2', text='DIAS', command=lambda:self.RegistrarDetalle(9))
         self.cvacaciones.place(x=299, y=447, height=110)
 
         self.dmedico = Treeview(contenedor, columns=('#1', '#2'))
-        self.dmedico.column('#1', width=212, minwidth=212, anchor='center')    
-        self.dmedico.column('#2', width=50, minwidth=50, anchor='center')   
-        self.dmedico.heading('#1', text='DESCANSO MEDICO', command=lambda:self.mama(self.dmedico))   
-        self.dmedico.heading('#2', text='DIAS', command=lambda:self.mama(self.dmedico))  
+        self.dmedico.column('#1', width=212, minwidth=212, anchor='center')
+        self.dmedico.column('#2', width=50, minwidth=50, anchor='center')
+        self.dmedico.heading('#1', text='DESCANSO MEDICO', command=lambda:self.RegistrarDetalle(10))
+        self.dmedico.heading('#2', text='DIAS', command=lambda:self.RegistrarDetalle(10))
         self.dmedico.place(x=578, y=447, height=110)
 
-        self.apoyo.bind('<Button-1>', self.RemoveSelection)
-        self.falta.bind('<Button-1>', self.RemoveSelection) 
-        self.feriado.bind('<Button-1>', self.RemoveSelection)
-        self.adelanto.bind('<Button-1>', self.RemoveSelection)
-        self.porFuera.bind('<Button-1>', self.RemoveSelection)
-        self.ingreso.bind('<Button-1>', self.RemoveSelection)
-        self.descuento.bind('<Button-1>', self.RemoveSelection)
-        self.vacaciones.bind('<Button-1>', self.RemoveSelection)            
-        self.cvacaciones.bind('<Button-1>', self.RemoveSelection)
-        self.dmedico.bind('<Button-1>', self.RemoveSelection)
+        self.apoyo.bind('<Button-1>', self.QuitarSeleccion)
+        self.falta.bind('<Button-1>', self.QuitarSeleccion) 
+        self.feriado.bind('<Button-1>', self.QuitarSeleccion)
+        self.adelanto.bind('<Button-1>', self.QuitarSeleccion)
+        self.porFuera.bind('<Button-1>', self.QuitarSeleccion)
+        self.ingreso.bind('<Button-1>', self.QuitarSeleccion)
+        self.descuento.bind('<Button-1>', self.QuitarSeleccion)
+        self.vacaciones.bind('<Button-1>', self.QuitarSeleccion)            
+        self.cvacaciones.bind('<Button-1>', self.QuitarSeleccion)
+        self.dmedico.bind('<Button-1>', self.QuitarSeleccion)
 
-        Button(contenedor, text='ELIMINAR', command=self.DeleteTRABAJADORES).place(x=890, y=30, width=90, height=30)     
+        self.fechaAdelanto = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')
+        self.fechaPorFuera = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')
+        self.fechaVacaciones1 = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')
+        self.fechaVacaciones2 = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')
+        self.fechaCVacaciones1 = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')
+        self.fechaCVacaciones2 = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')
+        self.fechaDMedico1 = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')
+        self.fechaDMedico2 = Label(contenedor, cursor='hand2', anchor='center', bg='yellow')
+
+        self.fechaAdelanto.bind('<Button-1>', self.SeleccionarFecha)
+        self.fechaPorFuera.bind('<Button-1>', self.SeleccionarFecha)
+        self.fechaVacaciones1.bind('<Button-1>', self.SeleccionarFecha)
+        self.fechaVacaciones2.bind('<Button-1>', self.SeleccionarFecha)
+        self.fechaCVacaciones1.bind('<Button-1>', self.SeleccionarFecha)
+        self.fechaCVacaciones2.bind('<Button-1>', self.SeleccionarFecha)
+        self.fechaDMedico1.bind('<Button-1>', self.SeleccionarFecha)
+        self.fechaDMedico2.bind('<Button-1>', self.SeleccionarFecha)
+
+        self.fechaAdelanto.place(x=571, y=243, width=74, height=17)
+        self.fechaPorFuera.place(x=714, y=243, width=74, height=17)
+        self.fechaVacaciones1.place(x=21, y=560, width=132, height=17)
+        self.fechaVacaciones2.place(x=156, y=560, width=132, height=17)
+        self.fechaCVacaciones1.place(x=300, y=560, width=132, height=17)
+        self.fechaCVacaciones2.place(x=435, y=560, width=132, height=17)
+        self.fechaDMedico1.place(x=579, y=560, width=132, height=17)
+        self.fechaDMedico2.place(x=714, y=560, width=131, height=17)
+
+        self.montoAdelanto = Entry(contenedor, cursor='hand2', bg='yellow')
+        self.montoPorFuera = Entry(contenedor, cursor='hand2', bg='yellow')
+        self.detalleIngreso = Entry(contenedor, cursor='hand2', bg='yellow')
+        self.montoIngreso = Entry(contenedor, cursor='hand2', bg='yellow')
+        self.detalleDescuento = Entry(contenedor, cursor='hand2', bg='yellow')
+        self.montoDescuento = Entry(contenedor, cursor='hand2', bg='yellow')
+
+        self.montoAdelanto.place(x=648, y=243, width=54, height=17)
+        self.montoPorFuera.place(x=791, y=243, width=54, height=17)
+        self.detalleIngreso.place(x=21, y=401, width=349, height=17)
+        self.montoIngreso.place(x=373, y=401, width=54, height=17)
+        self.detalleDescuento.place(x=439, y=401, width=349, height=17)
+        self.montoDescuento.place(x=791, y=401, width=54, height=17)     
+       
+        Button(contenedor, text='ELIMINAR', command=self.EliminarDetalle).place(x=890, y=30, width=90, height=30)     
         Button(contenedor, text='SALIR', bg='#DF2F2F', command=lambda: contenedor.destroy()).place(x=890, y=65, width=90, height=30)
 
-        self.CargarDetalles()    
-        contenedor.place(width=1000, height=600)      
+        self.CargarDetalles()
+        contenedor.place(width=1000, height=600)
 
     def CargarDetalles(self):      
                   
@@ -214,7 +228,7 @@ class Menu2(Frame):
         for dato in cvac: self.cvacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))
         for dato in dmed: self.dmedico.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))
    
-    def RemoveSelection(self, e):
+    def QuitarSeleccion(self, e):
         
         self.apoyo.selection_set('') 
         self.falta.selection_set('')      
@@ -227,376 +241,409 @@ class Menu2(Frame):
         self.cvacaciones.selection_set('')
         self.dmedico.selection_set('')
 
-    def prueba(self, e):
+    def SeleccionarFecha(self, e):
 
         fecha = self.calendario.get_date()       
         e.widget['text'] = fecha
     
-    def mama(self, widget):      
-
+    def RegistrarDetalle(self, treeview: int):        
         
-        valores = self.TRABAJADORES.item(self.TRABAJADORES.focus())['values']
-        id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
-        fecha = self.calendario.get_date()       
-        nombre = widget.winfo_name()[1:]
-        detalle = {'treeview': 'APOYO', 'treeview2': 'FALTA', 'treeview3': 'FERIADO'}
-        posicion = {'treeview': 2, 'treeview2': 3, 'treeview3': 4}
-        print(nombre)
-        if nombre == 'treeview' or nombre == 'treeview2' or nombre == 'treeview3':          
-            for row in widget.get_children():
-                if widget.item(row)['values'][0] == fecha:                   
-                    return
+        filaTrabajador = self.TRABAJADORES.focus()
+        detallesTrabajador = self.TRABAJADORES.item(filaTrabajador)['values']
 
-            insert(f'INSERT INTO {detalle[nombre]} (IDAC, FECH) VALUES ({id}, "{fecha}")')
-            idRegistro = select(f'SELECT ID FROM {detalle[nombre]} ORDER BY ID DESC', False)    
+        idTrabajador = int(self.TRABAJADORES.item(filaTrabajador).get('text'))
 
-            widget.insert('', 'end', text=idRegistro[0], values=fecha)
+        fechaCalendario = self.calendario.get_date()        
 
-            valores[posicion[nombre]] = len(widget.get_children())
-
-            self.TRABAJADORES.item(self.TRABAJADORES.focus(), values=valores)
-           
-    def SaveTRABAJADORES(self, widget: str):
-
-        valores = self.TRABAJADORES.item(self.TRABAJADORES.focus())['values']
-        id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
-        fecha = self.calendario.get_date()
-
-        if widget == 'APO':
-            for row in self.apoyo.get_children():
-                if self.apoyo.item(row)['values'][0] == fecha:
-                    return
-
-            if valores[2] == '':
-                valores[2] = 1
-            else:
-                valores[2] = int(valores[2]) + 1
-
-            insert(f'INSERT INTO APOYO (IDAC, FECH) VALUES ({id}, "{fecha}")')
-            idRegistro = select(f'SELECT ID FROM APOYO ORDER BY ID DESC', False)
-            self.apoyo.insert('', 'end', text=idRegistro[0], values=fecha)
-                   
-        elif widget == 'FAL':
-            for row in self.falta.get_children():
-                if self.falta.item(row)['values'][0] == fecha:
-                    return
-        
-            if valores[3] == '':
-                valores[3] = 1
-            else:
-                valores[3] = int(valores[3]) + 1           
-
-            insert(f'INSERT INTO FALTA (IDAC, FECH) VALUES ({id}, "{fecha}")')
-            idRegistro = select(f'SELECT ID FROM FALTA ORDER BY ID DESC', False)
-            self.falta.insert('', 'end', text=idRegistro[0], values=fecha)
-
-        elif widget == 'FER':
-            for row in self.feriado.get_children():
-                if self.feriado.item(row)['values'][0] == fecha:
-                    return
-        
-            if valores[4] == '':
-                valores[4] = 1
-            else:
-                valores[4] = int(valores[4]) + 1           
-
-            insert(f'INSERT INTO FERIADO (IDAC, FECH) VALUES ({id}, "{fecha}")')
-            idRegistro = select(f'SELECT ID FROM FERIADO ORDER BY ID DESC', False)
-            self.feriado.insert('', 'end', text=idRegistro[0], values=fecha)
-
-        elif widget == 'ADE':
-            if self.adelantoImporte.get() == '':
-                self.adelantoImporte.focus_set()
-                messagebox.showinfo('ADELANTO', 'Registra el importe del adelanto !')
-            elif self.adelantoImporte.get().count('.') > 1:
-                self.adelantoImporte.focus_set()
-                messagebox.showinfo('ADELANTO', 'Registra correctamente el importe del adelanto !')
-            elif not self.adelantoImporte.get().replace('.','').isnumeric():
-                self.adelantoImporte.focus_set()
-                messagebox.showinfo('ADELANTO', 'Registra correctamente el importe del adelanto !')
-            else:
-                for row in self.adelanto.get_children():
-                    if self.adelanto.item(row)['values'][0] == fecha:
-                        return
-
-                monto = float(self.adelantoImporte.get())
-
-                if valores[10] == '':
-                    valores[10] = f'{monto:.2f}'
-                else:                    
-                    valores[10] = f'{float(valores[10]) + monto:.2f}'
-
-                insert(f'INSERT INTO ADELANTO (IDAC, FECH, MONT) VALUES ({id}, "{fecha}", {monto})')
-                idRegistro = select(f'SELECT ID FROM ADELANTO ORDER BY ID DESC', False)
-                self.adelanto.insert('', 'end',text=idRegistro[0], values=(fecha, f'{monto:.2f}'))
-                self.adelantoImporte.delete(0, 'end')
-
-        elif widget == 'ING':
-
-            # Validamos los cuadros de ingreso si estan vacios enviar el foco
-            if self.ingresoDetalle.get() == '':
-                self.ingresoDetalle.focus_set()
-                messagebox.showinfo('INGRESO', 'Registra el detalle del ingreso !')
-            elif self.ingresoImporte.get() == '':
-                self.ingresoImporte.focus_set()
-                messagebox.showinfo('INGRESO', 'Registra el importe del ingreso !')
-            elif self.ingresoImporte.get().count('.') > 1:
-                self.ingresoImporte.focus_set()
-                messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !')
-            elif not self.ingresoImporte.get().replace('.','').isnumeric():
-                self.ingresoImporte.focus_set()
-                messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !')
-            else:
-                detalle = self.ingresoDetalle.get()
-                monto = float(self.ingresoImporte.get())
-
-                if valores[5] == '':
-                    valores[5] = f'{monto:.2f}'
-                else:                    
-                    valores[5] = f'{float(valores[5]) + monto:.2f}'                   
-
-                insert(f'INSERT INTO INGRESO (IDAC, DETA, MONT) VALUES ({id}, "{detalle}", {monto})')
-                idRegistro = select(f'SELECT ID FROM INGRESO ORDER BY ID DESC', False)
-                self.ingreso.insert('', 'end', text=idRegistro[0], values=(self.ingresoDetalle.get(), f'{monto:.2f}'))
-                self.ingresoDetalle.delete(0, 'end')
-                self.ingresoImporte.delete(0, 'end')
-
-        elif widget == 'DES':
-
-            # Validamos los cuadros de descuento si estan vacios enviar el foco
-            if self.descuentoDetalle.get() == '':
-                self.descuentoDetalle.focus_set()
-                messagebox.showinfo('DESCUENTO', 'Registra el detalle del descuento !')
-            elif self.descuentoImporte.get() == '':
-                self.descuentoImporte.focus_set()
-                messagebox.showinfo('DESCUENTO', 'Registra el importe del descuento !')
-            elif self.descuentoImporte.get().count('.') > 1:
-                self.descuentoImporte.focus_set()
-                messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !')
-            elif not self.descuentoImporte.get().replace('.','').isnumeric():
-                self.descuentoImporte.focus_set()
-                messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !')
-            else:
-                detalle = self.descuentoDetalle.get()
-                monto = float(self.descuentoImporte.get())
-
-                if valores[6] == '':
-                    valores[6] = f'{monto:.2f}'
-                else:                    
-                    valores[6] = f'{float(valores[6]) + monto:.2f}'                  
-
-                insert(f'INSERT INTO DESCUENTO (IDAC, DETA, MONT) VALUES ({id}, "{detalle}", {monto})')
-                idRegistro = select(f'SELECT ID FROM DESCUENTO ORDER BY ID DESC', False)
-                self.descuento.insert('', 'end', text=idRegistro[0], values=(self.descuentoDetalle.get(), f'{monto:.2f}'))
-                self.descuentoDetalle.delete(0, 'end')
-                self.descuentoImporte.delete(0, 'end')                    
-
-        elif widget == 'VAC':
-
-            # Validamos los cuadros de vacaciones si estan vacios enviar el foco           
-            if self.date01['text'] == '':
-                self.vacacionesTotal.focus_set() 
-                messagebox.showinfo('VACACIONES', 'Selecciona la fecha inicial de las vacaciones !')
-            elif self.date02['text'] == '':
-                self.vacacionesTotal.focus_set() 
-                messagebox.showinfo('VACACIONES', 'Selecciona la fecha final de las vacaciones !')
-            elif self.vacacionesTotal.get() == '':
-                self.vacacionesTotal.focus_set()   
-                messagebox.showinfo('VACACIONES', 'Registra el total de dias de las vacaciones !')
-            elif not self.vacacionesTotal.get().isnumeric():
-                self.vacacionesTotal.focus_set()   
-                messagebox.showinfo('VACACIONES', 'Registra correctamente el total de dias de las vacaciones !')
-            else:
-                fechaI = self.date01['text']
-                fechaF = self.date02['text']
-
-                total =int(self.vacacionesTotal.get())
-
-                if valores[8] == '':
-                    valores[8] = total
-                else:                    
-                    valores[8] = int(valores[8]) + total                
-
-                insert(F'INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{fechaI}", "{fechaF}", {total})')
-                idRegistro = select(F'SELECT ID FROM VACACIONES ORDER BY ID DESC', False)
-                self.vacaciones.insert('', 'end', text=idRegistro[0], values=(fechaI, fechaF, total))
-                self.date01['text'] = ''
-                self.date02['text'] = ''
-                self.vacacionesTotal.delete(0, 'end')
-
-        elif widget == 'DME':
-            
-            # Validamos los cuadros de descanso medico si estan vacios enviar el foco
-            if self.date03['text'] == '':
-                self.dmedicoDetalle.focus_set() 
-                messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha inicial del descanso medico !')
-            elif self.date04['text'] == '':
-                self.dmedicoDetalle.focus_set() 
-                messagebox.showinfo('DESCANSO MEDICO', 'Selecciona la fecha final del descanso medico !')
-            elif self.dmedicoDetalle.get() == '':
-                self.dmedicoDetalle.focus_set()   
-                messagebox.showinfo('DESCANSO MEDICO', 'Registra el detalle del descanso medico !')
-            elif self.dmedicoTotal.get() == '':
-                self.dmedicoTotal.focus_set()   
-                messagebox.showinfo('DESCANSO MEDICO', 'Registra el total de dias del descanso medico !')
-            elif not self.dmedicoTotal.get().isnumeric():
-                self.dmedicoTotal.focus_set()   
-                messagebox.showinfo('DESCANSO MEDICO', 'Registra correctamente el total de dias del descanso medico !')
-            else:
-                dmedI = self.date03['text']
-                dmedF = self.date04['text']
+        match treeview:
+            case 1:
+                for fila in self.apoyo.get_children():
+                    apoyo = self.apoyo.item(fila)['values'][0]
+                    if apoyo == fechaCalendario: return
                 
-                detalle = self.dmedicoDetalle.get()
-                total =int(self.dmedicoTotal.get())
+                insert(f'INSERT INTO APOYO (IDAC, FECH) VALUES ({idTrabajador}, "{fechaCalendario}")')
+                idApoyo = select(f'SELECT ID FROM APOYO ORDER BY ID DESC', False)[0]
 
-                if valores[7] == '':
-                    valores[7] = total
-                else:                    
-                    valores[7] = int(valores[7]) + total     
+                self.apoyo.insert('', 'end', text=idApoyo, values=fechaCalendario)
+                detallesTrabajador[2] = len(self.apoyo.get_children())
+                
+            case 2:
+                for fila in self.falta.get_children():
+                    falta = self.falta.item(fila)['values'][0]
+                    if falta == fechaCalendario: return
+                
+                insert(f'INSERT INTO FALTA (IDAC, FECH) VALUES ({idTrabajador}, "{fechaCalendario}")')
+                idFalta = select(f'SELECT ID FROM FALTA ORDER BY ID DESC', False)[0]
 
-                insert(f'INSERT INTO DMEDICO (IDAC, FINI, FFIN, DETA, DTOT) VALUES ({id}, "{dmedI}", "{dmedF}", "{detalle}", {total})')
-                idRegistro = select(f'SELECT ID FROM DMEDICO ORDER BY ID DESC', False)
-                self.dmedico.insert('', 'end', text=idRegistro[0], values=(dmedI, dmedF, detalle, total))
-                self.date03['text'] = ''
-                self.date04['text'] = ''
-                self.dmedicoDetalle.delete(0, 'end')
-                self.dmedicoTotal.delete(0, 'end')
-               
+                self.falta.insert('', 'end', text=idFalta, values=fechaCalendario)
+                detallesTrabajador[3] = len(self.falta.get_children())
+            
+            case 3:
+                for fila in self.feriado.get_children():
+                    feriado = self.feriado.item(fila)['values'][0]
+                    if feriado == fechaCalendario: return
+                
+                insert(f'INSERT INTO FERIADO (IDAC, FECH) VALUES ({idTrabajador}, "{fechaCalendario}")')
+                idFeriado = select(f'SELECT ID FROM FERIADO ORDER BY ID DESC', False)[0]
 
-        elif widget == 'CVA':
+                self.feriado.insert('', 'end', text=idFeriado, values=fechaCalendario)
+                detallesTrabajador[4] = len(self.feriado.get_children())
+            
+            case 4:
+                monto = self.montoAdelanto.get()
 
-             # Validamos los cuadros de compra de vacaciones si estan vacios enviar el foco
-            if self.date05['text'] == '':
-                self.cvacacionesTotal.focus_set() 
-                messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha inicial de la compra de vacaciones !')
-            elif self.date06['text'] == '':
-                self.cvacacionesTotal.focus_set() 
-                messagebox.showinfo('COMPRA DE VACACIONES', 'Selecciona la fecha final de la compra de vacaciones !')
-            elif self.cvacacionesTotal.get() == '':
-                self.cvacacionesTotal.focus_set()   
-                messagebox.showinfo('COMPRA DE VACACIONES', 'Registra el total de dias de la compra de vacaciones !')
-            elif not self.cvacacionesTotal.get().isnumeric():
-                self.cvacacionesTotal.focus_set()   
-                messagebox.showinfo('COMPRA DE VACACIONES', 'Registra correctamente el total de dias de la compra de vacaciones !')
-            else:
-                cvacI = self.date05['text']
-                cvacF = self.date06['text']
+                if not self.fechaAdelanto['text']:
+                    messagebox.showinfo('ADELANTO', 'Registra la fecha del adelanto !')
+                elif monto == '':
+                    self.montoAdelanto.focus_set()
+                    messagebox.showinfo('ADELANTO', 'Registra el importe del adelanto !')
+                elif monto.count('.') > 1:
+                    self.montoAdelanto.focus_set()
+                    messagebox.showinfo('ADELANTO', 'Registra correctamente el importe del adelanto !')
+                elif not monto.replace('.','').isnumeric():
+                    self.montoAdelanto.focus_set()
+                    messagebox.showinfo('ADELANTO', 'Registra correctamente el importe del adelanto !')
+                else:
+                    
+                    insert(f'INSERT INTO ADELANTO (IDAC, FECH, MONT) VALUES ({idTrabajador}, "{fechaCalendario}", {float(monto)})')
+                    idAdelanto = select(f'SELECT ID FROM ADELANTO ORDER BY ID DESC', False)[0]
 
-                total =int(self.cvacacionesTotal.get())
+                    self.adelanto.insert('', 'end',text=idAdelanto, values=(fechaCalendario, f'{float(monto):.2f}'))                    
 
-                if valores[9] == '':
-                    valores[9] = total
-                else:                    
-                    valores[9] = int(valores[9]) + total
+                    if detallesTrabajador[10]:
+                        totalIngresos = float(detallesTrabajador[10]) + float(monto)
+                        detallesTrabajador[10] =  f'{totalIngresos:.2f}'
+                    else:                    
+                        detallesTrabajador[10] = f'{float(monto):.2f}'
 
-                insert(f'INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT) VALUES ({id}, "{cvacI}", "{cvacF}", {total})')
-                idRegistro = select(f'SELECT ID FROM CVACACIONES ORDER BY ID DESC', False)
-                self.cvacaciones.insert('', 'end', text=idRegistro[0], values=(cvacI, cvacF, total))
-                self.date05['text'] = ''
-                self.date06['text'] = ''
-                self.cvacacionesTotal.delete(0, 'end')               
+                    self.fechaAdelanto['text'] = ''
+                    self.montoAdelanto.delete(0, 'end')
 
-        self.TRABAJADORES.item(self.TRABAJADORES.focus(), values=valores)
+            case 5:
+                monto = self.montoPorFuera.get()
 
-    def DeleteTRABAJADORES(self):
+                if not self.fechaPorFuera['text']:
+                    messagebox.showinfo('POR FUERA', 'Registra la fecha del por fuera !')
+                elif monto == '':
+                    self.montoPorFuera.focus_set()
+                    messagebox.showinfo('POR FUERA', 'Registra el importe del por fuera !')
+                elif monto.count('.') > 1:
+                    self.montoPorFuera.focus_set()
+                    messagebox.showinfo('POR FUERA', 'Registra correctamente el importe del por fuera !')
+                elif not monto.replace('.','').isnumeric():
+                    self.montoPorFuera.focus_set()
+                    messagebox.showinfo('POR FUERA', 'Registra correctamente el importe del por fuera !')
+                else:
+                    
+                    insert(f'INSERT INTO XFUERA (IDAC, FECH, MONT) VALUES ({idTrabajador}, "{fechaCalendario}", {float(monto)})')
+                    idPorFuera = select(f'SELECT ID FROM XFUERA ORDER BY ID DESC', False)[0]
 
-        valores = self.TRABAJADORES.item(self.TRABAJADORES.focus())['values']
+                    self.porFuera.insert('', 'end',text=idPorFuera, values=(fechaCalendario, f'{float(monto):.2f}'))                    
+
+                    if detallesTrabajador[11]:
+                        totalPorFuera = float(detallesTrabajador[11]) + float(monto)
+                        detallesTrabajador[11] =  f'{totalPorFuera:.2f}'
+                    else:                    
+                        detallesTrabajador[11] = f'{float(monto):.2f}'
+
+                    self.fechaPorFuera['text'] = ''
+                    self.montoPorFuera.delete(0, 'end')                     
+
+            case 6:
+                monto = self.montoIngreso.get()
+                detalle = self.detalleIngreso.get().upper()
+
+                if detalle == '':
+                    messagebox.showinfo('INGRESO', 'Registra el detalle del ingreso !')
+                    self.detalleIngreso.focus_set()
+                elif monto == '':
+                    self.montoIngreso.focus_set()
+                    messagebox.showinfo('INGRESO', 'Registra el importe del ingreso !')
+                elif monto.count('.') > 1:
+                    self.montoIngreso.focus_set()
+                    messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !')
+                elif not monto.replace('.','').isnumeric():
+                    self.montoIngreso.focus_set()
+                    messagebox.showinfo('INGRESO', 'Registra correctamente el importe del ingreso !')
+                else:
+                    
+                    insert(f'INSERT INTO INGRESO (IDAC, DETA, MONT) VALUES ({idTrabajador}, "{detalle}", {float(monto)})')
+                    idIngreso = select(f'SELECT ID FROM INGRESO ORDER BY ID DESC', False)[0]
+
+                    self.ingreso.insert('', 'end',text=idIngreso, values=(detalle, f'{float(monto):.2f}'))                    
+
+                    if detallesTrabajador[5]:
+                        totalIngreso = float(detallesTrabajador[5]) + float(monto)
+                        detallesTrabajador[5] =  f'{totalIngreso:.2f}'
+                    else:                    
+                        detallesTrabajador[5] = f'{float(monto):.2f}'
+
+                    self.detalleIngreso.delete(0, 'end') 
+                    self.montoIngreso.delete(0, 'end')        
+
+            case 7:
+                monto = self.montoDescuento.get()
+                detalle = self.detalleDescuento.get().upper()
+
+                if detalle == '':
+                    messagebox.showinfo('DESCUENTO', 'Registra el detalle del descuento !')
+                    self.detalleDescuento.focus_set()
+                elif monto == '':
+                    self.montoDescuento.focus_set()
+                    messagebox.showinfo('DESCUENTO', 'Registra el importe del descuento !')
+                elif monto.count('.') > 1:
+                    self.montoDescuento.focus_set()
+                    messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !')
+                elif not monto.replace('.','').isnumeric():
+                    self.montoDescuento.focus_set()
+                    messagebox.showinfo('DESCUENTO', 'Registra correctamente el importe del descuento !')
+                else:
+                    
+                    insert(f'INSERT INTO DESCUENTO (IDAC, DETA, MONT) VALUES ({idTrabajador}, "{detalle}", {float(monto)})')
+                    idDescuento = select(f'SELECT ID FROM DESCUENTO ORDER BY ID DESC', False)[0]
+
+                    self.descuento.insert('', 'end',text=idDescuento, values=(detalle, f'{float(monto):.2f}'))                    
+
+                    if detallesTrabajador[6]:
+                        totalDescuento = float(detallesTrabajador[6]) + float(monto)
+                        detallesTrabajador[6] =  f'{totalDescuento:.2f}'
+                    else:                    
+                        detallesTrabajador[6] = f'{float(monto):.2f}'
+
+                    self.detalleDescuento.delete(0, 'end') 
+                    self.montoDescuento.delete(0, 'end')  
+
+            case 8:
+                fechaInicial = self.fechaVacaciones1['text']
+                fechaFinal = self.fechaVacaciones2['text']                
+
+                if not fechaInicial:
+                    messagebox.showinfo('VACACIONES', 'Registra la fecha inicial de las vacaciones !')
+                elif not fechaFinal:
+                    messagebox.showinfo('VACACIONES', 'Registra la fecha final de las vacaciones !')
+                elif not CompararFechas(fechaInicial, fechaFinal):
+                    messagebox.showinfo('VACACIONES', 'Registra correctamente las fechas !')
+                else:
+
+                    totalDias = TotalDias(fechaInicial, fechaFinal)
+
+                    insert(f'''INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT)
+                                VALUES ({idTrabajador}, "{fechaInicial}", "{fechaFinal}", {totalDias})''')
+                    idVacaciones = select(f'SELECT ID FROM VACACIONES ORDER BY ID DESC', False)[0]
+
+                    self.vacaciones.insert('', 'end',text=idVacaciones, values=(f'{fechaInicial} - {fechaFinal}', totalDias))
+
+                    if detallesTrabajador[8]:
+                        totalVacaciones = int(detallesTrabajador[8]) + totalDias
+                        detallesTrabajador[8] = totalVacaciones
+                    else:
+                        detallesTrabajador[8] = totalDias
+
+                    self.fechaVacaciones1['text'] = ''
+                    self.fechaVacaciones2['text'] = ''
+
+            case 9:
+                fechaInicial = self.fechaCVacaciones1['text']
+                fechaFinal = self.fechaCVacaciones2['text']                
+
+                if not fechaInicial:
+                    messagebox.showinfo('COMPRA DE VACACIONES', 'Registra la fecha inicial de la compra de vacaciones !')
+                elif not fechaFinal:
+                    messagebox.showinfo('COMPRA DE VACACIONES', 'Registra la fecha final de la compra de vacaciones !')
+                elif not CompararFechas(fechaInicial, fechaFinal):
+                    messagebox.showinfo('COMPRA DE VACACIONES', 'Registra correctamente la compra de vacaciones !')
+                else:
+
+                    totalDias = TotalDias(fechaInicial, fechaFinal)
+
+                    insert(f'''INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT)
+                                VALUES ({idTrabajador}, "{fechaInicial}", "{fechaFinal}", {totalDias})''')
+                    idCVacaciones = select(f'SELECT ID FROM CVACACIONES ORDER BY ID DESC', False)[0]
+
+                    self.cvacaciones.insert('', 'end',text=idCVacaciones, values=(f'{fechaInicial} - {fechaFinal}', totalDias))
+
+                    if detallesTrabajador[9]:
+                        totalCVacaciones = int(detallesTrabajador[9]) + totalDias
+                        detallesTrabajador[9] = totalCVacaciones
+                    else:
+                        detallesTrabajador[9] = totalDias
+
+                    self.fechaCVacaciones1['text'] = ''
+                    self.fechaCVacaciones2['text'] = ''
+
+            case 10:
+                fechaInicial = self.fechaDMedico1['text']
+                fechaFinal = self.fechaDMedico2['text']                
+
+                if not fechaInicial:
+                    messagebox.showinfo('DESCANSO MEDICO', 'Registra la fecha inicial del descanso medico !')
+                elif not fechaFinal:
+                    messagebox.showinfo('DESCANSO MEDICO', 'Registra la fecha final del descanso medico !')
+                elif not CompararFechas(fechaInicial, fechaFinal):
+                    messagebox.showinfo('DESCANSO MEDICO', 'Registra correctamente el descanso medico !')
+                else:
+
+                    totalDias = TotalDias(fechaInicial, fechaFinal)
+
+                    insert(f'''INSERT INTO DMEDICO (IDAC, FINI, FFIN, DTOT)
+                                VALUES ({idTrabajador}, "{fechaInicial}", "{fechaFinal}", {totalDias})''')
+                    idDMedico = select(f'SELECT ID FROM DMEDICO ORDER BY ID DESC', False)[0]
+
+                    self.dmedico.insert('', 'end',text=idDMedico, values=(f'{fechaInicial} - {fechaFinal}', totalDias))
+
+                    if detallesTrabajador[7]:
+                        totalDMedico = int(detallesTrabajador[7]) + totalDias
+                        detallesTrabajador[7] = totalDMedico
+                    else:
+                        detallesTrabajador[7] = totalDias
+
+                    self.fechaDMedico1['text'] = ''
+                    self.fechaDMedico2['text'] = ''
+
+        self.TRABAJADORES.item(filaTrabajador, values=detallesTrabajador)
+           
+    def EliminarDetalle(self):
+
+        filaTrabajador = self.TRABAJADORES.focus()
+        detallesTrabajador = self.TRABAJADORES.item(filaTrabajador)['values']
                 
         if self.apoyo.selection():
-            if valores[2] == 1:
-                valores[2] = ''
-            else:
-                valores[2] = int(valores[2]) - 1
-
-            id = int(self.apoyo.item(self.apoyo.focus())['text'])
+            fila = self.apoyo.focus()
+            id = int(self.apoyo.item(fila)['text'])
             delete(F'DELETE FROM APOYO WHERE ID = {id}', False)
-            self.apoyo.delete(self.apoyo.focus())
+            self.apoyo.delete(fila)
+
+            if len(self.apoyo.get_children()) >= 1:
+                detallesTrabajador[2] = int(detallesTrabajador[2]) - 1
+            else:
+               detallesTrabajador[2] = ''            
   
-        if self.falta.selection():
-            if valores[3] == 1:
-                valores[3] = ''
-            else:
-                valores[3] = int(valores[3]) - 1
-            
-            id = int(self.falta.item(self.falta.focus())['text'])
+        elif self.falta.selection():
+            fila = self.falta.focus()
+            id = int(self.falta.item(fila)['text'])
             delete(F'DELETE FROM FALTA WHERE ID = {id}', False)
-            self.falta.delete(self.falta.focus())      
+            self.falta.delete(fila)
 
-        if self.feriado.selection():
-            if valores[4] == 1:
-                valores[4] = ''
+            if len(self.falta.get_children()) >= 1:
+                detallesTrabajador[3] = int(detallesTrabajador[3]) - 1
             else:
-                valores[4] = int(valores[4]) - 1
+               detallesTrabajador[3] = ''       
 
-            id = int(self.feriado.item(self.feriado.focus())['text'])
+        elif self.feriado.selection():
+            fila = self.feriado.focus()
+            id = int(self.feriado.item(fila)['text'])
             delete(F'DELETE FROM FERIADO WHERE ID = {id}', False)
-            self.feriado.delete(self.feriado.focus())
+            self.feriado.delete(fila)
 
-        if self.adelanto.selection():
-            monto = float(self.adelanto.item(self.adelanto.focus())['values'][1])
-            if float(valores[10]) == monto:
-                valores[10] = ''
+            if len(self.feriado.get_children()) >= 1:
+                detallesTrabajador[4] = int(detallesTrabajador[4]) - 1
             else:
-                saldo = float(valores[10]) - monto
-                valores[10] = f'{saldo:.2f}'
+               detallesTrabajador[4] = ''   
 
-            id = int(self.adelanto.item(self.adelanto.focus())['text'])
-            delete(F'DELETE FROM ADELANTO WHERE ID = {id}', False)
-            self.adelanto.delete(self.adelanto.focus())
+        elif self.adelanto.selection():
             
-        if self.ingreso.selection():
-            if float(valores[5]) == float(self.ingreso.item(self.ingreso.focus())['values'][1]):
-                valores[5] = ''
-            else:
-                saldo = float(valores[5]) - float(self.ingreso.item(self.ingreso.focus())['values'][1])
-                valores[5] = f'{saldo:.2f}'                
+            fila = self.adelanto.focus()
+            id = int(self.adelanto.item(fila)['text'])
+            delete(F'DELETE FROM ADELANTO WHERE ID = {id}', False)
 
-            id = int(self.ingreso.item(self.ingreso.focus())['text'])
+            monto = float(self.adelanto.item(fila)['values'][1])          
+            
+            self.adelanto.delete(fila)
+
+            if len(self.adelanto.get_children()) >= 1:
+                saldo = float(detallesTrabajador[10]) - monto
+                detallesTrabajador[10] = f'{saldo:.2f}'
+            else:
+               detallesTrabajador[10] = ''
+          
+        elif self.porFuera.selection():
+            fila = self.porFuera.focus()
+            id = int(self.porFuera.item(fila)['text'])
+            delete(F'DELETE FROM XFUERA WHERE ID = {id}', False)
+
+            monto = float(self.porFuera.item(fila)['values'][1])          
+            
+            self.porFuera.delete(fila)
+
+            if len(self.porFuera.get_children()) >= 1:
+                saldo = float(detallesTrabajador[11]) - monto
+                detallesTrabajador[11] = f'{saldo:.2f}'
+            else:
+               detallesTrabajador[11] = ''    
+            
+        elif self.ingreso.selection():
+            fila = self.ingreso.focus()
+            id = int(self.ingreso.item(fila)['text'])
             delete(F'DELETE FROM INGRESO WHERE ID = {id}', False)
-            self.ingreso.delete(self.ingreso.focus())
 
-        if self.descuento.selection():
-            if float(valores[6]) == float(self.descuento.item(self.descuento.focus())['values'][1]):
-                valores[6] = ''
+            monto = float(self.ingreso.item(fila)['values'][1])          
+            
+            self.ingreso.delete(fila)
+
+            if len(self.ingreso.get_children()) >= 1:
+                saldo = float(detallesTrabajador[5]) - monto
+                detallesTrabajador[5] = f'{saldo:.2f}'
             else:
-                saldo = float(valores[6]) - float(self.descuento.item(self.descuento.focus())['values'][1])
-                valores[6] = f'{saldo:.2f}'
+               detallesTrabajador[5] = ''   
 
-            id = int(self.descuento.item(self.descuento.focus())['text'])
+        elif self.descuento.selection():
+            fila = self.descuento.focus()
+            id = int(self.descuento.item(fila)['text'])
             delete(F'DELETE FROM DESCUENTO WHERE ID = {id}', False)
-            self.descuento.delete(self.descuento.focus())
 
-        if self.vacaciones.selection():
-            if int(valores[8]) == int(self.vacaciones.item(self.vacaciones.focus())['values'][2]):
-                valores[8] = ''
+            monto = float(self.descuento.item(fila)['values'][1])          
+            
+            self.descuento.delete(fila)
+
+            if len(self.descuento.get_children()) >= 1:
+                saldo = float(detallesTrabajador[6]) - monto
+                detallesTrabajador[6] = f'{saldo:.2f}'
             else:
-                dias = int(valores[8]) - int(self.vacaciones.item(self.vacaciones.focus())['values'][2])
-                valores[8] = dias            
+               detallesTrabajador[6] = ''   
 
-            id = int(self.vacaciones.item(self.vacaciones.focus())['text'])
+        elif self.vacaciones.selection():
+            fila = self.vacaciones.focus()
+            id = int(self.vacaciones.item(fila)['text'])
             delete(F'DELETE FROM VACACIONES WHERE ID = {id}', False)
-            self.vacaciones.delete(self.vacaciones.focus())
 
-        if self.dmedico.selection():
-            if int(valores[7]) == int(self.dmedico.item(self.dmedico.focus())['values'][3]):
-                valores[7] = ''
+            dias = int(self.vacaciones.item(fila)['values'][1])          
+            
+            self.vacaciones.delete(fila)
+
+            if len(self.vacaciones.get_children()) >= 1:
+                saldo = int(detallesTrabajador[8]) - dias
+                detallesTrabajador[8] = saldo
             else:
-                dias = int(valores[7]) - int(self.dmedico.item(self.dmedico.focus())['values'][3])
-                valores[7] = dias            
+               detallesTrabajador[8] = ''   
 
-            id = int(self.dmedico.item(self.dmedico.focus())['text'])
-            delete(F'DELETE FROM DMEDICO WHERE ID = {id}', False)
-            self.dmedico.delete(self.dmedico.focus())
-
-        if self.cvacaciones.selection():
-            if int(valores[9]) == int(self.cvacaciones.item(self.cvacaciones.focus())['values'][2]):
-                valores[9] = ''
-            else:
-                dias = int(valores[9]) - int(self.cvacaciones.item(self.cvacaciones.focus())['values'][2])
-                valores[9] = dias            
-
-            id = int(self.cvacaciones.item(self.cvacaciones.focus())['text'])
+        elif self.cvacaciones.selection():
+            fila = self.cvacaciones.focus()
+            id = int(self.cvacaciones.item(fila)['text'])
             delete(F'DELETE FROM CVACACIONES WHERE ID = {id}', False)
-            self.cvacaciones.delete(self.cvacaciones.focus())
 
-        self.TRABAJADORES.item(self.TRABAJADORES.focus(), values=valores)        
+            dias = int(self.cvacaciones.item(fila)['values'][1])          
+            
+            self.cvacaciones.delete(fila)
+
+            if len(self.cvacaciones.get_children()) >= 1:
+                saldo = int(detallesTrabajador[9]) - dias
+                detallesTrabajador[9] = saldo
+            else:
+               detallesTrabajador[9] = ''   
+       
+        elif self.dmedico.selection():
+            fila = self.dmedico.focus()
+            id = int(self.dmedico.item(fila)['text'])
+            delete(F'DELETE FROM DMEDICO WHERE ID = {id}', False)
+
+            dias = int(self.dmedico.item(fila)['values'][1])          
+            
+            self.dmedico.delete(fila)
+
+            if len(self.dmedico.get_children()) >= 1:
+                saldo = int(detallesTrabajador[7]) - dias
+                detallesTrabajador[7] = saldo
+            else:
+               detallesTrabajador[7] = ''   
+        
+        self.TRABAJADORES.item(filaTrabajador, values=detallesTrabajador)        

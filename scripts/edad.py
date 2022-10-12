@@ -78,3 +78,10 @@ def CompararFechas(fechaInicial: str, fechaFinal: str) -> bool:
             return True
         else:
             return False
+
+def TotalDias(fechaInicial, fechaFinal) -> int:
+    fechaInicio = datetime.strptime(fechaInicial, '%d/%m/%Y')       
+    fechaFin = datetime.strptime(fechaFinal, '%d/%m/%Y')   
+
+    diferencia = relativedelta(fechaFin, fechaInicio)   
+    return diferencia.days + 1
