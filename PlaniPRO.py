@@ -1,8 +1,9 @@
-from tkinter import Button, Frame, Label, PhotoImage, Scrollbar, Tk
-from tkinter.ttk import Treeview, Style
+from tkinter import Button, Frame, Label, PhotoImage, Tk
+from tkinter.ttk import  Style
 from Menu1 import Menu1
 from Menu2 import Menu2
 from Menu3 import Menu3
+from Menu6 import Menu6
 
 class App(Tk):
 
@@ -70,52 +71,8 @@ class App(Tk):
         pass
 
     def Menu6(self):
+        Menu6(self)
         
-        # Creamos los elementos del menu 1      
-        menu = Frame(self)
-        
-        Label(menu, anchor='center', bg='#DDDDDD', text='Entidad\nAFP'                ).place(x= 20, y=20, width=100, height=48)
-        Label(menu, anchor='center', bg='#DDDDDD', text='Comision\nFlujo        Mixta').place(x=121, y=20, width=121, height=48)       
-        Label(menu, anchor='center', bg='#DDDDDD', text='Prima\nSeguro'               ).place(x=243, y=20, width= 60, height=48)        
-        Label(menu, anchor='center', bg='#DDDDDD', text='Aporte\nMensual'             ).place(x=304, y=20, width= 60, height=48)        
-        Label(menu, anchor='center', bg='#DDDDDD', text='Sueldo\nMaximo'              ).place(x=365, y=20, width= 60, height=48)      
-        
-        Label(menu, text=' Habitat'             ).place(x= 20, y= 69, width=100, height=24)
-        Label(menu, anchor='e', text='1.47%'    ).place(x=121, y= 69, width= 60, height=24)
-        Label(menu, anchor='e', text='0.23%'    ).place(x=182, y= 69, width= 60, height=24)
-        
-        Label(menu, text=' Integra'             ).place(x= 20, y= 94, width=100, height=24)
-        Label(menu, anchor='e', text='1.55%'    ).place(x=121, y= 94, width= 60, height=24)
-        Label(menu, anchor='e', text='0.00%'    ).place(x=182, y= 94, width= 60, height=24)
-        
-        Label(menu, text=' Prima'               ).place(x= 20, y=119, width=100, height=24)
-        Label(menu, anchor='e', text='1.60%'    ).place(x=121, y=119, width= 60, height=24)
-        Label(menu, anchor='e', text='0.18%'    ).place(x=182, y=119, width= 60, height=24)
-        
-        Label(menu, text=' Profuturo'           ).place(x= 20, y=144, width=100, height=24)
-        Label(menu, anchor='e', text='1.69%'    ).place(x=121, y=144, width= 60, height=24)
-        Label(menu, anchor='e', text='0.28%'    ).place(x=182, y=144, width= 60, height=24)
-
-        Label(menu, anchor='e', text='1.74%'    ).place(x=243, y= 69, width= 60, height=99)
-        Label(menu, anchor='e', text='10.00%'   ).place(x=304, y= 69, width= 60, height=99)
-        Label(menu, anchor='e', text='11,002.84').place(x=365, y= 69, width= 60, height=99)
-
-        Label(menu, anchor='center', bg='#DDDDDD', text='Fondo\nOnp'       ).place(x=445, y=20, width= 60, height=48)    
-        Label(menu, anchor='center', bg='#DDDDDD', text='Essalud'          ).place(x=506, y=20, width= 60, height=48)    
-        Label(menu, anchor='center', bg='#DDDDDD', text='Sueldo\nMinimo'   ).place(x=567, y=20, width= 60, height=48) 
-        Label(menu, anchor='center', bg='#DDDDDD', text='Asigna.\nFamiliar').place(x=628, y=20, width= 60, height=48)         
-        
-        Label(menu, anchor='e', text='13.00%'   ).place(x=445, y= 69, width= 60, height=99)
-        Label(menu, anchor='e', text='9.00%'    ).place(x=506, y= 69, width= 60, height=99)
-        Label(menu, anchor='e', text='1,025.00' ).place(x=567, y= 69, width= 60, height=99)
-        Label(menu, anchor='e', text='10.00%'   ).place(x=628, y= 69, width= 60, height=99)
-        
-
-        Button(menu, text='MODIFICAR').place(x=890, y=20, width=90, height=30)
-        Button(menu, text='SALIR'    , bg='#DF2F2F', command=lambda:menu.destroy()).place(x=890, y=125, width=90, height=30)
-
-        # Posicionamos la ventana principal
-        menu.place(width=1000, height=600)
 
 
 if __name__ == '__main__':
