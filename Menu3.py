@@ -46,10 +46,10 @@ class Menu3(Frame):
         mes = 10
         año = 2022
         dias = PlanillaMes(mes, año)
-        fechaInicial = f'01/{mes:02d}/{año}'     
-        fechaFinal = f'{dias}/{mes:02d}/{año}'   
+        fechaInicial = f'01/{mes:02d}/{año}'
+        fechaFinal = f'{dias}/{mes:02d}/{año}'
 
-        datos = select(f'SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES FROM ACTIVO', True)        
+        datos = select(f'SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES FROM ACTIVO', True)
         
         for index, dato in enumerate(datos, 1):
             
@@ -103,7 +103,15 @@ class Menu3(Frame):
                     diasComputables = TotalDias(ingreso, fechaFinal) 
             
             diaslaborados = diasComputables - diaFalta - diaVacaciones - diaDMedico
-                    
+
+            if diasComputables > dias / 2:
+                pass #me quede
+
+            if diaVacaciones:
+                pass
+
+            if diaDMedico:
+                pass
 
             detalles = (index, nombre, planilla, asignacion, movilidad, diaslaborados, diaFalta, 'planilla', 'movilidad',
                         diaVacaciones, 'vaca', diaCVacaciones, 'cvaca', diaDMedico, 'dmed', diaFeriado, 'feria')
