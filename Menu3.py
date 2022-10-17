@@ -81,14 +81,7 @@ class Menu3(Frame):
             if diaVacaciones is None: diaVacaciones = 0
             if diaCVacaciones is None: diaCVacaciones = 0
             if diaDMedico is None: diaDMedico = 0
-            
-            print(diaApoyo)
-            print(diaFalta)
-            print(diaFeriado)
-            print(diaVacaciones)
-            print(diaCVacaciones)
-            print(diaDMedico)
-
+                       
             diasComputables = 0
 
             if CompararFechas(ingreso, fechaInicial):
@@ -104,16 +97,55 @@ class Menu3(Frame):
             
             diaslaborados = diasComputables - diaFalta - diaVacaciones - diaDMedico
 
-            if diasComputables > dias / 2:
-                pass #me quede
+            diasRemunerados = diasComputables - diaFalta
+            diasNoremunerados = dias - diasRemunerados
 
-            if diaVacaciones:
-                pass
+            planillaBruta = 0
+            movilidadBruta = 0
+            if diasRemunerados > dias / 2:
+                planillaBruta = planilla - (planilla / 30 * diasNoremunerados)   
+                movilidadBruta = movilidad - (movilidad / 30 * diasNoremunerados)                
+            else:
+                planillaBruta = planilla / 30 * diasRemunerados    
+                movilidadBruta = (movilidad / 30 * diasRemunerados)   
 
-            if diaDMedico:
-                pass
+            vacaciones = 0
+            dmedico = 0
+            if diasRemunerados == diaVacaciones:
+                vacaciones = planillaBruta
+                planillaBruta = 0
+            elif diasRemunerados == diaDMedico:
+                dmedico = planillaBruta
+                planillaBruta = 0
+            else:
+                if diaVacaciones:
+                    calculoVacaciones = planilla / 30 * diaVacaciones
+                    if calculoVacaciones == planillaBruta:
+                        calculoVacaciones = calculoVacaciones - (planilla / 30 * 1)
+                    vacaciones = calculoVacaciones
+                    planillaBruta = planillaBruta - vacaciones
+                if diaDMedico:
+                    calculoDMedico = planilla / 30 * diaDMedico
+                    if calculoDMedico == planillaBruta:
+                        calculoDMedico = calculoDMedico - (planilla / 30 * 1)
+                    dmedico = calculoDMedico
+                    planillaBruta = planillaBruta - dmedico
 
-            detalles = (index, nombre, planilla, asignacion, movilidad, diaslaborados, diaFalta, 'planilla', 'movilidad',
-                        diaVacaciones, 'vaca', diaCVacaciones, 'cvaca', diaDMedico, 'dmed', diaFeriado, 'feria')
+                print(planillaBruta)
+                if planillaBruta < 0:
+                    saldoPlanillabruta = planillaBruta - vacaciones
+                    planillaBruta = saldoPlanillabruta / (diaslaborados + diaDMedico) * diaslaborados
+                    dmedico = saldoPlanillabruta / (diaslaborados + diaDMedico) * diaDMedico
+
+                
+
+                
+
+                
+
+
+
+            detalles = (index, nombre, planilla, asignacion, movilidad, diaslaborados, diaFalta, planillaBruta, movilidadBruta,
+                        diaVacaciones, vacaciones, diaCVacaciones, 'cvaca', diaDMedico, dmedico, diaFeriado, 'feria')
             self.TRABAJADORES.insert('', 'end', text=idTrabajador, values=detalles)
            
