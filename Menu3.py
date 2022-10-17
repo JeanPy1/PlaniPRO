@@ -102,11 +102,12 @@ class Menu3(Frame):
 
             planillaBruta = 0
             movilidadBruta = 0
+            sueldoPlanilla = planilla + asignacion
             if diasRemunerados > dias / 2:
-                planillaBruta = planilla - (planilla / 30 * diasNoremunerados)   
+                planillaBruta = sueldoPlanilla - (sueldoPlanilla / 30 * diasNoremunerados)   
                 movilidadBruta = movilidad - (movilidad / 30 * diasNoremunerados)                
             else:
-                planillaBruta = planilla / 30 * diasRemunerados    
+                planillaBruta = sueldoPlanilla / 30 * diasRemunerados    
                 movilidadBruta = (movilidad / 30 * diasRemunerados)   
 
             vacaciones = 0
@@ -117,25 +118,23 @@ class Menu3(Frame):
             elif diasRemunerados == diaDMedico:
                 dmedico = planillaBruta
                 planillaBruta = 0
-            else:
+            else:                
                 if diaVacaciones:
-                    calculoVacaciones = planilla / 30 * diaVacaciones
-                    if calculoVacaciones == planillaBruta:
-                        calculoVacaciones = calculoVacaciones - (planilla / 30 * 1)
+                    print(diasRemunerados)
+                    print(diaVacaciones)
+                    calculoVacaciones = planillaBruta / diasRemunerados * diaVacaciones
                     vacaciones = calculoVacaciones
-                    planillaBruta = planillaBruta - vacaciones
+                    print(calculoVacaciones)                   
+                    
                 if diaDMedico:
-                    calculoDMedico = planilla / 30 * diaDMedico
-                    if calculoDMedico == planillaBruta:
-                        calculoDMedico = calculoDMedico - (planilla / 30 * 1)
+                    print(diaDMedico)
+                    calculoDMedico = planillaBruta / diasRemunerados * diaDMedico
                     dmedico = calculoDMedico
-                    planillaBruta = planillaBruta - dmedico
-
+                    print(calculoDMedico)
+                   
+                print(vacaciones + dmedico)
                 print(planillaBruta)
-                if planillaBruta < 0:
-                    saldoPlanillabruta = planillaBruta - vacaciones
-                    planillaBruta = saldoPlanillabruta / (diaslaborados + diaDMedico) * diaslaborados
-                    dmedico = saldoPlanillabruta / (diaslaborados + diaDMedico) * diaDMedico
+                #planillaBruta = planillaBruta - vacaciones - dmedico
 
                 
 
