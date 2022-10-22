@@ -1,8 +1,9 @@
 from tkinter import Button, Entry, Frame, Label, Scrollbar, messagebox
 from tkinter.ttk import Treeview
 from tkcalendar import Calendar
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from scripts.sql import select, insert, delete
-from scripts.edad import CompararFechas, TotalDias
 
 class Menu2(Frame):
 
@@ -421,11 +422,13 @@ class Menu2(Frame):
                     messagebox.showinfo('VACACIONES', 'Registra la fecha inicial de las vacaciones !')
                 elif not fechaFinal:
                     messagebox.showinfo('VACACIONES', 'Registra la fecha final de las vacaciones !')
-                elif not CompararFechas(fechaInicial, fechaFinal):
+                elif not self.CompararFechas(fechaInicial, fechaFinal):
                     messagebox.showinfo('VACACIONES', 'Registra correctamente las fechas !')
                 else:
 
-                    totalDias = TotalDias(fechaInicial, fechaFinal)
+                    diferencia = relativedelta( datetime.strptime(fechaFinal, '%d/%m/%Y'), 
+                                                datetime.strptime(fechaInicial, '%d/%m/%Y'))  
+                    totalDias = diferencia.days + 1
 
                     insert(f'''INSERT INTO VACACIONES (IDAC, FINI, FFIN, DTOT)
                                 VALUES ({idTrabajador}, "{fechaInicial}", "{fechaFinal}", {totalDias})''')
@@ -450,11 +453,13 @@ class Menu2(Frame):
                     messagebox.showinfo('COMPRA DE VACACIONES', 'Registra la fecha inicial de la compra de vacaciones !')
                 elif not fechaFinal:
                     messagebox.showinfo('COMPRA DE VACACIONES', 'Registra la fecha final de la compra de vacaciones !')
-                elif not CompararFechas(fechaInicial, fechaFinal):
+                elif not self.CompararFechas(fechaInicial, fechaFinal):
                     messagebox.showinfo('COMPRA DE VACACIONES', 'Registra correctamente la compra de vacaciones !')
                 else:
 
-                    totalDias = TotalDias(fechaInicial, fechaFinal)
+                    diferencia = relativedelta( datetime.strptime(fechaFinal, '%d/%m/%Y'), 
+                                                datetime.strptime(fechaInicial, '%d/%m/%Y'))  
+                    totalDias = diferencia.days + 1
 
                     insert(f'''INSERT INTO CVACACIONES (IDAC, FINI, FFIN, DTOT)
                                 VALUES ({idTrabajador}, "{fechaInicial}", "{fechaFinal}", {totalDias})''')
@@ -479,11 +484,13 @@ class Menu2(Frame):
                     messagebox.showinfo('DESCANSO MEDICO', 'Registra la fecha inicial del descanso medico !')
                 elif not fechaFinal:
                     messagebox.showinfo('DESCANSO MEDICO', 'Registra la fecha final del descanso medico !')
-                elif not CompararFechas(fechaInicial, fechaFinal):
+                elif not self.CompararFechas(fechaInicial, fechaFinal):
                     messagebox.showinfo('DESCANSO MEDICO', 'Registra correctamente el descanso medico !')
                 else:
 
-                    totalDias = TotalDias(fechaInicial, fechaFinal)
+                    diferencia = relativedelta( datetime.strptime(fechaFinal, '%d/%m/%Y'), 
+                                                datetime.strptime(fechaInicial, '%d/%m/%Y'))  
+                    totalDias = diferencia.days + 1
 
                     insert(f'''INSERT INTO DMEDICO (IDAC, FINI, FFIN, DTOT)
                                 VALUES ({idTrabajador}, "{fechaInicial}", "{fechaFinal}", {totalDias})''')
@@ -647,3 +654,12 @@ class Menu2(Frame):
                detallesTrabajador[7] = ''   
         
         self.TRABAJADORES.item(filaTrabajador, values=detallesTrabajador)        
+
+    def CompararFechas(self, fechaInicial: str, fechaFinal: str):
+        inicio = datetime.strptime(fechaInicial, '%d/%m/%Y')       
+        fin = datetime.strptime(fechaFinal, '%d/%m/%Y')   
+
+        if inicio <= fin: 
+            return True
+        else:
+            return False

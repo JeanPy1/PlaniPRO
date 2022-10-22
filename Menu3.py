@@ -1,7 +1,7 @@
 from tkinter import Button, Frame, Scrollbar
 from tkinter.ttk import Treeview
+from datetime import date
 from scripts.sql import select
-from scripts.edad import PlanillaMes, CompararFechas, TotalDias
 
 class Menu3(Frame):
 
@@ -45,11 +45,12 @@ class Menu3(Frame):
         
         mes = 10
         año = 2022
-        dias = PlanillaMes(mes, año)
-        fechaInicial = f'01/{mes:02d}/{año}'
-        fechaFinal = f'{dias}/{mes:02d}/{año}'
-
-        datos = select(f'SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES FROM ACTIVO', True)
+        totalDiasMes = self.TotalDiasMes(mes, año)
+        fechaInicial = date(año, mes, 1) 
+        fechaFinal = date(año, mes, totalDiasMes)  
+          
+        datos = select(f'''SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES
+                                    FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC''', True)
         
         for index, dato in enumerate(datos, 1):
             
@@ -63,6 +64,17 @@ class Menu3(Frame):
             aportacion = dato[8]
             comision = dato[9]
             retiro = dato[10]
+
+            ingresoDia = int(ingreso[0:2])
+            ingresoMes = int(ingreso[3:5])
+            ingresoAño = int(ingreso[6:10])
+            fechaIngreso = date(ingresoAño, ingresoMes, ingresoDia)    
+
+            if retiro:
+                retiroDia = int(retiro[0:2])
+                retiroMes = int(retiro[3:5])
+                retiroAño = int(retiro[6:10])
+                fechaRetiro = date(retiroAño, retiroMes, retiroDia)    
             
             diaApoyo = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {idTrabajador}', False)[0]
             diaFalta = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {idTrabajador}', False)[0]
@@ -82,69 +94,117 @@ class Menu3(Frame):
             if diaCVacaciones is None: diaCVacaciones = 0
             if diaDMedico is None: diaDMedico = 0
                        
+
             diasComputables = 0
 
-            if CompararFechas(ingreso, fechaInicial):
-                if retiro:
-                    diasComputables = TotalDias(fechaInicial, retiro)
-                else:
-                    diasComputables = dias
+                      
+            if fechaIngreso <= fechaInicial:
+                print('es menor o igual')
+            elif fechaIngreso > fechaFinal:
+                continue
             else:
-                if retiro:
-                    diasComputables = TotalDias(ingreso, retiro)
-                else:
-                    diasComputables = TotalDias(ingreso, fechaFinal) 
+                print('dentro del mes')
+            #    if retiro:
+            #        diasComputables = TotalDias(fechaInicial, retiro)
+            #    else:
+            #        diasComputables = dias
+            #else:
+            #    if retiro:
+            #        diasComputables = TotalDias(ingreso, retiro)
+            #    else:
+            #        diasComputables = TotalDias(ingreso, fechaFinal) 
+            #
+            #diaslaborados = diasComputables - diaFalta - diaVacaciones - diaDMedico
+#
+            #diasRemunerados = diasComputables - diaFalta
+            #diasNoremunerados = dias - diasRemunerados
+#
+            #planillaBruta = 0
+            #movilidadBruta = 0
+#
+            #if diasComputables == dias:
+            #    pass
+            #elif diasComputables:
+            #    pass
+
+            #if diasRemunerados == diaVacaciones:
+            #    vacaciones = planillaBruta + asignacion
+            #    planillaBruta = 0
+            #
+            #if diasRemunerados == diaDMedico:
+            #    dmedico = planillaBruta + asignacion
+            #    planillaBruta = 0
+            #else:
+#
+            #if diaslaborados > 0:
+#
+#
+            #if diasRemunerados > dias / 2:              
+            #    planillaBruta = planilla - (planilla / 30 * diasNoremunerados)   
+            #    movilidadBruta = movilidad - (movilidad / 30 * diasNoremunerados)                
+            #else:               
+            #    planillaBruta = planilla / 30 * diasRemunerados    
+            #    movilidadBruta = (movilidad / 30 * diasRemunerados)   
+#
+            #vacaciones = 0
+            #dmedico = 0
+#
+#
+            #if diasRemunerados == diaVacaciones:
+            #    vacaciones = planillaBruta + asignacion
+            #    planillaBruta = 0
+            #elif diasRemunerados == diaDMedico:
+            #    dmedico = planillaBruta + asignacion
+            #    planillaBruta = 0
+            #else:
+                #if diaslaborados:  
+                #    if diaVacaciones:                   
+                #        calculoVacaciones = planillaBruta / 30 * diaVacaciones
+                #        vacaciones = calculoVacaciones         
+                #        
+                #    if diaDMedico:                  
+                #        calculoDMedico = planillaBruta / 30 * diaDMedico
+                #        dmedico = calculoDMedico        
+                #    if round(vacaciones, 2) + round(dmedico, 2) >= round(planillaBruta, 2):
+                #        planillaBruta = 0
+                #else:
+                #    if diaVacaciones:                   
+                #        calculoVacaciones = planillaBruta / diasRemunerados * diaVacaciones
+                #        vacaciones = calculoVacaciones         
+                #        
+                #    if diaDMedico:                  
+                #        calculoDMedico = planillaBruta / diasRemunerados * diaDMedico
+                #        dmedico = calculoDMedico                   
+                #    
+                #    if round(vacaciones, 2) + round(dmedico, 2) == round(planillaBruta, 2):
+                #        planillaBruta = 0
+                #pass
+                
             
-            diaslaborados = diasComputables - diaFalta - diaVacaciones - diaDMedico
 
-            diasRemunerados = diasComputables - diaFalta
-            diasNoremunerados = dias - diasRemunerados
-
-            planillaBruta = 0
-            movilidadBruta = 0
-            sueldoPlanilla = planilla + asignacion
-            if diasRemunerados > dias / 2:
-                planillaBruta = sueldoPlanilla - (sueldoPlanilla / 30 * diasNoremunerados)   
-                movilidadBruta = movilidad - (movilidad / 30 * diasNoremunerados)                
-            else:
-                planillaBruta = sueldoPlanilla / 30 * diasRemunerados    
-                movilidadBruta = (movilidad / 30 * diasRemunerados)   
-
-            vacaciones = 0
-            dmedico = 0
-            if diasRemunerados == diaVacaciones:
-                vacaciones = planillaBruta
-                planillaBruta = 0
-            elif diasRemunerados == diaDMedico:
-                dmedico = planillaBruta
-                planillaBruta = 0
-            else:                
-                if diaVacaciones:
-                    print(diasRemunerados)
-                    print(diaVacaciones)
-                    calculoVacaciones = planillaBruta / diasRemunerados * diaVacaciones
-                    vacaciones = calculoVacaciones
-                    print(calculoVacaciones)                   
-                    
-                if diaDMedico:
-                    print(diaDMedico)
-                    calculoDMedico = planillaBruta / diasRemunerados * diaDMedico
-                    dmedico = calculoDMedico
-                    print(calculoDMedico)
-                   
-                print(vacaciones + dmedico)
-                print(planillaBruta)
-                #planillaBruta = planillaBruta - vacaciones - dmedico
-
-                
-
-                
-
-                
+            #planillaBruta = round(planillaBruta, 2)
+            #movilidadBruta = round(movilidadBruta, 2)
+            #vacaciones = round(vacaciones, 2)
+            #dmedico = round(dmedico, 2)
 
 
 
-            detalles = (index, nombre, planilla, asignacion, movilidad, diaslaborados, diaFalta, planillaBruta, movilidadBruta,
-                        diaVacaciones, vacaciones, diaCVacaciones, 'cvaca', diaDMedico, dmedico, diaFeriado, 'feria')
+            detalles = (index, nombre, planilla, asignacion, movilidad, 'diaslaborados', diaFalta, 'planillaBruta', 'movilidadBruta',
+                        diaVacaciones, 'vacaciones', diaCVacaciones, 'cvaca', diaDMedico, 'dmedico', diaFeriado, 'feria')
             self.TRABAJADORES.insert('', 'end', text=idTrabajador, values=detalles)
-           
+
+    def ValidarFecha(self):
+        pass
+
+    def TotalDiasMes(self, mes: int, año: int) -> int:
+        
+        if mes in [4, 6, 9, 11]: 
+            return 30 # Abril, junio, septiembre y noviembre tienen 30
+        
+        if mes == 2:
+            if año % 4 == 0 and (año % 100 != 0 or año % 400 == 0): # Febrero depende de si es o no bisiesto
+                return 29 
+            else:
+                return 28
+        else:        
+            return 31 # Todos los demas 

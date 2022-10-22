@@ -1,8 +1,8 @@
 from tkinter import Button, Label, Scrollbar, Button, Frame, Entry, messagebox
 from tkinter.ttk import Treeview, Combobox
+from datetime import datetime
+from requests import get
 from scripts.sql import select, insert, update, delete
-from scripts.BuscarDni import BuscarDatosDni
-from scripts.edad import FechaValida
 
 class Menu1(Frame):
 
@@ -90,22 +90,28 @@ class Menu1(Frame):
         elif len(dni) != 8 or not dni.isdigit():  
             messagebox.showinfo('BUSCAR', 'INGRESA CORRECTAMENTE EL NUMERO DE DNI') 
             self.buscarDni.focus()      
-        else:
-           
-            persona = BuscarDatosDni(dni)
+        else:        
 
-            if persona:
+            parametros = {'numero': dni}
+            url = 'https://api.apis.net.pe/v1/dni'
+            headers = { 'Authorization': 'apis-token-1.aTSI1U7KEuT-6bbbCguH-4Y8TI6KS73N', 
+                        'Referer': 'https://apis.net.pe/api-tipo-cambio.html'}
+
+            response = get(url, headers=headers, params=parametros)
+                
+            if response.status_code == 200:
+                persona = response.json()   
                 self.numeroDni['text'] = persona['numeroDocumento']
                 self.apPaterno['text'] = persona['apellidoPaterno']
                 self.apMaterno['text'] = persona['apellidoMaterno']
                 self.nombre['text'] = persona['nombres']
                 self.buscarDni.delete(0, 'end')
-                self.fechaNaci.focus_set()
+                self.fechaNaci.focus_set()            
             else:                
                 messagebox.showinfo('BUSCAR', 'NO SE ENCONTRO EL NUMERO DE DNI')           
                 self.buscarDni.focus()   
 
-    def GrabarDatos(self):
+    def GrabarDatos(self):   
 
         # Validacion de dni
         if self.numeroDni['text'] == '':
@@ -116,7 +122,7 @@ class Menu1(Frame):
         elif self.fechaNaci.get() == '':
             messagebox.showinfo('GRABAR', 'REGISTRA EL NACIMIENTO')
             self.fechaNaci.focus()
-        elif len(self.fechaNaci.get()) != 10 or not FechaValida(self.fechaNaci.get(), False):
+        elif len(self.fechaNaci.get()) != 10 or not self.ValidarFecha(self.fechaNaci.get()):
             messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL NACIMIENTO')
             self.fechaNaci.focus()
 
@@ -124,7 +130,7 @@ class Menu1(Frame):
         elif self.fechaIngr.get() == '':
             messagebox.showinfo('GRABAR', 'REGISTRA EL INGRESO')
             self.fechaIngr.focus()
-        elif len(self.fechaIngr.get()) != 10 or not FechaValida(self.fechaIngr.get(), False):
+        elif len(self.fechaIngr.get()) != 10 or not self.ValidarFecha(self.fechaIngr.get()):
             messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL INGRESO')
             self.fechaIngr.focus()
 
@@ -153,11 +159,10 @@ class Menu1(Frame):
             self.movilidad.focus()
 
         # Validacion de fecha del cese      
-        elif self.retiro.get() != '' and not FechaValida(self.retiro.get(), True):
+        elif self.retiro.get() != '' and not self.ValidarFecha(self.retiro.get()):
             messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL RETIRO')
             self.retiro.focus()
-        else:                     
-            
+        else:            
             datosTrabajador = ( self.numeroDni['text'],         self.apPaterno['text'],
                                 self.apMaterno['text'],         self.nombre['text'],
                                 self.fechaNaci.get(),           self.fechaIngr.get(),
@@ -171,7 +176,6 @@ class Menu1(Frame):
                                 self.retiro.get())
 
             if self.buscar['state'] == 'normal':
-
                 for index in self.TRABAJADORES.get_children():
                     if f"{self.TRABAJADORES.item(index).get('values')[2]:0>8}" == self.numeroDni['text']:
                         messagebox.showinfo('GRABAR', 'DNI YA REGISTRADO')
@@ -191,9 +195,7 @@ class Menu1(Frame):
                             self.TRABAJADORES.selection_set(index)
                             self.TRABAJADORES.focus(index)
                             break
-
-            else:                
-
+            else:
                 query = f'''UPDATE ACTIVO SET   FNAC = '{datosTrabajador[4]}',   FING = '{datosTrabajador[5]}', 
                                                 SPLA =  {datosTrabajador[6]},    AFAM = '{datosTrabajador[7]}', 
                                                 SMOV =  {datosTrabajador[8]},    EAPO = '{datosTrabajador[9]}',
@@ -215,6 +217,13 @@ class Menu1(Frame):
 
             self.menuAgregar.destroy()
 
+    def ValidarFecha(self, fecha: str):
+        try:
+            datetime.strptime(fecha, '%d/%m/%Y')
+            return True
+        except ValueError:
+            return False
+ 
     def Agregar(self):
 
         contenedor = Frame(self)
