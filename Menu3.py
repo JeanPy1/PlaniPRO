@@ -60,21 +60,26 @@ class Menu3(Frame):
             planilla = float(dato[5])
             asignacion = float(dato[6])
             movilidad = float(dato[7])
-            total = planilla + asignacion + movilidad
+            #total = planilla + asignacion + movilidad
             aportacion = dato[8]
             comision = dato[9]
             retiro = dato[10]
+            
+            fechaIngreso = date(int(ingreso[6:10]), int(ingreso[3:5]), int(ingreso[0:2]))   
+            if fechaIngreso > fechaFinal:
+                continue   
 
-            ingresoDia = int(ingreso[0:2])
-            ingresoMes = int(ingreso[3:5])
-            ingresoAño = int(ingreso[6:10])
-            fechaIngreso = date(ingresoAño, ingresoMes, ingresoDia)    
-
+            diasComputables = 0
             if retiro:
-                retiroDia = int(retiro[0:2])
-                retiroMes = int(retiro[3:5])
-                retiroAño = int(retiro[6:10])
-                fechaRetiro = date(retiroAño, retiroMes, retiroDia)    
+                fechaRetiro = date(int(retiro[6:10]), int(retiro[3:5]), int(retiro[0:2]))
+                diasComputables = fechaRetiro.day - fechaInicial.day + 1
+                if fechaIngreso > fechaInicial:
+                    diasComputables = fechaRetiro.day - fechaIngreso.day + 1               
+            else:                
+                if fechaIngreso <= fechaInicial:
+                    diasComputables = totalDiasMes
+                else:
+                    diasComputables = totalDiasMes - fechaIngreso.day +1
             
             diaApoyo = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {idTrabajador}', False)[0]
             diaFalta = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {idTrabajador}', False)[0]
@@ -92,28 +97,11 @@ class Menu3(Frame):
             if not diaFeriado: diaFeriado = 0
             if diaVacaciones is None: diaVacaciones = 0
             if diaCVacaciones is None: diaCVacaciones = 0
-            if diaDMedico is None: diaDMedico = 0
-                       
+            if diaDMedico is None: diaDMedico = 0    
+            
+            print(diasComputables)
 
-            diasComputables = 0
-
-                      
-            if fechaIngreso <= fechaInicial:
-                print('es menor o igual')
-            elif fechaIngreso > fechaFinal:
-                continue
-            else:
-                print('dentro del mes')
-            #    if retiro:
-            #        diasComputables = TotalDias(fechaInicial, retiro)
-            #    else:
-            #        diasComputables = dias
-            #else:
-            #    if retiro:
-            #        diasComputables = TotalDias(ingreso, retiro)
-            #    else:
-            #        diasComputables = TotalDias(ingreso, fechaFinal) 
-            #
+         
             #diaslaborados = diasComputables - diaFalta - diaVacaciones - diaDMedico
 #
             #diasRemunerados = diasComputables - diaFalta
