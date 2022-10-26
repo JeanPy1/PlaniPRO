@@ -34,8 +34,8 @@ class Menu3(Frame):
         
         Button(self, text='GENERAR').place(x=890, y=30, width=90, height=30)
         Button(self, text='MODIFICAR').place(x=890, y=65, width=90, height=30)
-        Button(self, text='REPORTE').place(x=890, y=105, width=90, height=30)
-        Button(self, text='SALIR', command=lambda:self.destroy(), bg='#DF2F2F').place(x=890, y=140, width=90, height=30)
+        Button(self, text='REPORTE').place(x=890, y=100, width=90, height=30)
+        Button(self, text='SALIR', command=lambda:self.destroy(), bg='#DF2F2F').place(x=890, y=135, width=90, height=30)
 
         self.CargarPlanilla()
 
@@ -59,8 +59,7 @@ class Menu3(Frame):
             ingreso = dato[4]
             planilla = float(dato[5])
             asignacion = float(dato[6])
-            movilidad = float(dato[7])
-            #total = planilla + asignacion + movilidad
+            movilidad = float(dato[7])            
             aportacion = dato[8]
             comision = dato[9]
             retiro = dato[10]
@@ -99,6 +98,9 @@ class Menu3(Frame):
             if diaCVacaciones is None: diaCVacaciones = 0
             if diaDMedico is None: diaDMedico = 0    
             
+            
+
+
             print(diasComputables)
 
          
@@ -181,9 +183,7 @@ class Menu3(Frame):
                         diaVacaciones, 'vacaciones', diaCVacaciones, 'cvaca', diaDMedico, 'dmedico', diaFeriado, 'feria')
             self.TRABAJADORES.insert('', 'end', text=idTrabajador, values=detalles)
 
-    def ValidarFecha(self):
-        pass
-
+  
     def TotalDiasMes(self, mes: int, año: int) -> int:
         
         if mes in [4, 6, 9, 11]: 
