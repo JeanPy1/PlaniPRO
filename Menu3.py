@@ -80,6 +80,8 @@ class Menu3(Frame):
                 else:
                     diasComputables = totalDiasMes - fechaIngreso.day +1
             
+            
+
             diaApoyo = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {idTrabajador}', False)[0]
             diaFalta = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {idTrabajador}', False)[0]
             diaFeriado = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {idTrabajador}', False)[0]
@@ -90,7 +92,7 @@ class Menu3(Frame):
             descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {idTrabajador}', False)[0]
             adelanto = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {idTrabajador}', False)[0]
             porfuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {idTrabajador}', False)[0]
-
+           
             if not diaApoyo: diaApoyo = 0
             if not diaFalta: diaFalta = 0
             if not diaFeriado: diaFeriado = 0
@@ -98,10 +100,15 @@ class Menu3(Frame):
             if diaCVacaciones is None: diaCVacaciones = 0
             if diaDMedico is None: diaDMedico = 0    
             
-            
+            diasRemunerados = diasComputables - diaFalta
+            diasNoRemunerados = totalDiasMes - diasRemunerados
+            diasLaborados = diasRemunerados - diaVacaciones - diaDMedico
 
 
-            print(diasComputables)
+            print(f'apoyo {diaApoyo} - falta {diaFalta} - feriado {diaFeriado}')
+
+            print(f'dias remunerados {diasRemunerados} - dias no remunerados {diasNoRemunerados} - dias computables {diasComputables} - dias laborados {diasLaborados}')
+
 
          
             #diaslaborados = diasComputables - diaFalta - diaVacaciones - diaDMedico

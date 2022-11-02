@@ -57,6 +57,7 @@ class Menu6(Frame):
         self.place(width=1000, height=600)
 
     def CargarDatos(self):
+
         opciones = select(f'SELECT * FROM OPCIONES', False)  
         habitatF = round(opciones[0] * 100, 2)
         habitatM = round(opciones[1] * 100, 2)
@@ -73,7 +74,6 @@ class Menu6(Frame):
         essaludA = round(opciones[12] * 100, 2)
         sueldoM = round(opciones[13], 2)
         asignacionF = round(opciones[14] * 100, 2)
-
           
         self.habitatF['text'] = f'{habitatF:.2f}%'
         self.habitatM['text'] = f'{habitatM:.2f}%'
@@ -94,54 +94,52 @@ class Menu6(Frame):
     def Modificar(self):
 
         contenedor = Frame(self)
-
-        Label(contenedor, anchor='center', bg='#DDDDDD', text='Entidad\nAFP'                ).place(x= 20, y=20, width=100, height=48)
+        Label(contenedor, anchor='center', bg='#DDDDDD', text='Entidad\nAFP').place(x=20, y=20, width=100, height=48)
         Label(contenedor, anchor='center', bg='#DDDDDD', text='Comision\nFlujo        Mixta').place(x=121, y=20, width=121, height=48)
-        Label(contenedor, anchor='center', bg='#DDDDDD', text='Prima\nSeguro'               ).place(x=243, y=20, width= 60, height=48)
-        Label(contenedor, anchor='center', bg='#DDDDDD', text='Aporte\nMensual'             ).place(x=304, y=20, width= 60, height=48)
-        Label(contenedor, anchor='center', bg='#DDDDDD', text='Sueldo\nMaximo'              ).place(x=365, y=20, width= 60, height=48)
-        Label(contenedor, text=' Habitat').place(x= 20, y= 69, width=100, height=24)
+        Label(contenedor, anchor='center', bg='#DDDDDD', text='Prima\nSeguro').place(x=243, y=20, width=60, height=48)
+        Label(contenedor, anchor='center', bg='#DDDDDD', text='Aporte\nMensual').place(x=304, y=20, width=60, height=48)
+        Label(contenedor, anchor='center', bg='#DDDDDD', text='Sueldo\nMaximo').place(x=365, y=20, width=60, height=48)
+        Label(contenedor, text=' Habitat').place(x=20, y=69, width=100, height=24)
         self.habitatFlujo = Entry(contenedor, justify='right')
         self.habitatMixta = Entry(contenedor, justify='right')
-        Label(contenedor, text=' Integra').place(x= 20, y= 94, width=100, height=24)
+        Label(contenedor, text=' Integra').place(x=20, y=94, width=100, height=24)
         self.integraFlujo = Entry(contenedor, justify='right')
         self.integraMixta = Entry(contenedor, justify='right')
-        Label(contenedor, text=' Prima').place(x= 20, y=119, width=100, height=24)
+        Label(contenedor, text=' Prima').place(x=20, y=119, width=100, height=24)
         self.primaFlujo = Entry(contenedor, justify='right')
         self.primaMixta = Entry(contenedor, justify='right')
-        Label(contenedor, text=' Profuturo').place(x= 20, y=144, width=100, height=24)
+        Label(contenedor, text=' Profuturo').place(x=20, y=144, width=100, height=24)
         self.profuturoFlujo = Entry(contenedor, justify='right')
         self.profuturoMixta = Entry(contenedor, justify='right')
         self.primaSeguro = Entry(contenedor, justify='right')
         self.aporte = Entry(contenedor, justify='right')
         self.remuneracionMaxima = Entry(contenedor, justify='right')
-        Label(contenedor, anchor='center', bg='#DDDDDD', text='Fondo\nOnp'       ).place(x=445, y=20, width= 60, height=48)
-        Label(contenedor, anchor='center', bg='#DDDDDD', text='Essalud'          ).place(x=506, y=20, width= 60, height=48)
-        Label(contenedor, anchor='center', bg='#DDDDDD', text='Sueldo\nMinimo'   ).place(x=567, y=20, width= 60, height=48)
-        Label(contenedor, anchor='center', bg='#DDDDDD', text='Asigna.\nFamiliar').place(x=628, y=20, width= 60, height=48)
+        Label(contenedor, anchor='center', bg='#DDDDDD', text='Fondo\nOnp').place(x=445, y=20, width=60, height=48)
+        Label(contenedor, anchor='center', bg='#DDDDDD', text='Essalud').place(x=506, y=20, width=60, height=48)
+        Label(contenedor, anchor='center', bg='#DDDDDD', text='Sueldo\nMinimo').place(x=567, y=20, width=60, height=48)
+        Label(contenedor, anchor='center', bg='#DDDDDD', text='Asigna.\nFamiliar').place(x=628, y=20, width=60, height=48)
         self.onp = Entry(contenedor, justify='right')
         self.essalud = Entry(contenedor, justify='right')
         self.sueldoMinimo = Entry(contenedor, justify='right')
         self.asignacionFamiliar = Entry(contenedor, justify='right')
         Button(contenedor, text='GRABAR', command=self.Grabar).place(x=890, y=20, width=90, height=30)
-        Button(contenedor, text='SALIR'    , bg='#DF2F2F', command=lambda:contenedor.destroy()).place(x=890, y=125, width=90, height=30)
+        Button(contenedor, text='SALIR', bg='#DF2F2F', command=lambda:contenedor.destroy()).place(x=890, y=125, width=90, height=30)
        
-        self.habitatFlujo.place(x=121, y= 69, width= 60, height=24)
-        self.habitatMixta.place(x=182, y= 69, width= 60, height=24)
-        self.integraFlujo.place(x=121, y= 94, width= 60, height=24)
-        self.integraMixta.place(x=182, y= 94, width= 60, height=24)
-        self.primaFlujo.place(x=121, y=119, width= 60, height=24)
-        self.primaMixta.place(x=182, y=119, width= 60, height=24)
-        self.profuturoFlujo.place(x=121, y=144, width= 60, height=24)
-        self.profuturoMixta.place(x=182, y=144, width= 60, height=24)
-        self.primaSeguro.place(x=243, y= 69, width= 60, height=99)
-        self.aporte.place(x=304, y= 69, width= 60, height=99)
-        self.remuneracionMaxima.place(x=365, y= 69, width= 60, height=99)
-        self.onp.place(x=445, y= 69, width= 60, height=99)
-        self.essalud.place(x=506, y= 69, width= 60, height=99)
-        self.sueldoMinimo.place(x=567, y= 69, width= 60, height=99)
-        self.asignacionFamiliar.place(x=628, y= 69, width= 60, height=99)
-
+        self.habitatFlujo.place(x=121, y=69, width=60, height=24)
+        self.habitatMixta.place(x=182, y=69, width=60, height=24)
+        self.integraFlujo.place(x=121, y=94, width=60, height=24)
+        self.integraMixta.place(x=182, y=94, width=60, height=24)
+        self.primaFlujo.place(x=121, y=119, width=60, height=24)
+        self.primaMixta.place(x=182, y=119, width=60, height=24)
+        self.profuturoFlujo.place(x=121, y=144, width=60, height=24)
+        self.profuturoMixta.place(x=182, y=144, width=60, height=24)
+        self.primaSeguro.place(x=243, y=69, width=60, height=99)
+        self.aporte.place(x=304, y=69, width=60, height=99)
+        self.remuneracionMaxima.place(x=365, y=69, width=60, height=99)
+        self.onp.place(x=445, y=69, width=60, height=99)
+        self.essalud.place(x=506, y=69, width=60, height=99)
+        self.sueldoMinimo.place(x=567, y=69, width=60, height=99)
+        self.asignacionFamiliar.place(x=628, y=69, width=60, height=99)
 
         opciones = select(f'SELECT * FROM OPCIONES', False)
         self.habitatFlujo.insert(0, round(opciones[0] * 100, 2))
@@ -158,7 +156,7 @@ class Menu6(Frame):
         self.onp.insert(0, round(opciones[11] * 100, 2))
         self.essalud.insert(0, round(opciones[12] * 100, 2))
         self.sueldoMinimo.insert(0, round(opciones[13], 2))
-        self.asignacionFamiliar.insert(0, round(opciones[14] * 100, 2))        
+        self.asignacionFamiliar.insert(0, round(opciones[14] * 100, 2))
 
         self.opciones = contenedor
         contenedor.place(width=1000, height=600)
@@ -192,3 +190,5 @@ class Menu6(Frame):
 
         self.CargarDatos()
         self.opciones.destroy()
+
+        
