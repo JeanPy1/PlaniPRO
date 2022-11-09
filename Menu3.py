@@ -11,15 +11,14 @@ class Menu3(Frame):
         columna = ('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', 
                    '#11', '#12', '#13', '#14', '#15', '#16', '#17', '#18', '#19', '#20',
                    '#21', '#22', '#23', '#24', '#25', '#26', '#27', '#28', '#29', '#30')
-        ancho = (26, 260, 70, 50, 50, 30, 30, 70, 50, 30, 70, 30, 70, 30, 70,
-                 30, 50, 70, 50, 50, 50, 50, 50, 50, 50, 50, 70, 50, 50, 50)
-        titulo = ('N°', 'APELLIDOS Y NOMBRE', 'PLANILLA', 'AF', 'MOVI.', 'DL', 'DNL',
-                  'PLANILLA', 'MOVI.', 'DV', 'VACA.', 'DCV', 'C. VACA.', 'DDM', 'D. MED.',
-                  'DF', 'FERIA.', 'REM. BRUTA', 'ONP', 'COMISION', 'PRI. SEG.', 'APORTE', 'RENTA 5',
-                  'DESCUEN.', 'INGRESO', 'APOYO', 'REM. NETA', 'MOV. NETA', 'POR FUERA', 'ESSALUD')
+        ancho = (26, 260, 70, 50, 50, 30, 30, 70, 50, 30, 60, 30, 60, 30, 60,
+                 30, 60, 70, 50, 50, 50, 50, 50, 50, 50, 50, 70, 50, 50, 50)
+        titulo = ('N°', 'APELLIDOS Y NOMBRE', 'PLANILLA', 'A. F.', 'MOV.', 'DL', 'DNL',
+                  'PLANILLA', 'MOV.', 'V', 'MONTO', 'CV', 'MONTO', 'DM', 'MONTO',
+                  'F', 'MONTO', 'R. BRUTA', 'ONP', 'COMI.', 'PRIM.', 'APOR.', 'REN. 5',
+                  'DSCTO', 'INGSO', 'APOYO', 'R. NETA', 'MOV.', 'XFUERA', 'ESSA.')
         
-        self.TRABAJADORES = Treeview(self, columns=columna)          
-
+        self.TRABAJADORES = Treeview(self, columns=columna)
         for index, columna in enumerate(columna):
             self.TRABAJADORES.column(columna, width=ancho[index], minwidth=ancho[index], anchor='e')
             self.TRABAJADORES.heading(columna, text=titulo[index])        
@@ -27,7 +26,6 @@ class Menu3(Frame):
         scroll = Scrollbar(self, orient='vertical', command=self.TRABAJADORES.yview)
         scrol2 = Scrollbar(self, orient='horizontal', command=self.TRABAJADORES.xview)
         self.TRABAJADORES.configure(yscrollcommand=scroll.set, xscrollcommand=scrol2.set)
-
         self.TRABAJADORES.place(x=20, y=30, height=548, width=830)
         scroll.place(x=851, y=30, height=548)
         scrol2.place(x=20, y=579, width=830)
@@ -38,7 +36,6 @@ class Menu3(Frame):
         Button(self, text='SALIR', command=lambda:self.destroy(), bg='#DF2F2F').place(x=890, y=135, width=90, height=30)
 
         self.CargarPlanilla()
-
         self.place(width=1000, height=600)
 
     def CargarPlanilla(self):
@@ -128,10 +125,23 @@ class Menu3(Frame):
                     if diaDMedico > totalDiasMes / 2:
                         dMedico = round(planilla - (planilla / 30 * (totalDiasMes - diaDMedico)), 2)
 
+            cVacaciones = 0
+            if diaCVacaciones:
+                cVacaciones = round((planilla + asignacion) / 30 * diaCVacaciones, 2)
+
+            feriado = 0
+            if diaFeriado:
+                feriado = round(planilla / 30 * (diaFeriado * 2), 2)
+
             sueldoComputable = round(sueldoComputable - vacaciones - dMedico, 2)  
 
-            detalles = (index, nombre, planilla, asignacion, movilidad, diasLaborados, diaFalta, sueldoComputable, movilidadComputable,
-            diaVacaciones, vacaciones, diaCVacaciones, 'cvaca', diaDMedico, dMedico, diaFeriado, 'feria')
+            remuneracionBruta = round(sueldoComputable + vacaciones + dMedico, 2)  
+
+
+            detalles = (index, nombre, planilla, asignacion, movilidad, diasLaborados, diaFalta, 
+            sueldoComputable, movilidadComputable, diaVacaciones, vacaciones, diaCVacaciones,
+            cVacaciones, diaDMedico, dMedico, diaFeriado, feriado, remuneracionBruta)
+            
             self.TRABAJADORES.insert('', 'end', text=idTrabajador, values=detalles)
 
   
