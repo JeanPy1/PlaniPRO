@@ -10,13 +10,16 @@ class Menu3(Frame):
 
         columna = ('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', 
                    '#11', '#12', '#13', '#14', '#15', '#16', '#17', '#18', '#19', '#20',
-                   '#21', '#22', '#23', '#24', '#25', '#26', '#27', '#28', '#29', '#30')
-        ancho = (26, 260, 70, 50, 50, 30, 30, 70, 50, 30, 60, 30, 60, 30, 60,
-                 30, 60, 70, 50, 50, 50, 50, 50, 50, 50, 50, 70, 50, 50, 50)
+                   '#21', '#22', '#23', '#24', '#25', '#26', '#27', '#28', '#29', '#30',
+                   '#31', '#32', '#33', '#34', '#35')
+        ancho = (26, 260, 70, 50, 50, 30, 30, 70, 50, 50, 30, 60, 30, 60, 30, 60,
+                 30, 60, 70, 50, 50, 50, 50, 50, 50, 50, 50, 70, 50, 50, 50, 50, 50,
+                 50, 50)
         titulo = ('N°', 'APELLIDOS Y NOMBRE', 'PLANILLA', 'A. F.', 'MOV.', 'DL', 'DNL',
-                  'PLANILLA', 'MOV.', 'V', 'MONTO', 'CV', 'MONTO', 'DM', 'MONTO',
+                  'PLANILLA', 'A. F.', 'MOV.', 'V', 'MONTO', 'CV', 'MONTO', 'DM', 'MONTO',
                   'F', 'MONTO', 'R. BRUTA', 'ONP', 'COMI.', 'PRIM.', 'APOR.', 'REN. 5',
-                  'DSCTO', 'INGSO', 'APOYO', 'R. NETA', 'MOV.', 'XFUERA', 'ESSA.')
+                  'DSCTO', 'INGSO', 'APOYO', 'R. NETA', 'MOV.', 'XFUERA', 'ESSA.', 'ONP',
+                  'COM.', 'PRI.', 'APO.')
         
         self.TRABAJADORES = Treeview(self, columns=columna)
         for index, columna in enumerate(columna):
@@ -38,7 +41,7 @@ class Menu3(Frame):
         self.CargarPlanilla()
         self.place(width=1000, height=600)
 
-    def CargarPlanilla(self):
+    def CargarPlanilla(self):        
         
         mes = 10
         año = 2022
@@ -64,7 +67,8 @@ class Menu3(Frame):
             fechaIngreso = date(int(ingreso[6:10]), int(ingreso[3:5]), int(ingreso[0:2]))   
             if fechaIngreso > fechaFinal:
                 continue   
-
+            
+            # Calculos de dias
             diasComputables = 0
             if retiro:
                 fechaRetiro = date(int(retiro[6:10]), int(retiro[3:5]), int(retiro[0:2]))
@@ -87,7 +91,7 @@ class Menu3(Frame):
             descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {idTrabajador}', False)[0]
             adelanto = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {idTrabajador}', False)[0]
             porfuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {idTrabajador}', False)[0]
-           
+              
             if not diaApoyo: diaApoyo = 0
             if not diaFalta: diaFalta = 0
             if not diaFeriado: diaFeriado = 0
@@ -95,6 +99,7 @@ class Menu3(Frame):
             if diaCVacaciones is None: diaCVacaciones = 0
             if diaDMedico is None: diaDMedico = 0            
             
+            # Empieza Calculos de remuneracion            
             diasRemunerados = diasComputables - diaFalta
             diasNoRemunerados = totalDiasMes - diasRemunerados
             diasLaborados = diasRemunerados - diaVacaciones - diaDMedico
@@ -102,7 +107,8 @@ class Menu3(Frame):
 
             sueldoComputable = round(planilla / 30 * diasRemunerados, 2)
             movilidadComputable = round(movilidad / 30 * diasLaborados, 2)
-            if diasComputables > totalDiasMes / 2:
+            asignacionComputable = asignacion
+            if diasRemunerados > totalDiasMes / 2:
                 sueldoComputable = round(planilla - (planilla / 30 * diasNoRemunerados), 2)
             if diasLaborados > totalDiasMes / 2:
                 movilidadComputable = round(movilidad - (movilidad / 30 * diasNoLaborados), 2)
@@ -111,6 +117,7 @@ class Menu3(Frame):
             if diaVacaciones:
                 if diaVacaciones == totalDiasMes:
                     vacaciones = planilla + asignacion
+                    asignacionComputable = 0
                 else:
                     vacaciones = round(planilla / 30 * diaVacaciones, 2)
                     if diaVacaciones > totalDiasMes / 2:
@@ -119,7 +126,7 @@ class Menu3(Frame):
             dMedico = 0
             if diaDMedico:
                 if diaDMedico == totalDiasMes:
-                    dMedico = planilla + asignacion
+                    dMedico = planilla
                 else:
                     dMedico = round(planilla / 30 * diaDMedico, 2)
                     if diaDMedico > totalDiasMes / 2:
@@ -131,19 +138,124 @@ class Menu3(Frame):
 
             feriado = 0
             if diaFeriado:
-                feriado = round(planilla / 30 * (diaFeriado * 2), 2)
+                feriado = round((planilla) / 30 * (diaFeriado * 2), 2)
 
             sueldoComputable = round(sueldoComputable - vacaciones - dMedico, 2)  
+            remuneracionBruta = round(sueldoComputable + asignacion + vacaciones + dMedico + feriado, 2)  
+            if sueldoComputable < 0:
+                sueldoComputable = 0
 
-            remuneracionBruta = round(sueldoComputable + vacaciones + dMedico, 2)  
+            comisiones = select(f""" SELECT * FROM OPCIONES """, False)
+           
+            habitatF = comisiones[0]
+            habitatM = comisiones[1]
+            integraF = comisiones[2]
+            integraM = comisiones[3]
+            primaF = comisiones[4]
+            primaM = comisiones[5]
+            profuturoF = comisiones[6]
+            profuturoM = comisiones[7]
+            primaS = comisiones[8]
+            aporteO = comisiones[9]
+            remMax = comisiones[10]
+            onpA = comisiones[11]
 
+            onp = 0
+            afpComision = 0
+            afpPrima = 0
+            afpAporte = 0
+            match aportacion:
+                case "ONP":
+                    onp = remuneracionBruta * onpA
+                case "HABITAT":                    
+                    afpComision = remuneracionBruta * habitatM
+                    if comision == "FLUJO":
+                        afpComision = remuneracionBruta * habitatF
+                    afpPrima = remuneracionBruta * primaS
+                    if planilla + movilidad > remMax:
+                        afpPrima = remMax * primaS
+                    afpAporte = remuneracionBruta * aporteO
+                case "INTEGRA":
+                    afpComision = remuneracionBruta * integraM
+                    if comision == "FLUJO":
+                        afpComision = remuneracionBruta * integraF
+                    afpPrima = remuneracionBruta * primaS
+                    if planilla + movilidad > remMax:
+                        afpPrima = remMax * primaS
+                    afpAporte = remuneracionBruta * aporteO
+                case "PRIMA":
+                    afpComision = remuneracionBruta * primaM
+                    if comision == "FLUJO":
+                        afpComision = remuneracionBruta * primaF
+                    afpPrima = remuneracionBruta * primaS
+                    if planilla + movilidad > remMax:
+                        afpPrima = remMax * primaS
+                    afpAporte = remuneracionBruta * aporteO
+                case "PROFUTURO":
+                    afpComision = remuneracionBruta * profuturoM
+                    if comision == "FLUJO":
+                        afpComision = remuneracionBruta * profuturoF
+                    afpPrima = remuneracionBruta * primaS
+                    if planilla + movilidad > remMax:
+                        afpPrima = remMax * primaS
+                    afpAporte = remuneracionBruta * aporteO
+
+            # Redondear a 2 decimales
+            planilla = f"{planilla:.2f}"
+
+            if not asignacion: asignacion = "" 
+            else: asignacion = f"{asignacion:.2f}"
+            
+            if not asignacionComputable: asignacionComputable = "" 
+            else: asignacionComputable = f"{asignacionComputable:.2f}"
+
+            if not movilidad: movilidad = "" 
+            else: movilidad = f"{movilidad:.2f}"
+
+            if not diasLaborados: diasLaborados = ""
+            if not diaFalta: diaFalta = ""
+            if not diaVacaciones: diaVacaciones = ""
+            if not diaCVacaciones: diaCVacaciones = ""
+            if not diaDMedico: diaDMedico = ""
+            if not diaFeriado: diaFeriado = ""
+
+            if not sueldoComputable: sueldoComputable = ""
+            else: sueldoComputable = f"{sueldoComputable:.2f}"
+
+            if not movilidadComputable: movilidadComputable = ""
+            else: movilidadComputable = f"{movilidadComputable:.2f}"
+
+            if not vacaciones: vacaciones = ""
+            else: vacaciones = f"{vacaciones:.2f}"
+
+            if not cVacaciones: cVacaciones = ""
+            else: cVacaciones = f"{cVacaciones:.2f}"
+
+            if not dMedico: dMedico = ""
+            else: dMedico = f"{dMedico:.2f}"
+
+            if not feriado: feriado = ""
+            else: feriado = f"{feriado:.2f}"
+
+            remuneracionBruta = f"{remuneracionBruta:.2f}"
+
+            if not onp: onp = "" 
+            else: onp = f"{onp:.2f}"
+
+            if not afpComision: afpComision = "" 
+            else: afpComision = f"{afpComision:.2f}"
+
+            if not afpPrima: afpPrima = "" 
+            else: afpPrima = f"{afpPrima:.2f}"
+
+            if not afpAporte: afpAporte = "" 
+            else: afpAporte = f"{afpAporte:.2f}"
 
             detalles = (index, nombre, planilla, asignacion, movilidad, diasLaborados, diaFalta, 
-            sueldoComputable, movilidadComputable, diaVacaciones, vacaciones, diaCVacaciones,
-            cVacaciones, diaDMedico, dMedico, diaFeriado, feriado, remuneracionBruta)
+            sueldoComputable, asignacionComputable, movilidadComputable, diaVacaciones, vacaciones, diaCVacaciones,
+            cVacaciones, diaDMedico, dMedico, diaFeriado, feriado, remuneracionBruta, onp, afpComision, afpPrima, afpAporte)
             
             self.TRABAJADORES.insert('', 'end', text=idTrabajador, values=detalles)
-
   
     def TotalDiasMes(self, mes: int, año: int) -> int:
         

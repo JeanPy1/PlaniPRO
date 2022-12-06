@@ -1,4 +1,4 @@
-from tkinter import Button, Frame, Label, PhotoImage, Tk
+from tkinter import Button, PhotoImage, Tk
 from tkinter.ttk import  Style
 from Menu1 import Menu1
 from Menu2 import Menu2
@@ -9,8 +9,7 @@ class App(Tk):
 
     def __init__(self):
         super(App, self).__init__()
-
-        # Creamos la ventana principal
+       
         self.title('PlaniPRO')
         self.geometry('1000x600+-8+0')
         self.resizable(0,0)
@@ -35,24 +34,21 @@ class App(Tk):
 
         # Modificados estilo de los treeview
         Style().configure('Treeview', font=('Segoe UI Semibold', 10))
-
-        # Cargamos las imagenes de los botones
+       
         img1 = PhotoImage(file='./img/menu1.png')
         img2 = PhotoImage(file='./img/menu2.png')
         img3 = PhotoImage(file='./img/menu3.png')
         img4 = PhotoImage(file='./img/menu4.png')
         img5 = PhotoImage(file='./img/menu5.png')
         img6 = PhotoImage(file='./img/menu6.png')
-
-        # Creamos los botones del menu
+       
         Button(self, bg='#F0F0F0', image=img1, command=self.Menu1).place(       width=100, height=100)
         Button(self, bg='#F0F0F0', image=img2, command=self.Menu2).place(y=100, width=100, height=100)
         Button(self, bg='#F0F0F0', image=img3, command=self.Menu3).place(y=200, width=100, height=100)
         Button(self, bg='#F0F0F0', image=img4, command=self.Menu4).place(y=300, width=100, height=100)
         Button(self, bg='#F0F0F0', image=img5, command=self.Menu5).place(y=400, width=100, height=100)
-        Button(self, bg='#F0F0F0', image=img6, command=self.Menu6).place(y=500, width=100, height=100)
-     
-        # Corremos programa
+        Button(self, bg='#F0F0F0', image=img6, command=self.Menu6).place(y=500, width=100, height=100)     
+        
         self.mainloop()
     
     def Menu1(self):
@@ -72,8 +68,7 @@ class App(Tk):
 
     def Menu6(self):
         Menu6(self)
-        
-
+      
 
 if __name__ == '__main__':
     aplicacion = App()      

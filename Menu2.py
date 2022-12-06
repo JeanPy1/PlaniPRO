@@ -656,6 +656,7 @@ class Menu2(Frame):
         self.TRABAJADORES.item(filaTrabajador, values=detallesTrabajador)        
 
     def CompararFechas(self, fechaInicial: str, fechaFinal: str):
+        
         inicio = datetime.strptime(fechaInicial, '%d/%m/%Y')       
         fin = datetime.strptime(fechaFinal, '%d/%m/%Y')   
 
