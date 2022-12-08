@@ -27,7 +27,7 @@ class Person(Base):
     categoria = Column(String(5))
     vencimiento = Column(String(10))
     area = Column(String(10))
-    celular = Column(String(9))
+    telefono = Column(String(9))
     distrito = Column(String(30))
     retiro = Column(String(10))
 
@@ -35,7 +35,7 @@ class Person(Base):
                         ingreso: str, planilla: float, asignacion: float, movilidad: float,
                         aportacion: str, comision: str, cuspp:str, cargo: str, cuenta: str,
                         licencia: str, categoria: str, vencimiento: str, area: str,
-                        celular: str, distrito: str, retiro: str) -> None:
+                        telefono: str, distrito: str, retiro: str) -> None:
         self.dni = dni
         self.paterno = paterno
         self.materno = materno
@@ -54,7 +54,7 @@ class Person(Base):
         self.categoria = categoria
         self.vencimiento = vencimiento
         self.area = area
-        self.celular = celular
+        self.telefono = telefono
         self.distrito = distrito
         self.retiro = retiro
 
@@ -65,4 +65,3 @@ engine = create_engine("sqlite:///data/db.sqlite3", echo=True)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
-

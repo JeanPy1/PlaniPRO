@@ -9,14 +9,17 @@ class Menu1(Frame):
 
     def __init__(self, contenedor):
         super().__init__(contenedor)
-
-        self.trabajadores = Treeview(self, columns=('#1', '#2', '#3'))       
+        
+        self.trabajadores = Treeview(self, columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10',
+                                                    '#11', '#12', '#13', '#14', '#15', '#16', '#17', '#18', '#19', '#20',
+                                                    '#21', '#22', '#23', '#24', '#25'))       
         self.trabajadores.column('#1', width=30, minwidth=30, anchor='center')
         self.trabajadores.column('#2', width=270, minwidth=270)
         self.trabajadores.column('#3', width=70, minwidth=70, anchor='center')
         self.trabajadores.heading('#1', text='N°')
         self.trabajadores.heading('#2', text='APELLIDOS Y NOMBRE')
         self.trabajadores.heading('#3', text='DNI')
+        self.trabajadores["displaycolumns"] = ('#1', '#2', '#3')
 
         scroll = Scrollbar(self, orient='vertical', command=self.trabajadores.yview)
         self.trabajadores.configure(yscrollcommand=scroll.set)
@@ -24,63 +27,136 @@ class Menu1(Frame):
         self.trabajadores.bind('<<TreeviewSelect>>', self.MostrarDetalles)
 
         scroll.place(x=396, y=30, height=548)
-        self.trabajadores.place(x=20, y=30, height=548)               
+        self.trabajadores.place(x=20, y=30, height=548)         
 
-        titulos1 = (' Fecha de nacimiento', ' Fecha de ingreso', ' Planilla', ' Asignacion familiar', ' Movilidad',
-                    ' Remuneracion total', ' Puesto laboral', ' Entidad de aportacion', ' Tipo de comision')
-        titulos2 = (' Codigo cuspp', ' Cuenta bancaria', ' Numero de licencia', ' Tipo de categoria', ' Fecha de revalidacion',
-                    ' Area de labor', ' Numero de celular', ' Distrito de residencia', ' Fecha de retiro')
-                
-        detalles1 = []
-        detalles2 = []
-        posicion = -31
-        for numero in range(9):
-            posicion+=61
-            Label(self, text=titulos1[numero]).place(x=430, y=posicion, width=205, height=60)
-            Label(self, text=titulos2[numero]).place(x=636, y=posicion, width=205, height=60)  
+        Label(self, text=' Fecha de nacimiento').place(x=430, y=30, width=205, height=60)
+        Label(self, text=' Fecha de ingreso').place(x=430, y=91, width=205, height=60)  
+        Label(self, text=' Planilla').place(x=430, y=152, width=205, height=60)
+        Label(self, text=' Asignacion familiar').place(x=430, y=213, width=205, height=60) 
+        Label(self, text=' Movilidad').place(x=430, y=274, width=205, height=60)
+        Label(self, text=' Remuneracion total').place(x=430, y=335, width=205, height=60)  
+        Label(self, text=' Entidad de aportacion').place(x=430, y=396, width=205, height=60)
+        Label(self, text=' Tipo de comision').place(x=430, y=457, width=205, height=60)  
+        Label(self, text=' Codigo cuspp').place(x=430, y=518, width=205, height=60)
+        Label(self, text=' Puesto laboral').place(x=636, y= 30, width=205, height=60)
+        Label(self, text=' Cuenta bancaria').place(x=636, y= 91, width=205, height=60)
+        Label(self, text=' Numero de licencia').place(x=636, y=152, width=205, height=60) 
+        Label(self, text=' Tipo de categoria').place(x=636, y=213, width=205, height=60)
+        Label(self, text=' Fecha de revalidacion').place(x=636, y=274, width=205, height=60)  
+        Label(self, text=' Area de labor').place(x=636, y=335, width=205, height=60)
+        Label(self, text=' Numero de celular').place(x=636, y=396, width=205, height=60)  
+        Label(self, text=' Distrito de residencia').place(x=636, y=457, width=205, height=60)
+        Label(self, text=' Fecha de retiro').place(x=636, y=518, width=205, height=60)  
 
-            detalles1.append(Label(self, fg='#000000', anchor='e'))   
-            detalles1[numero].place(x=435, y=posicion+28, width=195)
-            detalles2.append(Label(self, fg='#000000', anchor='e'))
-            detalles2[numero].place(x=641, y=posicion+28, width=195)          
-            
-        self.detalles = detalles1 + detalles2    
+        self.lnacimiento = Label(self, fg='#000000', anchor='e')
+        self.lingreso = Label(self, fg='#000000', anchor='e')
+        self.lplanila = Label(self, fg='#000000', anchor='e')
+        self.lasignacion = Label(self, fg='#000000', anchor='e')
+        self.lmovilidad = Label(self, fg='#000000', anchor='e')
+        self.ltotal = Label(self, fg='#000000', anchor='e')
+        self.laportacion = Label(self, fg='#000000', anchor='e')
+        self.lcomision = Label(self, fg='#000000', anchor='e')
+        self.lcuspp = Label(self, fg='#000000', anchor='e')
+        self.lcargo = Label(self, fg='#000000', anchor='e')
+        self.lcuenta = Label(self, fg='#000000', anchor='e')
+        self.llicencia = Label(self, fg='#000000', anchor='e')
+        self.lcategoria = Label(self, fg='#000000', anchor='e')
+        self.lvencimiento = Label(self, fg='#000000', anchor='e')
+        self.larea = Label(self, fg='#000000', anchor='e')
+        self.ltelefono = Label(self, fg='#000000', anchor='e')
+        self.ldistrito = Label(self, fg='#000000', anchor='e')
+        self.lretiro = Label(self, fg='#000000', anchor='e')
 
+        self.lnacimiento.place(x=435, y=58, width=195)
+        self.lingreso.place(x=435, y=119, width=195)
+        self.lplanila.place(x=435, y=180, width=195) 
+        self.lasignacion.place(x=435, y=241, width=195)
+        self.lmovilidad.place(x=435, y=302, width=195)
+        self.ltotal.place(x=435, y=363, width=195) 
+        self.laportacion.place(x=435, y=424, width=195) 
+        self.lcomision.place(x=435, y=485, width=195)
+        self.lcuspp.place(x=435, y=546, width=195)
+        self.lcargo.place(x=641, y=58, width=195)
+        self.lcuenta.place(x=641, y=119, width=195)
+        self.llicencia.place(x=641, y=180, width=195)
+        self.lcategoria.place(x=641, y=241, width=195)
+        self.lvencimiento.place(x=641, y=302, width=195)
+        self.larea.place(x=641, y=363, width=195)
+        self.ltelefono.place(x=641, y=424, width=195)
+        self.ldistrito.place(x=641, y=485, width=195)
+        self.lretiro.place(x=641, y=546, width=195)       
+       
         Button(self, text='AGREGAR', command=self.Agregar).place(x=890, y=30, width=90, height=30)
         Button(self, text='MODIFICAR', command=self.Modificar).place(x=890, y=65, width=90, height=30)
         Button(self, text='ELIMINAR', command=self.Eliminar).place(x=890, y=100, width=90, height=30)
         Button(self, text='SALIR', command=lambda:self.destroy(), bg='#DF2F2F').place(x=890, y=135, width=90, height=30)
  
         self.CargarTrabajadores()
-        self.place(width=1000, height=600)
+        self.place(width=1000, height=600)        
 
     def CargarTrabajadores(self):
 
         self.trabajadores.delete(*self.trabajadores.get_children())
-        persons = session.query(Person).order_by(Person.paterno.asc(), Person.materno.asc(), Person.nombre.asc()).all()
+        persons = session.query(Person).order_by(Person.paterno, Person.materno, Person.nombre).all()
         
-        for index, person in enumerate(persons):
+        for index, person in enumerate(persons, 1):
             nombre = f"{person.paterno} {person.materno} {person.nombre}"
-            self.trabajadores.insert('', 'end', text=person.id, values=(index, nombre, person.dni))      
+            datos = (index, nombre, person.dni, person.id, person.dni, person.paterno, person.materno,
+                    person.nombre, person.nacimiento, person.ingreso, person.planilla, person.asignacion,
+                    person.movilidad, person.aportacion, person.comision, person.cuspp, person.cargo,
+                    person.cuenta, person.licencia, person.categoria, person.vencimiento, person.area,
+                    person.telefono, person.distrito, person.retiro)
+            self.trabajadores.insert('', 'end', text=person.id, values=datos)      
 
     def MostrarDetalles(self, e):
        
         if self.trabajadores.selection():
-            self.BorrarDetalles()                      
-            id = int(self.trabajadores.item(self.trabajadores.focus()).get('text'))               
-            datos = select(f'''SELECT FNAC, FING, SPLA, AFAM, SMOV, PLAB, EAPO, TCOM, NCUS, NCUE, NLIC,
-                                      CLIC, VLIC, ALAB, NCEL, DRES, FCES FROM ACTIVO WHERE ID = {id}''', False)
-            
-            detalles = list(datos)
-            detalles.insert(5, datos[2] + datos[3] + datos[4])            
-            
-            for index, label in enumerate(self.detalles):
-                label['text'] = detalles[index]    
+            self.BorrarDetalles() 
+
+            datos = self.trabajadores.item(self.trabajadores.selection()).get("values")
+            planilla = float(datos[10])
+            asignacion = float(datos[11])
+            movilidad = float(datos[12])
+            totalSueldo = planilla + asignacion + movilidad
+            self.lnacimiento["text"] = datos[8]
+            self.lingreso["text"] = datos[9]
+            self.lplanila["text"] = f"{planilla:.2f}"
+            self.lasignacion["text"] = f"{asignacion:.2f}"
+            self.lmovilidad["text"] = f"{movilidad:.2f}"
+            self.ltotal["text"] = f"{totalSueldo:.2f}"
+            self.laportacion["text"] = datos[13]
+            self.lcomision["text"] = datos[14]
+            self.lcuspp["text"] = datos[15]
+            self.lcargo["text"] = datos[16]
+            self.lcuenta["text"] = datos[17]
+            self.llicencia["text"] = datos[18]
+            self.lcategoria["text"] = datos[19]
+            self.lvencimiento["text"] = datos[20]
+            self.larea["text"] = datos[21]
+            self.ltelefono["text"] = datos[22]
+            self.ldistrito["text"] = datos[23]
+            self.lretiro["text"] = datos[24]             
 
     def BorrarDetalles(self):
 
-        for label in self.detalles:
-            label['text'] = ''   
+        self.lnacimiento["text"] = ""
+        self.lingreso["text"] = ""
+        self.lplanila["text"] = ""
+        self.lasignacion["text"] = ""
+        self.lmovilidad["text"] = ""
+        self.ltotal["text"] = ""
+        self.laportacion["text"] = ""
+        self.lcomision["text"] = ""
+        self.lcuspp["text"] = ""
+        self.lcargo["text"] = ""
+        self.lcuenta["text"] = ""
+        self.llicencia["text"] = ""
+        self.lcategoria["text"] = ""
+        self.lvencimiento["text"] = ""
+        self.larea["text"] = ""
+        self.ltelefono["text"] = ""
+        self.ldistrito["text"] = ""
+        self.lretiro["text"] = ""
 
     def BuscarDni(self):
       

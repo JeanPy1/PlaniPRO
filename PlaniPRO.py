@@ -42,12 +42,12 @@ class App(Tk):
         img5 = PhotoImage(file='./img/menu5.png')
         img6 = PhotoImage(file='./img/menu6.png')
        
-        Button(self, bg='#F0F0F0', image=img1, command=self.Menu1).place(       width=100, height=100)
-        Button(self, bg='#F0F0F0', image=img2, command=self.Menu2).place(y=100, width=100, height=100)
-        Button(self, bg='#F0F0F0', image=img3, command=self.Menu3).place(y=200, width=100, height=100)
-        Button(self, bg='#F0F0F0', image=img4, command=self.Menu4).place(y=300, width=100, height=100)
-        Button(self, bg='#F0F0F0', image=img5, command=self.Menu5).place(y=400, width=100, height=100)
-        Button(self, bg='#F0F0F0', image=img6, command=self.Menu6).place(y=500, width=100, height=100)     
+        Button(self, bg='#F0F0F0', image=img1, command=self.Menu1).grid(row=1, column=0, pady=1, padx=1)
+        Button(self, bg='#F0F0F0', image=img2, command=self.Menu2).grid(row=2, column=0, pady=1, padx=1)
+        Button(self, bg='#F0F0F0', image=img3, command=self.Menu3).grid(row=3, column=0, pady=1, padx=1)
+        Button(self, bg='#F0F0F0', image=img4, command=self.Menu4).grid(row=4, column=0, pady=1, padx=1)
+        Button(self, bg='#F0F0F0', image=img5, command=self.Menu5).grid(row=5, column=0, pady=1, padx=1)
+        Button(self, bg='#F0F0F0', image=img6, command=self.Menu6).grid(row=6, column=0, pady=1, padx=1)
         
         self.mainloop()
     
