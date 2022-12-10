@@ -178,12 +178,12 @@ class Menu1(Frame):
                 
             if response.status_code == 200:
                 persona = response.json()   
-                self.numeroDni['text'] = persona['numeroDocumento']
-                self.apPaterno['text'] = persona['apellidoPaterno']
-                self.apMaterno['text'] = persona['apellidoMaterno']
+                self.dni['text'] = persona['numeroDocumento']
+                self.paterno['text'] = persona['apellidoPaterno']
+                self.materno['text'] = persona['apellidoMaterno']
                 self.nombre['text'] = persona['nombres']
                 self.buscarDni.delete(0, 'end')
-                self.fechaNaci.focus_set()            
+                self.nacimiento.focus_set()            
             else:                
                 messagebox.showinfo('BUSCAR', 'NO SE ENCONTRO EL NUMERO DE DNI')           
                 self.buscarDni.focus()   
@@ -191,25 +191,25 @@ class Menu1(Frame):
     def GrabarDatos(self):   
 
         # Validacion de dni
-        if self.numeroDni['text'] == '':
+        if self.dni['text'] == '':
             messagebox.showinfo('GRABAR', 'REGISTRA EL DNI')
             self.buscarDni.focus()
 
         # Validacion de fecha de nacimiento
-        elif self.fechaNaci.get() == '':
+        elif self.nacimiento.get() == '':
             messagebox.showinfo('GRABAR', 'REGISTRA EL NACIMIENTO')
-            self.fechaNaci.focus()
-        elif len(self.fechaNaci.get()) != 10 or not self.ValidarFecha(self.fechaNaci.get()):
+            self.nacimiento.focus()
+        elif len(self.nacimiento.get()) != 10 or not self.ValidarFecha(self.nacimiento.get()):
             messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL NACIMIENTO')
-            self.fechaNaci.focus()
+            self.nacimiento.focus()
 
         # Validacion de fecha de ingreso
-        elif self.fechaIngr.get() == '':
+        elif self.ingreso.get() == '':
             messagebox.showinfo('GRABAR', 'REGISTRA EL INGRESO')
-            self.fechaIngr.focus()
-        elif len(self.fechaIngr.get()) != 10 or not self.ValidarFecha(self.fechaIngr.get()):
+            self.ingreso.focus()
+        elif len(self.ingreso.get()) != 10 or not self.ValidarFecha(self.ingreso.get()):
             messagebox.showinfo('GRABAR', 'REGISTRA CORRECTAMENTE EL INGRESO')
-            self.fechaIngr.focus()
+            self.ingreso.focus()
 
         # Validacion de sueldo planilla
         elif self.planilla.get() == '':
@@ -241,15 +241,15 @@ class Menu1(Frame):
             self.retiro.focus()
         else:           
 
-            datosTrabajador = Person(self.numeroDni['text'], self.apPaterno['text'], self.apMaterno['text'], self.nombre['text'],
-                                    self.fechaNaci.get(), self.fechaIngr.get(), float(self.planilla.get()), float(self.asignacion.get()),
+            datosTrabajador = Person(self.dni['text'], self.paterno['text'], self.materno['text'], self.nombre['text'],
+                                    self.nacimiento.get(), self.ingreso.get(), float(self.planilla.get()), float(self.asignacion.get()),
                                     float(self.movilidad.get()), self.aportacion.get(), self.comision.get(), self.cuspp.get().upper(),
-                                    self.cargo.get(), self.cuenta.get(), self.area.get(), self.codigo.get().upper(), self.revalidacion.get(),
-                                    self.categoria.get(), self.celular.get(), self.distrito.get(), self.retiro.get())
+                                    self.cargo.get(), self.cuenta.get(), self.licencia.get().upper(), self.categoria.get(),
+                                    self.vencimiento.get(), self.area.get(), self.telefono.get(), self.distrito.get(), self.retiro.get())
 
             if self.buscar['state'] == 'normal':
                 for index in self.trabajadores.get_children():
-                    if f"{self.trabajadores.item(index).get('values')[2]:0>8}" == self.numeroDni['text']:
+                    if f"{self.trabajadores.item(index).get('values')[2]:0>8}" == self.dni['text']:
                         messagebox.showinfo('GRABAR', 'DNI YA REGISTRADO')
                         return            
 
@@ -300,72 +300,80 @@ class Menu1(Frame):
 
         contenedor = Frame(self)
 
-        titulos1 = (' Buscar dni', ' Numero dni', ' Apellido paterno', ' Apellido materno', ' Nombres',
-                    ' Fecha de nacimiento', ' Fecha de ingreso', ' Planilla', ' Puesto laboral')                    
-        titulos2 = (' Cuenta bancaria', ' Entidad de aportacion', ' Tipo de comision', ' Codigo cuspp', ' No. de licencia',
-                    ' Fecha de revalidacion', ' Area de labor', ' Distrito de residencia', ' Fecha de retiro')
-
-        posicion = -61
-        for numero in range(9):
-            posicion+=61
-            Label(contenedor, text=titulos1[numero]).place(x=  0, y=posicion, width=205, height=60)
-            Label(contenedor, text=titulos2[numero]).place(x=206, y=posicion, width=205, height=60) 
-       
+        Label(contenedor, text=' Buscar DNI').place(width=205, height=60)
+        Label(contenedor, text=' Numero DNI').place(y=61, width=205, height=60)
+        Label(contenedor, text=' Apellido Paterno').place(y=122, width=205, height=60)
+        Label(contenedor, text=' Apellido Materno').place(y=183, width=205, height=60)
+        Label(contenedor, text=' Nombre').place(y=244, width=205, height=60)
+        Label(contenedor, text=' Fecha de Nacimiento').place(y=305, width=205, height=60)
+        Label(contenedor, text=' Fecha de Ingreso').place(y=366, width=205, height=60)
+        Label(contenedor, text=' Planilla').place(y=427, width=205, height=60)
+        Label(contenedor, text=' Cargo Laboral').place(y=488, width=205, height=60)
+        Label(contenedor, text=' Cuenta Bancaria').place(x=206, width=205, height=60)
+        Label(contenedor, text=' Entidad de Aportacion').place(x=206, y=61, width=205, height=60)
+        Label(contenedor, text=' Tipo de Comision').place(x=206, y=122, width=205, height=60)
+        Label(contenedor, text=' Codigo Cuspp').place(x=206, y=183, width=205, height=60)
+        Label(contenedor, text=' No. de Licencia').place(x=206, y=244, width=205, height=60)
+        Label(contenedor, text=' Fecha de Revalidacion').place(x=206, y=305, width=205, height=60)
+        Label(contenedor, text=' Area de Labor').place(x=206, y=366, width=205, height=60)
+        Label(contenedor, text=' Distrito de Residencia').place(x=206, y=427, width=205, height=60)
+        Label(contenedor, text=' Fecha de Retiro').place(x=206, y=488, width=205, height=60)
         Label(contenedor, text=' Asigna.').place(x=68, y=427)
         Label(contenedor, text=' Movili.').place(x=134, y=427)        
-        Label(contenedor, text=' Tipo categoria').place(x=306, y=244)      
-        Label(contenedor, text=' Numero celular').place(x=306, y=366)            
+        Label(contenedor, text=' Categoria').place(x=306, y=244)      
+        Label(contenedor, text=' Telefono').place(x=306, y=366)                    
        
-        self.buscar       = Button(contenedor, text='BUSCAR', bg='#88C7FF', command=self.BuscarDni)
-        self.buscarDni    = Entry(contenedor, relief='ridge', bd=2)     
-        self.numeroDni    = Label(contenedor, fg='#000000', anchor='w')        
-        self.apPaterno    = Label(contenedor, fg='#000000', anchor='w')
-        self.apMaterno    = Label(contenedor, fg='#000000', anchor='w')
-        self.nombre       = Label(contenedor, fg='#000000', anchor='w')
-        self.fechaNaci    = Entry(contenedor, relief='ridge', bd=2)   
-        self.fechaIngr    = Entry(contenedor, relief='ridge', bd=2)   
-        self.planilla     = Entry(contenedor, relief='ridge', bd=2)           
-        self.asignacion   = Entry(contenedor, relief='ridge', bd=2)   
-        self.movilidad    = Entry(contenedor, relief='ridge', bd=2)   
-        self.cargo        = Combobox(contenedor, state='readonly', values=['INSPECTOR VIAL', 'OPERADOR DE GRUA LIVIANA', 'OPERADOR DE GRUA PESADA', ''])       
-        self.cuenta       = Entry(contenedor, relief='ridge', bd=2)   
-        self.aportacion   = Combobox(contenedor, state='readonly', values=['ONP', 'HABITAT', 'INTEGRA', 'PRIMA', 'PROFUTURO',''])
-        self.comision     = Combobox(contenedor, state='readonly', values=['FLUJO', 'MIXTA', ''])
-        self.cuspp        = Entry(contenedor, relief='ridge', bd=2)   
-        self.codigo       = Entry(contenedor, relief='ridge', bd=2) 
-        self.categoria    = Combobox(contenedor, state='readonly', values=['AIIA', 'AIIB', 'AIIIA', 'AIIIB', 'AIIIC', ''])       
-        self.revalidacion = Entry(contenedor, relief='ridge', bd=2)             
-        self.area         = Combobox(contenedor, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA', ''])       
-        self.celular      = Entry(contenedor, relief='ridge', bd=2)   
-        self.distrito     = Combobox(contenedor, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS', 'LOS OLIVOS',
-                                        'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO', 'SAN JUAN DE LURIGANCHO',
-                                        'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 'SANTA ANITA', 'SANTIAGO DE SURCO', 'SURQUILLO',
-                                        'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO', ''])      
+        self.buscar = Button(contenedor, text='BUSCAR', bg='#88C7FF', command=self.BuscarDni)
+        self.buscarDni = Entry(contenedor, relief='ridge', bd=2)     
+        self.dni = Label(contenedor, fg='#000000', anchor='w')        
+        self.paterno = Label(contenedor, fg='#000000', anchor='w')
+        self.materno = Label(contenedor, fg='#000000', anchor='w')
+        self.nombre = Label(contenedor, fg='#000000', anchor='w')
+        self.nacimiento = Entry(contenedor, relief='ridge', bd=2)   
+        self.ingreso = Entry(contenedor, relief='ridge', bd=2)   
+        self.planilla = Entry(contenedor, relief='ridge', bd=2)           
+        self.asignacion = Entry(contenedor, relief='ridge', bd=2)   
+        self.movilidad = Entry(contenedor, relief='ridge', bd=2)   
+        self.cargo = Combobox(contenedor, state='readonly', values=['INSPECTOR VIAL', 'OPERADOR DE GRUA LIVIANA',
+                                                                    'OPERADOR DE GRUA PESADA', ''])       
+        self.cuenta = Entry(contenedor, relief='ridge', bd=2)   
+        self.aportacion = Combobox(contenedor, state='readonly', values=['ONP', 'HABITAT', 'INTEGRA', 'PRIMA', 'PROFUTURO',''])
+        self.comision = Combobox(contenedor, state='readonly', values=['FLUJO', 'MIXTA', ''])
+        self.cuspp = Entry(contenedor, relief='ridge', bd=2)   
+        self.licencia = Entry(contenedor, relief='ridge', bd=2) 
+        self.categoria = Combobox(contenedor, state='readonly', values=['AIIA', 'AIIB', 'AIIIA', 'AIIIB', 'AIIIC', ''])       
+        self.vencimiento = Entry(contenedor, relief='ridge', bd=2)             
+        self.area = Combobox(contenedor, state='readonly', values=['SUR', 'NORTE', 'TALLER', 'OFICINA', ''])       
+        self.telefono = Entry(contenedor, relief='ridge', bd=2)   
+        self.distrito = Combobox(contenedor, state='readonly', values=['ANCON', 'ATE VITARTE', 'CARABAYLLO', 'CHORRILLOS', 'COMAS',
+                                        'LOS OLIVOS', 'LURIGANCHO', 'LURIN', 'PUCUSANA', 'PUENTE PIEDRA', 'RIMAC', 'SAN BARTOLO',
+                                        'SAN JUAN DE LURIGANCHO', 'SAN JUAN DE MIRAFLORES', 'SAN MARTIN DE PORRES', 'SANTA ANITA',
+                                        'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO', ''])      
         self.retiro = Entry(contenedor, relief='ridge', bd=2)
       
-        self.buscar.place      (x=139, y= 24, width= 61, height=28)    
-        self.buscarDni.place   (x=  5, y= 24, width=129, height=28)    
-        self.numeroDni.place   (x=  5, y= 85, width=195, height=28)
-        self.apPaterno.place   (x=  5, y=146, width=195, height=28)
-        self.apMaterno.place   (x=  5, y=207, width=195, height=28)
-        self.nombre.place      (x=  5, y=268, width=195, height=28)        
-        self.fechaNaci.place   (x=  5, y=329, width=195, height=28)        
-        self.fechaIngr.place   (x=  5, y=390, width=195, height=28)
-        self.planilla.place    (x=  5, y=451, width= 63, height=28)  
-        self.asignacion.place  (x= 73, y=451, width= 61, height=28)      
-        self.movilidad.place   (x=139, y=451, width= 61, height=28) 
-        self.cargo.place       (x=  5, y=512, width=195, height=28)        
-        self.cuenta.place      (x=211, y= 24, width=195, height=28)
-        self.aportacion.place  (x=211, y= 85, width=195, height=28) 
-        self.comision.place    (x=211, y=146, width=195, height=28)
-        self.cuspp.place       (x=211, y=207, width=195, height=28)
-        self.codigo.place      (x=211, y=268, width= 95, height=28)
-        self.categoria.place   (x=311, y=268, width= 95, height=28)
-        self.revalidacion.place(x=211, y=329, width=195, height=28)        
-        self.area.place        (x=211, y=390, width= 95, height=28)
-        self.celular.place     (x=311, y=390, width= 95, height=28)
-        self.distrito.place    (x=211, y=451, width=195, height=28)
-        self.retiro.place      (x=211, y=512, width=195, height=28)
+        self.buscar.place(x=139, y= 24, width= 61, height=28)    
+        self.buscarDni.place(x=  5, y= 24, width=129, height=28)    
+        self.dni.place(x=  5, y= 85, width=195, height=28)
+        self.paterno.place(x=  5, y=146, width=195, height=28)
+        self.materno.place(x=  5, y=207, width=195, height=28)
+        self.nombre.place(x=  5, y=268, width=195, height=28)        
+        self.nacimiento.place(x=  5, y=329, width=195, height=28)        
+        self.ingreso.place(x=  5, y=390, width=195, height=28)
+        self.planilla.place(x=  5, y=451, width= 63, height=28)  
+        self.asignacion.place(x= 73, y=451, width= 61, height=28)      
+        self.movilidad.place(x=139, y=451, width= 61, height=28) 
+        self.cargo.place(x=  5, y=512, width=195, height=28)        
+        self.cuenta.place(x=211, y= 24, width=195, height=28)
+        self.aportacion.place(x=211, y= 85, width=195, height=28) 
+        self.comision.place(x=211, y=146, width=195, height=28)
+        self.cuspp.place(x=211, y=207, width=195, height=28)
+        self.licencia.place(x=211, y=268, width= 95, height=28)
+        self.categoria.place(x=311, y=268, width= 95, height=28)
+        self.vencimiento.place(x=211, y=329, width=195, height=28)        
+        self.area.place(x=211, y=390, width= 95, height=28)
+        self.telefono.place(x=311, y=390, width= 95, height=28)
+        self.distrito.place(x=211, y=451, width=195, height=28)
+        self.retiro.place(x=211, y=512, width=195, height=28)
        
         Button(contenedor, text='GRABAR', command=self.GrabarDatos).place(x=460, width=90, height=30)     
         Button(contenedor, text='SALIR' , command=lambda:contenedor.destroy(), bg='#DF2F2F').place(x=460, y=35, width=90, height=30)
@@ -377,37 +385,38 @@ class Menu1(Frame):
 
         contenedor.place(x=430, y=30, width=550, height=548)
 
-    def Modificar(self):        
-       
-        if self.trabajadores.selection():                        
-                id = int(self.trabajadores.item(self.trabajadores.focus()).get('text'))
-                datos = select(f'SELECT * FROM ACTIVO WHERE ID = {id}', False)
-                
-                self.Agregar()
+    def Modificar(self):
 
-                self.buscar.configure(state='disabled')
-                self.buscarDni.configure(state='disabled')
-                self.numeroDni['text'] = datos[1]
-                self.apPaterno['text'] = datos[2]
-                self.apMaterno['text'] = datos[3]
-                self.nombre['text'] = datos[4]
-                self.fechaNaci.insert(0, datos[5])
-                self.fechaIngr.insert(0, datos[6])
-                self.planilla.insert(0, datos[7])
-                self.asignacion.insert(0, datos[8])
-                self.movilidad.insert(0, datos[9])
-                self.aportacion.set(datos[10])
-                self.comision.set(datos[11])
-                self.cuspp.insert(0, datos[12])
-                self.cargo.set(datos[13])
-                self.cuenta.insert(0, datos[14])
-                self.area.set(datos[15])
-                self.codigo.insert(0, datos[16])
-                self.revalidacion.insert(0, datos[17])
-                self.categoria.set(datos[18])
-                self.celular.insert(0, datos[19])
-                self.distrito.set(datos[20])
-                self.retiro.insert(0, datos[21])
+        if self.trabajadores.selection():
+            id = int(self.trabajadores.item(self.trabajadores.focus()).get('text'))
+
+            datos = session.query(Person).filter(Person.id == id).first()
+
+            self.Agregar()
+            self.buscar.configure(state='disabled')
+            self.buscarDni.configure(state='disabled')
+
+            self.dni['text'] = datos.dni
+            self.paterno['text'] = datos.paterno
+            self.materno['text'] = datos.materno
+            self.nombre['text'] = datos.nombre
+            self.nacimiento.insert(0, datos.nacimiento)
+            self.ingreso.insert(0, datos.ingreso)
+            self.planilla.insert(0, datos.planilla)
+            self.asignacion.insert(0, datos.asignacion)
+            self.movilidad.insert(0, datos.movilidad)
+            self.aportacion.set(datos.aportacion)
+            self.comision.set(datos.comision)
+            self.cuspp.insert(0, datos.cuspp)
+            self.cargo.set(datos.cargo)
+            self.cuenta.insert(0, datos.cuenta)
+            self.area.set(datos.area)
+            self.licencia.insert(0, datos.licencia)
+            self.vencimiento.insert(0, datos.vencimiento)
+            self.categoria.set(datos.categoria)
+            self.telefono.insert(0, datos.telefono)
+            self.distrito.set(datos.distrito)
+            self.retiro.insert(0, datos.retiro)
 
     def Eliminar(self):
 
@@ -417,10 +426,11 @@ class Menu1(Frame):
             if respuesta:
                 id = int(self.trabajadores.item(self.trabajadores.focus()).get('text'))
 
-                if self.detalles[17] != '':
-                    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
+                #if self.detalles[17] != '':
+                #    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
 
-                delete(f'DELETE FROM ACTIVO WHERE ID = {id}', True)
+                session.query(Person).filter(Person.id == id).delete()
+                session.commit()
 
                 self.BorrarDetalles()
                 self.CargarTrabajadores()
