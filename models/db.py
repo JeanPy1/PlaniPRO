@@ -59,11 +59,9 @@ class Person(Base):
         self.retiro = retiro
 
     def __repr__(self) -> str:       
-        return f"{self.dni},{self.paterno} {self.materno} {self.nombre}"
+        return f"{self.dni}, {self.paterno} {self.materno} {self.nombre}"
       
 engine = create_engine("sqlite:///data/db.sqlite3", echo=True)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
-
-#arreglando

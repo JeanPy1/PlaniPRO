@@ -2,7 +2,6 @@ from tkinter import Button, Label, Scrollbar, Button, Frame, Entry, messagebox
 from tkinter.ttk import Treeview, Combobox
 from datetime import datetime
 from requests import get
-from scripts.sql import select, insert, update, delete
 from models.db import Person, session
 
 class Menu1(Frame):
@@ -135,8 +134,8 @@ class Menu1(Frame):
             self.larea["text"] = datos[21]
             self.ltelefono["text"] = datos[22]
             self.ldistrito["text"] = datos[23]
-            self.lretiro["text"] = datos[24]             
-
+            self.lretiro["text"] = datos[24] 
+   
     def BorrarDetalles(self):
 
         self.lnacimiento["text"] = ""
@@ -241,11 +240,41 @@ class Menu1(Frame):
             self.retiro.focus()
         else:           
 
-            datosTrabajador = Person(self.dni['text'], self.paterno['text'], self.materno['text'], self.nombre['text'],
-                                    self.nacimiento.get(), self.ingreso.get(), float(self.planilla.get()), float(self.asignacion.get()),
-                                    float(self.movilidad.get()), self.aportacion.get(), self.comision.get(), self.cuspp.get().upper(),
-                                    self.cargo.get(), self.cuenta.get(), self.licencia.get().upper(), self.categoria.get(),
-                                    self.vencimiento.get(), self.area.get(), self.telefono.get(), self.distrito.get(), self.retiro.get())
+            dni = self.dni['text']
+            paterno = self.paterno['text']
+            materno = self.materno['text']
+            nombre = self.nombre['text']
+            nacimiento = self.nacimiento.get()
+            ingreso = self.ingreso.get()
+            planilla = float(self.planilla.get())
+            asignacion = float(self.asignacion.get())
+            movilidad = float(self.movilidad.get())
+            aportacion = self.aportacion.get()
+            comision = self.comision.get()
+            cuspp = self.cuspp.get().upper()
+            cargo = self.cargo.get()
+            cuenta = self.cuenta.get()
+            licencia = self.licencia.get()
+            categoria = self.categoria.get().upper()
+            vencimiento = self.vencimiento.get()
+            area = self.area.get()
+            telefono = self.telefono.get()
+            distrito = self.distrito.get()
+            retiro = self.retiro.get()
+
+            agregar = Person(dni, paterno, materno, nombre, nacimiento, ingreso, planilla, asignacion, movilidad,
+                            aportacion, comision, cuspp, cargo, cuenta, licencia, categoria, vencimiento, area,
+                            telefono, distrito, retiro)
+
+            modificar = {Person.nacimiento: nacimiento, Person.ingreso: ingreso, Person.planilla: planilla,
+                        Person.asignacion: asignacion, Person.movilidad: movilidad, Person.aportacion: aportacion,
+                        Person.comision: comision, Person.cuspp: cuspp, Person.cargo: cargo, Person.cuenta: cuenta,
+                        Person.licencia: licencia, Person.categoria: categoria, Person.vencimiento: vencimiento,
+                        Person.area: area, Person.telefono: telefono, Person.distrito: distrito, Person.retiro: retiro}
+            
+            seleccion = self.trabajadores.focus()
+            if seleccion:
+                id = int(self.trabajadores.item(seleccion).get('text'))
 
             if self.buscar['state'] == 'normal':
                 for index in self.trabajadores.get_children():
@@ -253,38 +282,20 @@ class Menu1(Frame):
                         messagebox.showinfo('GRABAR', 'DNI YA REGISTRADO')
                         return            
 
-                session.add(datosTrabajador)
-                session.commit()
-                
-                self.CargarTrabajadores()
-
-                seleccion = self.trabajadores.focus()
-                if seleccion:        
-                    id = int(self.trabajadores.item(seleccion).get('text'))
-                    for index in self.trabajadores.get_children():
-                        if int(self.trabajadores.item(index).get('text')) == id:
-                            self.trabajadores.selection_set(index)
-                            self.trabajadores.focus(index)
-                            break
+                session.add(agregar)
+                session.commit()   
             else:
-                query = f'''UPDATE ACTIVO SET   FNAC = '{datosTrabajador[4]}',   FING = '{datosTrabajador[5]}', 
-                                                SPLA =  {datosTrabajador[6]},    AFAM = '{datosTrabajador[7]}', 
-                                                SMOV =  {datosTrabajador[8]},    EAPO = '{datosTrabajador[9]}',
-                                                TCOM = '{datosTrabajador[10]}',  NCUS = '{datosTrabajador[11]}', 
-                                                PLAB = '{datosTrabajador[12]}',  NCUE = '{datosTrabajador[13]}',
-                                                ALAB = '{datosTrabajador[14]}',  NLIC = '{datosTrabajador[15]}', 
-                                                VLIC = '{datosTrabajador[16]}',  CLIC = '{datosTrabajador[17]}',
-                                                NCEL = '{datosTrabajador[18]}',  DRES = '{datosTrabajador[19]}', 
-                                                FCES = '{datosTrabajador[20]}'   WHERE NDNI = {datosTrabajador[0]}'''           
-                update(query)
+                session.query(Person).filter(Person.id == id).update(modificar)   
+                session.commit()
 
-                detalles = list(datosTrabajador)
-                detalles.insert(9, datosTrabajador[6] + datosTrabajador[7] + datosTrabajador[8])
-                detalles.insert(10, detalles.pop(13))    
-                detalles.insert(18, detalles.pop(15))   
-                
-                for index, label in enumerate(self.detalles):
-                    label['text'] = detalles[index+4]
+            self.CargarTrabajadores()
+                        
+            if seleccion:    
+                for index in self.trabajadores.get_children():
+                    if int(self.trabajadores.item(index).get('text')) == id:
+                        self.trabajadores.selection_set(index)
+                        self.trabajadores.focus(index)
+                        break
 
             self.menuAgregar.destroy()
 
@@ -387,36 +398,35 @@ class Menu1(Frame):
 
     def Modificar(self):
 
-        if self.trabajadores.selection():
-            id = int(self.trabajadores.item(self.trabajadores.focus()).get('text'))
+        if self.trabajadores.selection():          
 
-            datos = session.query(Person).filter(Person.id == id).first()
-
+            datos = self.trabajadores.item(self.trabajadores.focus()).get('values')
+          
             self.Agregar()
             self.buscar.configure(state='disabled')
             self.buscarDni.configure(state='disabled')
 
-            self.dni['text'] = datos.dni
-            self.paterno['text'] = datos.paterno
-            self.materno['text'] = datos.materno
-            self.nombre['text'] = datos.nombre
-            self.nacimiento.insert(0, datos.nacimiento)
-            self.ingreso.insert(0, datos.ingreso)
-            self.planilla.insert(0, datos.planilla)
-            self.asignacion.insert(0, datos.asignacion)
-            self.movilidad.insert(0, datos.movilidad)
-            self.aportacion.set(datos.aportacion)
-            self.comision.set(datos.comision)
-            self.cuspp.insert(0, datos.cuspp)
-            self.cargo.set(datos.cargo)
-            self.cuenta.insert(0, datos.cuenta)
-            self.area.set(datos.area)
-            self.licencia.insert(0, datos.licencia)
-            self.vencimiento.insert(0, datos.vencimiento)
-            self.categoria.set(datos.categoria)
-            self.telefono.insert(0, datos.telefono)
-            self.distrito.set(datos.distrito)
-            self.retiro.insert(0, datos.retiro)
+            self.dni['text'] = datos[4]
+            self.paterno['text'] = datos[5]
+            self.materno['text'] = datos[6]
+            self.nombre['text'] = datos[7]
+            self.nacimiento.insert(0, datos[8])
+            self.ingreso.insert(0, datos[9])
+            self.planilla.insert(0, datos[10])
+            self.asignacion.insert(0, datos[11])
+            self.movilidad.insert(0, datos[12])
+            self.aportacion.set(datos[13])
+            self.comision.set(datos[14])
+            self.cuspp.insert(0, datos[15])
+            self.cargo.set(datos[16])
+            self.cuenta.insert(0, datos[17])            
+            self.licencia.insert(0, datos[18])
+            self.categoria.set(datos[19])
+            self.vencimiento.insert(0, datos[20])            
+            self.area.set(datos[21])
+            self.telefono.insert(0, datos[22])
+            self.distrito.set(datos[23])
+            self.retiro.insert(0, datos[24])
 
     def Eliminar(self):
 
