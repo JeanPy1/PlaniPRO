@@ -4,12 +4,13 @@ from Menu1 import Menu1
 from Menu2 import Menu2
 from Menu3 import Menu3
 from Menu6 import Menu6
+from scripts.sql import Create_Tables
 
 class App(Tk):
 
     def __init__(self):
         super(App, self).__init__()
-       
+
         self.title('PlaniPRO')
         self.geometry('1000x600+-8+0')
         self.resizable(0,0)
@@ -49,6 +50,7 @@ class App(Tk):
         Button(self, bg='#F0F0F0', image=img5, command=self.Menu5).grid(row=5, column=0, pady=1, padx=1)
         Button(self, bg='#F0F0F0', image=img6, command=self.Menu6).grid(row=6, column=0, pady=1, padx=1)
         
+        Create_Tables()
         self.mainloop()
     
     def Menu1(self):

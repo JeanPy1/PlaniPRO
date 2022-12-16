@@ -3,23 +3,38 @@ from tkinter.ttk import Treeview
 from tkcalendar import Calendar
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from scripts.sql import select, insert, delete
+from scripts.sql import Select_Personal, Select_Apoyo_Id, Insert_Apoyo
 
 class Menu2(Frame):
 
     def __init__(self, contenedor):
-        super().__init__(contenedor)
-
-        columna = ('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', '#11', '#12')
-        ancho = (30, 270, 40, 40, 40, 70, 70, 40, 40, 40, 70, 70)
-        titulo = ('N°', 'APELLIDOS Y NOMBRE', 'APOYO', 'FALTA', 'FERIADO', 'INGRESO',
-                   'DESCUENTO', 'D.M.', 'VACACIONES', 'C.V.', 'ADELANTI', 'POR FUERA')
+        super().__init__(contenedor)        
         
-        self.TRABAJADORES = Treeview(self, columns=columna)          
-
-        for index, columna in enumerate(columna):
-            self.TRABAJADORES.column(columna, width=ancho[index], minwidth=ancho[index], anchor='center')
-            self.TRABAJADORES.heading(columna, text=titulo[index])    
+        self.TRABAJADORES = Treeview(self, columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', '#11', '#12'))          
+        self.TRABAJADORES.column('#1', width=30, minwidth=30, anchor='center')
+        self.TRABAJADORES.column('#2', width=270, minwidth=270)
+        self.TRABAJADORES.column('#3', width=40, minwidth=40, anchor='center')
+        self.TRABAJADORES.column('#4', width=40, minwidth=40, anchor='center')
+        self.TRABAJADORES.column('#5', width=40, minwidth=40, anchor='center')
+        self.TRABAJADORES.column('#6', width=70, minwidth=70, anchor='center')
+        self.TRABAJADORES.column('#7', width=70, minwidth=70, anchor='center')
+        self.TRABAJADORES.column('#8', width=40, minwidth=40, anchor='center')
+        self.TRABAJADORES.column('#9', width=40, minwidth=40, anchor='center')
+        self.TRABAJADORES.column('#10', width=40, minwidth=40, anchor='center')
+        self.TRABAJADORES.column('#11', width=70, minwidth=70, anchor='center')
+        self.TRABAJADORES.column('#12', width=70, minwidth=70, anchor='center')
+        self.TRABAJADORES.heading('#1', text='N°')
+        self.TRABAJADORES.heading('#2', text='APELLIDOS Y NOMBRE')    
+        self.TRABAJADORES.heading('#3', text='APOYO')    
+        self.TRABAJADORES.heading('#4', text='FALTA')    
+        self.TRABAJADORES.heading('#5', text='FERIADO')    
+        self.TRABAJADORES.heading('#6', text='INGRESO')    
+        self.TRABAJADORES.heading('#7', text='DESCUENTO')    
+        self.TRABAJADORES.heading('#8', text='D.M.')    
+        self.TRABAJADORES.heading('#9', text='VACACIONES')    
+        self.TRABAJADORES.heading('#10', text='C.V.')    
+        self.TRABAJADORES.heading('#11', text='ADELANTO')
+        self.TRABAJADORES.heading('#12', text='POR FUERA')
 
         scroll = Scrollbar(self, orient='vertical', command=self.TRABAJADORES.yview)
         self.TRABAJADORES.configure(yscrollcommand=scroll.set)
@@ -37,39 +52,52 @@ class Menu2(Frame):
 
     def CargarTrabajadores(self):
 
+        #Insert_Apoyo(1, "02/01/2022")
         self.TRABAJADORES.delete(*self.TRABAJADORES.get_children())
-        trabajadores = select('SELECT ID, APAT, AMAT, NOMB FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC', True)
+        trabajadores = Select_Personal()
       
-        for index, trabajador in enumerate(trabajadores, 1):
-            id = trabajador[0]           
-            nombreCompleto = f'{trabajador[1]} {trabajador[2]} {trabajador[3]}'  
+        for index, trabajador in enumerate(trabajadores, 1):         
+            id = int(trabajador[0])           
+            nombreCompleto = f'{trabajador[2]} {trabajador[3]} {trabajador[4]}'  
 
-            apoyos = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {id}', False)[0]
-            faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0]         
-            feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0]   
-            adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
-            porFuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
-            ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
-            descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]
-            vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
-            compraVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
-            descansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
+           
+            faltas = ""
+            feriados = ""
+            adelantos = ""
+            porFuera = ""
+            ingresos = ""
+            descuentos = ""
+            vacaciones = ""
+            compraVacaciones = ""
+            descansoMedico = ""
 
-            if not apoyos: apoyos = ''            
-            if not faltas: faltas = ''
-            if not feriados: feriados = ''            
-            if not vacaciones: vacaciones = ''
-            if not compraVacaciones: compraVacaciones = ''
-            if not descansoMedico: descansoMedico = ''
+            apoyos = Select_Apoyo_Id(id)
+            print(apoyos.count())
+            #faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0]         
+            #feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0]   
+            #adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
+            #porFuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
+            #ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
+            #descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]
+            #vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
+            #compraVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
+            #descansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
+
+            #if not apoyos: apoyos = ''            
+            #if not faltas: faltas = ''
+            #if not feriados: feriados = ''            
+            #if not vacaciones: vacaciones = ''
+            #if not compraVacaciones: compraVacaciones = ''
+            #if not descansoMedico: descansoMedico = ''
             
-            if not adelantos: adelantos = ''
-            else: adelantos = f'{adelantos:.2f}'  
-            if not porFuera: porFuera = ''
-            else: porFuera = f'{porFuera:.2f}'        
-            if not ingresos: ingresos = ''
-            else: ingresos = f'{ingresos:.2f}'
-            if not descuentos: descuentos = ''
-            else: descuentos = f'{descuentos:.2f}'             
+            #if not adelantos: adelantos = ''
+            #else: adelantos = f'{adelantos:.2f}'  
+            #if not porFuera: porFuera = ''
+            #else: porFuera = f'{porFuera:.2f}'        
+            #if not ingresos: ingresos = ''
+            #else: ingresos = f'{ingresos:.2f}'
+            #if not descuentos: descuentos = ''
+            #else: descuentos = f'{descuentos:.2f}'             
             
             self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyos, faltas, feriados, ingresos,
                                             descuentos, descansoMedico, vacaciones, compraVacaciones, adelantos, porFuera))

@@ -2,7 +2,7 @@ from tkinter import Button, Label, Scrollbar, Button, Frame, Entry, messagebox
 from tkinter.ttk import Treeview, Combobox
 from datetime import datetime
 from requests import get
-from models.db import Person, session
+from scripts.sql import Select_Personal, Delete_Personal, Insert_Personal, Update_Personal
 
 class Menu1(Frame):
 
@@ -10,8 +10,8 @@ class Menu1(Frame):
         super().__init__(contenedor)
         
         self.trabajadores = Treeview(self, columns=('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10',
-                                                    '#11', '#12', '#13', '#14', '#15', '#16', '#17', '#18', '#19', '#20',
-                                                    '#21', '#22', '#23', '#24', '#25'))       
+                                                    '#11', '#12', '#13', '#14', '#15', '#16', '#17', '#18', '#19',
+                                                    '#20', '#21', '#22', '#23', '#24', '#25'))       
         self.trabajadores.column('#1', width=30, minwidth=30, anchor='center')
         self.trabajadores.column('#2', width=270, minwidth=270)
         self.trabajadores.column('#3', width=70, minwidth=70, anchor='center')
@@ -96,16 +96,11 @@ class Menu1(Frame):
     def CargarTrabajadores(self):
 
         self.trabajadores.delete(*self.trabajadores.get_children())
-        persons = session.query(Person).order_by(Person.paterno, Person.materno, Person.nombre).all()
-        
-        for index, person in enumerate(persons, 1):
-            nombre = f"{person.paterno} {person.materno} {person.nombre}"
-            datos = (index, nombre, person.dni, person.id, person.dni, person.paterno, person.materno,
-                    person.nombre, person.nacimiento, person.ingreso, person.planilla, person.asignacion,
-                    person.movilidad, person.aportacion, person.comision, person.cuspp, person.cargo,
-                    person.cuenta, person.licencia, person.categoria, person.vencimiento, person.area,
-                    person.telefono, person.distrito, person.retiro)
-            self.trabajadores.insert('', 'end', text=person.id, values=datos)      
+        persons = Select_Personal()        
+        for index, person in enumerate(persons, 1):          
+            nombre = f"{person[2]} {person[3]} {person[4]}"
+            datos = (index, nombre, person[1]) + person      
+            self.trabajadores.insert('', 'end', text=person[0], values=datos)      
 
     def MostrarDetalles(self, e):
        
@@ -261,17 +256,7 @@ class Menu1(Frame):
             telefono = self.telefono.get()
             distrito = self.distrito.get()
             retiro = self.retiro.get()
-
-            agregar = Person(dni, paterno, materno, nombre, nacimiento, ingreso, planilla, asignacion, movilidad,
-                            aportacion, comision, cuspp, cargo, cuenta, licencia, categoria, vencimiento, area,
-                            telefono, distrito, retiro)
-
-            modificar = {Person.nacimiento: nacimiento, Person.ingreso: ingreso, Person.planilla: planilla,
-                        Person.asignacion: asignacion, Person.movilidad: movilidad, Person.aportacion: aportacion,
-                        Person.comision: comision, Person.cuspp: cuspp, Person.cargo: cargo, Person.cuenta: cuenta,
-                        Person.licencia: licencia, Person.categoria: categoria, Person.vencimiento: vencimiento,
-                        Person.area: area, Person.telefono: telefono, Person.distrito: distrito, Person.retiro: retiro}
-            
+           
             seleccion = self.trabajadores.focus()
             if seleccion:
                 id = int(self.trabajadores.item(seleccion).get('text'))
@@ -282,11 +267,12 @@ class Menu1(Frame):
                         messagebox.showinfo('GRABAR', 'DNI YA REGISTRADO')
                         return            
 
-                session.add(agregar)
-                session.commit()   
+                Insert_Personal(dni, paterno, materno, nombre, nacimiento, ingreso, planilla, asignacion, movilidad, aportacion,
+                                comision, cuspp, cargo, cuenta, licencia, categoria, vencimiento, area, telefono, distrito, retiro)
+
             else:
-                session.query(Person).filter(Person.id == id).update(modificar)   
-                session.commit()
+                Update_Personal(id, nacimiento, ingreso, planilla, asignacion, movilidad, aportacion, comision, cuspp, cargo,
+                                cuenta, licencia, categoria, vencimiento, area, telefono, distrito, retiro)
 
             self.CargarTrabajadores()
                         
@@ -362,27 +348,27 @@ class Menu1(Frame):
                                         'SANTIAGO DE SURCO', 'SURQUILLO', 'VILLA EL SALVADOR', 'VILLA MARIA DEL TRIUNFO', ''])      
         self.retiro = Entry(contenedor, relief='ridge', bd=2)
       
-        self.buscar.place(x=139, y= 24, width= 61, height=28)    
-        self.buscarDni.place(x=  5, y= 24, width=129, height=28)    
-        self.dni.place(x=  5, y= 85, width=195, height=28)
-        self.paterno.place(x=  5, y=146, width=195, height=28)
-        self.materno.place(x=  5, y=207, width=195, height=28)
-        self.nombre.place(x=  5, y=268, width=195, height=28)        
-        self.nacimiento.place(x=  5, y=329, width=195, height=28)        
-        self.ingreso.place(x=  5, y=390, width=195, height=28)
-        self.planilla.place(x=  5, y=451, width= 63, height=28)  
-        self.asignacion.place(x= 73, y=451, width= 61, height=28)      
-        self.movilidad.place(x=139, y=451, width= 61, height=28) 
-        self.cargo.place(x=  5, y=512, width=195, height=28)        
-        self.cuenta.place(x=211, y= 24, width=195, height=28)
-        self.aportacion.place(x=211, y= 85, width=195, height=28) 
+        self.buscar.place(x=139, y=24, width=61, height=28)    
+        self.buscarDni.place(x=5, y=24, width=129, height=28)    
+        self.dni.place(x=5, y=85, width=195, height=28)
+        self.paterno.place(x=5, y=146, width=195, height=28)
+        self.materno.place(x=5, y=207, width=195, height=28)
+        self.nombre.place(x=5, y=268, width=195, height=28)        
+        self.nacimiento.place(x=5, y=329, width=195, height=28)        
+        self.ingreso.place(x=5, y=390, width=195, height=28)
+        self.planilla.place(x=5, y=451, width=63, height=28)  
+        self.asignacion.place(x=73, y=451, width=61, height=28)      
+        self.movilidad.place(x=139, y=451, width=61, height=28) 
+        self.cargo.place(x=5, y=512, width=195, height=28)        
+        self.cuenta.place(x=211, y=24, width=195, height=28)
+        self.aportacion.place(x=211, y=85, width=195, height=28) 
         self.comision.place(x=211, y=146, width=195, height=28)
         self.cuspp.place(x=211, y=207, width=195, height=28)
-        self.licencia.place(x=211, y=268, width= 95, height=28)
-        self.categoria.place(x=311, y=268, width= 95, height=28)
+        self.licencia.place(x=211, y=268, width=95, height=28)
+        self.categoria.place(x=311, y=268, width=95, height=28)
         self.vencimiento.place(x=211, y=329, width=195, height=28)        
-        self.area.place(x=211, y=390, width= 95, height=28)
-        self.telefono.place(x=311, y=390, width= 95, height=28)
+        self.area.place(x=211, y=390, width=95, height=28)
+        self.telefono.place(x=311, y=390, width=95, height=28)
         self.distrito.place(x=211, y=451, width=195, height=28)
         self.retiro.place(x=211, y=512, width=195, height=28)
        
@@ -438,9 +424,8 @@ class Menu1(Frame):
 
                 #if self.detalles[17] != '':
                 #    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
-
-                session.query(Person).filter(Person.id == id).delete()
-                session.commit()
+                
+                Delete_Personal(id)
 
                 self.BorrarDetalles()
                 self.CargarTrabajadores()

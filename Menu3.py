@@ -1,7 +1,7 @@
 from tkinter import Button, Frame, Scrollbar
 from tkinter.ttk import Treeview
 from datetime import date
-from scripts.sql import select
+
 
 class Menu3(Frame):
 
@@ -49,8 +49,8 @@ class Menu3(Frame):
         fechaInicial = date(año, mes, 1) 
         fechaFinal = date(año, mes, totalDiasMes)  
           
-        datos = select(f'''SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES
-                                    FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC''', True)
+        #datos = select(f'''SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES
+        #                            FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC''', True)
         
         for index, dato in enumerate(datos, 1):
             

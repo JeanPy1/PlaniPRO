@@ -1,5 +1,5 @@
 from tkinter import Button, Entry, Frame, Label
-from scripts.sql import select, update
+
 
 class Menu6(Frame):
 
