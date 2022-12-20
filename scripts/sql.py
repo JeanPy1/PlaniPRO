@@ -122,6 +122,17 @@ def Create_Tables():
                     FOREIGN KEY (personal_id) REFERENCES personal (id)
                     ON DELETE CASCADE   )"""
 
+    copia = """ CREATE TRIGGER IF NOT EXISTS copia_personal AFTER DELETE ON personal 
+                BEGIN
+                INSERT INTO cesados (dni, paterno, materno, nombre, nacimiento, ingreso,
+	                planilla, asignacion, movilidad, aportacion, comision, cuspp, cargo,
+	                cuenta, licencia, categoria, vencimiento, area, telefono, distrito, retiro) 
+                    VALUES (old.dni, old.paterno, old.materno, old.nombre, old.nacimiento, old.ingreso, 
+                    old.planilla, old.asignacion, old.movilidad, old.aportacion, old.comision, old.cuspp, 
+                    old.cargo, old.cuenta, old.licencia, old.categoria, old.vencimiento, old.area, 
+                    old.telefono, old.distrito, old.retiro);
+                END """
+
     cur.execute(personal)
     cur.execute(cesados)
     cur.execute(apoyo)
@@ -134,6 +145,7 @@ def Create_Tables():
     cur.execute(descansomedico)
     cur.execute(adelanto)
     cur.execute(porfuera)
+    cur.execute(copia)
 
     con.commit()
     con.close()
@@ -206,6 +218,20 @@ def Insert_Apoyo(personal_id: int, fecha: str):
 	query = f""" INSERT INTO apoyo (personal_id, fecha) VALUES ({personal_id}, "{fecha}") """
 	__Conexion(query, False)
 
+def Select_Falta() -> list:
+
+    query = f""" SELECT * FROM falta """
+    return __Conexion(query, True)
+
+def Select_Falta_Id(id: int) -> list:    
+
+    query = f""" SELECT * FROM falta WHERE personal_id = {id} """
+    return __Conexion(query, True)
+
+def Insert_Falta(personal_id: int, fecha: str):	
+	
+	query = f""" INSERT INTO falta (personal_id, fecha) VALUES ({personal_id}, "{fecha}") """
+	__Conexion(query, False)
 
 
 

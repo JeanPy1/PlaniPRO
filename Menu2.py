@@ -3,7 +3,7 @@ from tkinter.ttk import Treeview
 from tkcalendar import Calendar
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from scripts.sql import Select_Personal, Select_Apoyo_Id, Insert_Apoyo
+from scripts.sql import Select_Personal, Select_Apoyo_Id, Insert_Apoyo, Select_Falta_Id
 
 class Menu2(Frame):
 
@@ -25,16 +25,16 @@ class Menu2(Frame):
         self.TRABAJADORES.column('#12', width=70, minwidth=70, anchor='center')
         self.TRABAJADORES.heading('#1', text='N°')
         self.TRABAJADORES.heading('#2', text='APELLIDOS Y NOMBRE')    
-        self.TRABAJADORES.heading('#3', text='APOYO')    
-        self.TRABAJADORES.heading('#4', text='FALTA')    
-        self.TRABAJADORES.heading('#5', text='FERIADO')    
-        self.TRABAJADORES.heading('#6', text='INGRESO')    
-        self.TRABAJADORES.heading('#7', text='DESCUENTO')    
-        self.TRABAJADORES.heading('#8', text='D.M.')    
-        self.TRABAJADORES.heading('#9', text='VACACIONES')    
-        self.TRABAJADORES.heading('#10', text='C.V.')    
-        self.TRABAJADORES.heading('#11', text='ADELANTO')
-        self.TRABAJADORES.heading('#12', text='POR FUERA')
+        self.TRABAJADORES.heading('#3', text='APO')    
+        self.TRABAJADORES.heading('#4', text='FAL')    
+        self.TRABAJADORES.heading('#5', text='FER')    
+        self.TRABAJADORES.heading('#6', text='INGRE')    
+        self.TRABAJADORES.heading('#7', text='DESCU')    
+        self.TRABAJADORES.heading('#8', text='DME')    
+        self.TRABAJADORES.heading('#9', text='VAC')    
+        self.TRABAJADORES.heading('#10', text='CVA')    
+        self.TRABAJADORES.heading('#11', text='ADELA')
+        self.TRABAJADORES.heading('#12', text='FUERA')
 
         scroll = Scrollbar(self, orient='vertical', command=self.TRABAJADORES.yview)
         self.TRABAJADORES.configure(yscrollcommand=scroll.set)
@@ -52,7 +52,7 @@ class Menu2(Frame):
 
     def CargarTrabajadores(self):
 
-        #Insert_Apoyo(1, "02/01/2022")
+        Insert_Apoyo(5, "02/01/2022")
         self.TRABAJADORES.delete(*self.TRABAJADORES.get_children())
         trabajadores = Select_Personal()
       
@@ -61,7 +61,6 @@ class Menu2(Frame):
             nombreCompleto = f'{trabajador[2]} {trabajador[3]} {trabajador[4]}'  
 
            
-            faltas = ""
             feriados = ""
             adelantos = ""
             porFuera = ""
@@ -71,8 +70,8 @@ class Menu2(Frame):
             compraVacaciones = ""
             descansoMedico = ""
 
-            apoyos = Select_Apoyo_Id(id)
-            print(apoyos.count())
+            apoyo = len(Select_Apoyo_Id(id))
+            falta = len(Select_Falta_Id(id))
             #faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0]         
             #feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0]   
             #adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
@@ -99,7 +98,7 @@ class Menu2(Frame):
             #if not descuentos: descuentos = ''
             #else: descuentos = f'{descuentos:.2f}'             
             
-            self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyos, faltas, feriados, ingresos,
+            self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyo, falta, feriados, ingresos,
                                             descuentos, descansoMedico, vacaciones, compraVacaciones, adelantos, porFuera))
 
     def Detalles(self):
@@ -235,27 +234,27 @@ class Menu2(Frame):
     def CargarDetalles(self):      
                   
         id = int(self.TRABAJADORES.item(self.TRABAJADORES.focus()).get('text'))
-        apoy = select(F'SELECT ID, FECH FROM APOYO WHERE IDAC = {id}', True)
-        falt = select(F'SELECT ID, FECH FROM FALTA WHERE IDAC = {id}', True) 
-        feri = select(F'SELECT ID, FECH FROM FERIADO WHERE IDAC = {id}', True) 
-        adel = select(F'SELECT ID, FECH, MONT FROM ADELANTO WHERE IDAC = {id}', True) 
-        xfue = select(F'SELECT ID, FECH, MONT FROM XFUERA WHERE IDAC = {id}', True) 
-        ingr = select(F'SELECT ID, DETA, MONT FROM INGRESO WHERE IDAC = {id}', True)
-        desc = select(F'SELECT ID, DETA, MONT FROM DESCUENTO WHERE IDAC = {id}', True) 
-        vaca = select(F'SELECT ID, FINI, FFIN, DTOT FROM VACACIONES WHERE IDAC = {id}', True)         
-        cvac = select(F'SELECT ID, FINI, FFIN, DTOT FROM CVACACIONES WHERE IDAC = {id}', True) 
-        dmed = select(F'SELECT ID, FINI, FFIN, DTOT FROM DMEDICO WHERE IDAC = {id}', True)
+        apoyo = Select_Apoyo_Id(id)
+        falta = Select_Falta_Id(id)
+        #feri = select(F'SELECT ID, FECH FROM FERIADO WHERE IDAC = {id}', True) 
+        #adel = select(F'SELECT ID, FECH, MONT FROM ADELANTO WHERE IDAC = {id}', True) 
+        #xfue = select(F'SELECT ID, FECH, MONT FROM XFUERA WHERE IDAC = {id}', True) 
+        #ingr = select(F'SELECT ID, DETA, MONT FROM INGRESO WHERE IDAC = {id}', True)
+        #desc = select(F'SELECT ID, DETA, MONT FROM DESCUENTO WHERE IDAC = {id}', True) 
+        #vaca = select(F'SELECT ID, FINI, FFIN, DTOT FROM VACACIONES WHERE IDAC = {id}', True)         
+        #cvac = select(F'SELECT ID, FINI, FFIN, DTOT FROM CVACACIONES WHERE IDAC = {id}', True) 
+        #dmed = select(F'SELECT ID, FINI, FFIN, DTOT FROM DMEDICO WHERE IDAC = {id}', True)
 
-        for dato in apoy: self.apoyo.insert('', 'end', text=dato[0], values=(dato[1]))
-        for dato in falt: self.falta.insert('', 'end', text=dato[0], values=(dato[1]))
-        for dato in feri: self.feriado.insert('', 'end', text=dato[0], values=(dato[1]))
-        for dato in adel: self.adelanto.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))
-        for dato in xfue: self.porFuera.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))
-        for dato in ingr: self.ingreso.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))
-        for dato in desc: self.descuento.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))
-        for dato in vaca: self.vacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))
-        for dato in cvac: self.cvacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))
-        for dato in dmed: self.dmedico.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))
+        for dato in apoyo: self.apoyo.insert('', 'end', text=dato[0], values=(dato[2]))
+        for dato in falta: self.falta.insert('', 'end', text=dato[0], values=(dato[2]))
+        #for dato in feri: self.feriado.insert('', 'end', text=dato[0], values=(dato[1]))
+        #for dato in adel: self.adelanto.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))
+        #for dato in xfue: self.porFuera.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))
+        #for dato in ingr: self.ingreso.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))
+        #for dato in desc: self.descuento.insert('', 'end', text=dato[0], values=(dato[1], f'{dato[2]:.2f}'))
+        #for dato in vaca: self.vacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))
+        #for dato in cvac: self.cvacaciones.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))
+        #for dato in dmed: self.dmedico.insert('', 'end', text=dato[0], values=(f'{dato[1]} - {dato[2]}', dato[3]))
    
     def QuitarSeleccion(self, e):
         

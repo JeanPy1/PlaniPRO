@@ -420,10 +420,7 @@ class Menu1(Frame):
             respuesta = messagebox.askyesno('ELIMINAR','SEGURO?', default='no')
 
             if respuesta:
-                id = int(self.trabajadores.item(self.trabajadores.focus()).get('text'))
-
-                #if self.detalles[17] != '':
-                #    insert(f'INSERT INTO CESADO SELECT * FROM ACTIVO WHERE ID = {id}')
+                id = int(self.trabajadores.item(self.trabajadores.focus()).get('text'))                
                 
                 Delete_Personal(id)
 

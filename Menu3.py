@@ -49,7 +49,7 @@ class Menu3(Frame):
         fechaInicial = date(año, mes, 1) 
         fechaFinal = date(año, mes, totalDiasMes)  
           
-        #datos = select(f'''SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES
+        datos = select(f'''SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES
         #                            FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC''', True)
         
         for index, dato in enumerate(datos, 1):
