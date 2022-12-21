@@ -81,63 +81,49 @@ class Menu2(Frame):
 
             if ingreso:
                 importe = 0
-                for monto in ingreso:
-                    importe += monto[3]       
-                ingreso = importe             
+                for dato in ingreso:
+                    importe += dato[3]       
+                ingreso = f'{importe:.2f}'              
             else: ingreso = "" 
             if descuento:
                 importe = 0
-                for monto in descuento:
-                    importe += monto[3]       
-                descuento = importe             
+                for dato in descuento:
+                    importe += dato[3]       
+                descuento = f'{importe:.2f}'              
             else: descuento = "" 
 
             if vacaciones:
                 dias = 0
-                for monto in vacaciones:
-                    dias += monto[4]       
+                for dato in vacaciones:
+                    dias += dato[4]       
                 vacaciones = dias             
             else: vacaciones = "" 
             if compravacaciones:
                 dias = 0
-                for monto in compravacaciones:
-                    dias += monto[4]       
+                for dato in compravacaciones:
+                    dias += dato[4]       
                 compravacaciones = dias             
             else: compravacaciones = "" 
             if descansomedico:
                 dias = 0
-                for monto in descansomedico:
-                    dias += monto[4]       
+                for dato in descansomedico:
+                    dias += dato[4]       
                 descansomedico = dias             
             else: descansomedico = "" 
 
             if adelanto:
                 importe = 0
-                for monto in adelanto:
-                    importe += monto[3]       
-                adelanto = importe             
+                for dato in adelanto:
+                    importe += dato[3]       
+                adelanto = f'{importe:.2f}'              
             else: adelanto = "" 
             if porfuera:
                 importe = 0
-                for monto in porfuera:
-                    importe += monto[3]       
-                porfuera = importe             
+                for dato in porfuera:
+                    importe += dato[3]       
+                porfuera = f'{importe:.2f}'              
             else: porfuera = "" 
-            
-            
-            #if not vacaciones: vacaciones = ''
-            #if not compraVacaciones: compraVacaciones = ''
-            #if not descansoMedico: descansoMedico = ''
-            
-            #if not adelantos: adelantos = ''
-            #else: adelantos = f'{adelantos:.2f}'  
-            #if not porFuera: porFuera = ''
-            #else: porFuera = f'{porFuera:.2f}'        
-            #if not ingresos: ingresos = ''
-            #else: ingresos = f'{ingresos:.2f}'
-            #if not descuentos: descuentos = ''
-            #else: descuentos = f'{descuentos:.2f}'             
-            
+                                
             self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyo, falta, feriado, ingreso,
                                         descuento, vacaciones, compravacaciones, descansomedico, adelanto, porfuera))
 
