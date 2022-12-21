@@ -3,7 +3,8 @@ from tkinter.ttk import Treeview
 from tkcalendar import Calendar
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from scripts.sql import Select_Personal, Select_Apoyo_Id, Insert_Apoyo, Select_Falta_Id
+from scripts.sql import Select_Personal
+from scripts.sql import Select_Detalle, Insert_Detalle
 
 class Menu2(Frame):
 
@@ -29,10 +30,10 @@ class Menu2(Frame):
         self.TRABAJADORES.heading('#4', text='FAL')    
         self.TRABAJADORES.heading('#5', text='FER')    
         self.TRABAJADORES.heading('#6', text='INGRE')    
-        self.TRABAJADORES.heading('#7', text='DESCU')    
-        self.TRABAJADORES.heading('#8', text='DME')    
-        self.TRABAJADORES.heading('#9', text='VAC')    
-        self.TRABAJADORES.heading('#10', text='CVA')    
+        self.TRABAJADORES.heading('#7', text='DESCU')          
+        self.TRABAJADORES.heading('#8', text='VAC')    
+        self.TRABAJADORES.heading('#9', text='CVA') 
+        self.TRABAJADORES.heading('#10', text='DME')     
         self.TRABAJADORES.heading('#11', text='ADELA')
         self.TRABAJADORES.heading('#12', text='FUERA')
 
@@ -52,39 +53,78 @@ class Menu2(Frame):
 
     def CargarTrabajadores(self):
 
-        Insert_Apoyo(5, "02/01/2022")
+        #Insert_Adelanto(5, "01/01/2020", 150.50)
         self.TRABAJADORES.delete(*self.TRABAJADORES.get_children())
         trabajadores = Select_Personal()
       
         for index, trabajador in enumerate(trabajadores, 1):         
             id = int(trabajador[0])           
-            nombreCompleto = f'{trabajador[2]} {trabajador[3]} {trabajador[4]}'  
+            nombreCompleto = f'{trabajador[2]} {trabajador[3]} {trabajador[4]}'
 
+            apoyo = Select_Detalle("apoyo", id)
+            falta = Select_Detalle("falta", id)
+            feriado = Select_Detalle("feriado", id)
+            ingreso = Select_Detalle("ingreso", id)
+            descuento = Select_Detalle("descuento", id)
+            vacaciones = Select_Detalle("vacaciones", id)
+            compravacaciones = Select_Detalle("compravacaciones", id)
+            descansomedico = Select_Detalle("descansomedico", id)
+            adelanto = Select_Detalle("adelanto", id)
+            porfuera = Select_Detalle("porfuera", id)
            
-            feriados = ""
-            adelantos = ""
-            porFuera = ""
-            ingresos = ""
-            descuentos = ""
-            vacaciones = ""
-            compraVacaciones = ""
-            descansoMedico = ""
+            if apoyo: apoyo = len(apoyo) 
+            else: apoyo = ""            
+            if falta: falta = len(falta) 
+            else: falta = "" 
+            if feriado: feriado = len(feriado) 
+            else: feriado = "" 
 
-            apoyo = len(Select_Apoyo_Id(id))
-            falta = len(Select_Falta_Id(id))
-            #faltas = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {id}', False)[0]         
-            #feriados = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {id}', False)[0]   
-            #adelantos = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {id}', False)[0]
-            #porFuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {id}', False)[0]
-            #ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {id}', False)[0]
-            #descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {id}', False)[0]
-            #vacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {id}', False)[0]
-            #compraVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {id}', False)[0]
-            #descansoMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {id}', False)[0]
+            if ingreso:
+                importe = 0
+                for monto in ingreso:
+                    importe += monto[3]       
+                ingreso = importe             
+            else: ingreso = "" 
+            if descuento:
+                importe = 0
+                for monto in descuento:
+                    importe += monto[3]       
+                descuento = importe             
+            else: descuento = "" 
 
-            #if not apoyos: apoyos = ''            
-            #if not faltas: faltas = ''
-            #if not feriados: feriados = ''            
+            if vacaciones:
+                dias = 0
+                for monto in vacaciones:
+                    dias += monto[4]       
+                vacaciones = dias             
+            else: vacaciones = "" 
+            if compravacaciones:
+                dias = 0
+                for monto in compravacaciones:
+                    dias += monto[4]       
+                compravacaciones = dias             
+            else: compravacaciones = "" 
+            if descansomedico:
+                dias = 0
+                for monto in descansomedico:
+                    dias += monto[4]       
+                descansomedico = dias             
+            else: descansomedico = "" 
+
+            if adelanto:
+                importe = 0
+                for monto in adelanto:
+                    importe += monto[3]       
+                adelanto = importe             
+            else: adelanto = "" 
+            if porfuera:
+                importe = 0
+                for monto in porfuera:
+                    importe += monto[3]       
+                porfuera = importe             
+            else: porfuera = "" 
+            
+            
             #if not vacaciones: vacaciones = ''
             #if not compraVacaciones: compraVacaciones = ''
             #if not descansoMedico: descansoMedico = ''
@@ -98,8 +138,8 @@ class Menu2(Frame):
             #if not descuentos: descuentos = ''
             #else: descuentos = f'{descuentos:.2f}'             
             
-            self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyo, falta, feriados, ingresos,
-                                            descuentos, descansoMedico, vacaciones, compraVacaciones, adelantos, porFuera))
+            self.TRABAJADORES.insert('', 'end', text=id, values=(index, nombreCompleto, apoyo, falta, feriado, ingreso,
+                                        descuento, vacaciones, compravacaciones, descansomedico, adelanto, porfuera))
 
     def Detalles(self):
 

@@ -117,7 +117,7 @@ def Create_Tables():
     porfuera = """ CREATE TABLE IF NOT EXISTS porfuera (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     personal_id INTEGER,
-                    detalle VARCHAR(150),
+                    fecha VARCHAR(10),
                     importe REAL,
                     FOREIGN KEY (personal_id) REFERENCES personal (id)
                     ON DELETE CASCADE   )"""
@@ -167,14 +167,10 @@ def __Conexion(query:str, select: bool):
     if select:
         return result
 
+
 def Select_Personal() -> list:
 
     query = f""" SELECT * FROM personal ORDER BY paterno ASC, materno ASC, nombre ASC """
-    return __Conexion(query, True)
-
-def Select_Personal_Id(id: int) -> list:    
-
-    query = f""" SELECT * FROM personal WHERE ID = {id} """
     return __Conexion(query, True)
 
 def Insert_Personal(dni: str, paterno: str, materno: str, nombre: str, nacimiento: str, ingreso: str, planilla: float,
@@ -203,44 +199,31 @@ def Delete_Personal(id: int):
     query = f""" DELETE FROM personal WHERE ID = {id} """
     __Conexion(query, False)
 
-def Select_Apoyo() -> list:
 
-    query = f""" SELECT * FROM apoyo """
+def Select_Detalle(table_name: str, id: int) -> list:    
+
+    query = f""" SELECT * FROM {table_name} WHERE personal_id = {id} """
     return __Conexion(query, True)
 
-def Select_Apoyo_Id(id: int) -> list:    
+def Insert_Detalle(table_name: str, personal_id: int, datos: dict):
+     
+    if table_name == "apoyo" or table_name == "falta" or table_name == "feriado":
+        query = f""" INSERT INTO {table_name} (personal_id, fecha) VALUES ({personal_id}, "{datos["fecha"]}") """
+    elif table_name == "ingreso" or table_name == "descuento":
+        query = f""" INSERT INTO {table_name} (personal_id, detalle, importe) VALUES ({personal_id}, "{datos["detalle"]}", {datos["importe"]}) """
+    elif table_name == "vacaciones" or table_name == "compravacaciones" or table_name == "descansomedico":
+        query = f""" INSERT INTO {table_name} (personal_id, inicio, final, dias) VALUES ({personal_id}, "{datos["inicio"]}", "{datos["final"]}", {datos["dias"]}) """
+    elif table_name == "adelanto" or table_name == "porfuera":
+        query = f""" INSERT INTO {table_name} (personal_id, fecha, importe) VALUES ({personal_id}, "{datos["fecha"]}", {datos["importe"]}) """
 
-    query = f""" SELECT * FROM apoyo WHERE personal_id = {id} """
-    return __Conexion(query, True)
-
-def Insert_Apoyo(personal_id: int, fecha: str):	
-	
-	query = f""" INSERT INTO apoyo (personal_id, fecha) VALUES ({personal_id}, "{fecha}") """
-	__Conexion(query, False)
-
-def Select_Falta() -> list:
-
-    query = f""" SELECT * FROM falta """
-    return __Conexion(query, True)
-
-def Select_Falta_Id(id: int) -> list:    
-
-    query = f""" SELECT * FROM falta WHERE personal_id = {id} """
-    return __Conexion(query, True)
-
-def Insert_Falta(personal_id: int, fecha: str):	
-	
-	query = f""" INSERT INTO falta (personal_id, fecha) VALUES ({personal_id}, "{fecha}") """
-	__Conexion(query, False)
-
-
-
+    __Conexion(query, False)
 
 
 def Restablecer_Secuencia():
 
 	query = f""" DELETE FROM sqlite_sequence """
 	__Conexion(query, False)
+
 
 
 
