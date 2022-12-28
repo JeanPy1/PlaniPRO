@@ -218,6 +218,16 @@ def Insert_Detalle(table_name: str, personal_id: int, datos: dict):
 
     __Conexion(query, False)
 
+def Delete_Detalle(table_name: str, id: int):
+
+    query = f""" DELETE FROM {table_name} WHERE ID = {id} """
+    __Conexion(query, False)
+
+
+def Select_Id(table_name: str) -> list:
+
+    query = f""" SELECT id FROM {table_name} ORDER BY id DESC LIMIT 1 """
+    return __Conexion(query, True)
 
 def Restablecer_Secuencia():
 

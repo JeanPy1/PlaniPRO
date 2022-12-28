@@ -1,6 +1,7 @@
 from tkinter import Button, Frame, Scrollbar
 from tkinter.ttk import Treeview
 from datetime import date
+from scripts.sql import Select_Personal, Select_Detalle
 
 
 class Menu3(Frame):
@@ -49,26 +50,24 @@ class Menu3(Frame):
         fechaInicial = date(año, mes, 1) 
         fechaFinal = date(año, mes, totalDiasMes)  
           
-        datos = select(f'''SELECT ID, APAT, AMAT, NOMB, FING, SPLA, AFAM, SMOV, EAPO, TCOM, FCES
-        #                            FROM ACTIVO ORDER BY APAT, AMAT, NOMB ASC''', True)
+        datos = Select_Personal()
         
-        for index, dato in enumerate(datos, 1):
+        for index, dato in enumerate(datos, 1):            
             
             idTrabajador = dato[0]
-            nombre = f'{dato[1]} {dato[2]} {dato[3]}'
-            ingreso = dato[4]
-            planilla = float(dato[5])
-            asignacion = float(dato[6])
-            movilidad = float(dato[7])            
-            aportacion = dato[8]
-            comision = dato[9]
-            retiro = dato[10]
+            nombre = f'{dato[2]} {dato[3]} {dato[4]}'
+            ingreso = dato[6]
+            planilla = float(dato[7])
+            asignacion = float(dato[8])
+            movilidad = float(dato[9])            
+            aportacion = dato[10]
+            comision = dato[11]
+            retiro = dato[21]            
             
             fechaIngreso = date(int(ingreso[6:10]), int(ingreso[3:5]), int(ingreso[0:2]))   
             if fechaIngreso > fechaFinal:
                 continue   
-            
-            # Calculos de dias
+           
             diasComputables = 0
             if retiro:
                 fechaRetiro = date(int(retiro[6:10]), int(retiro[3:5]), int(retiro[0:2]))
@@ -81,17 +80,20 @@ class Menu3(Frame):
                 else:
                     diasComputables = totalDiasMes - fechaIngreso.day +1
 
-            diaApoyo = select(F'SELECT COUNT(FECH) FROM APOYO WHERE IDAC = {idTrabajador}', False)[0]
-            diaFalta = select(F'SELECT COUNT(FECH) FROM FALTA WHERE IDAC = {idTrabajador}', False)[0]
-            diaFeriado = select(F'SELECT COUNT(FECH) FROM FERIADO WHERE IDAC = {idTrabajador}', False)[0]
-            diaVacaciones = select(F'SELECT SUM(DTOT) FROM VACACIONES WHERE IDAC = {idTrabajador}', False)[0]
-            diaCVacaciones = select(F'SELECT SUM(DTOT) FROM CVACACIONES WHERE IDAC = {idTrabajador}', False)[0]
-            diaDMedico = select(F'SELECT SUM(DTOT) FROM DMEDICO WHERE IDAC = {idTrabajador}', False)[0]
-            ingresos = select(F'SELECT SUM(MONT) FROM INGRESO WHERE IDAC = {idTrabajador}', False)[0]
-            descuentos = select(F'SELECT SUM(MONT) FROM DESCUENTO WHERE IDAC = {idTrabajador}', False)[0]
-            adelanto = select(F'SELECT SUM(MONT) FROM ADELANTO WHERE IDAC = {idTrabajador}', False)[0]
-            porfuera = select(F'SELECT SUM(MONT) FROM XFUERA WHERE IDAC = {idTrabajador}', False)[0]
-              
+            diaApoyo = Select_Detalle("apoyo", idTrabajador)
+            diaFalta = Select_Detalle("falta", idTrabajador)
+            diaFeriado = Select_Detalle("feriado", idTrabajador)
+            diaVacaciones = Select_Detalle("vacaciones", idTrabajador)
+            diaCVacaciones = Select_Detalle("compravacaciones", idTrabajador)
+            diaDMedico = Select_Detalle("descansomedico", idTrabajador)
+            ingresos = Select_Detalle("ingreso", idTrabajador)
+            descuentos = Select_Detalle("descuento", idTrabajador)
+            adelanto = Select_Detalle("adelanto", idTrabajador)
+            porfuera = Select_Detalle("porfuera", idTrabajador)
+            
+            print(diaApoyo)
+            
+            continue
             if not diaApoyo: diaApoyo = 0
             if not diaFalta: diaFalta = 0
             if not diaFeriado: diaFeriado = 0
@@ -145,60 +147,60 @@ class Menu3(Frame):
             if sueldoComputable < 0:
                 sueldoComputable = 0
 
-            comisiones = select(f""" SELECT * FROM OPCIONES """, False)
+            #comisiones = select(f""" SELECT * FROM OPCIONES """, False)
            
-            habitatF = comisiones[0]
-            habitatM = comisiones[1]
-            integraF = comisiones[2]
-            integraM = comisiones[3]
-            primaF = comisiones[4]
-            primaM = comisiones[5]
-            profuturoF = comisiones[6]
-            profuturoM = comisiones[7]
-            primaS = comisiones[8]
-            aporteO = comisiones[9]
-            remMax = comisiones[10]
-            onpA = comisiones[11]
+            #habitatF = comisiones[0]
+            #habitatM = comisiones[1]
+            #integraF = comisiones[2]
+            #integraM = comisiones[3]
+            #primaF = comisiones[4]
+            #primaM = comisiones[5]
+            #profuturoF = comisiones[6]
+            #profuturoM = comisiones[7]
+            #primaS = comisiones[8]
+            #aporteO = comisiones[9]
+            #remMax = comisiones[10]
+            #onpA = comisiones[11]
 
-            onp = 0
-            afpComision = 0
-            afpPrima = 0
-            afpAporte = 0
-            match aportacion:
-                case "ONP":
-                    onp = remuneracionBruta * onpA
-                case "HABITAT":                    
-                    afpComision = remuneracionBruta * habitatM
-                    if comision == "FLUJO":
-                        afpComision = remuneracionBruta * habitatF
-                    afpPrima = remuneracionBruta * primaS
-                    if planilla + movilidad > remMax:
-                        afpPrima = remMax * primaS
-                    afpAporte = remuneracionBruta * aporteO
-                case "INTEGRA":
-                    afpComision = remuneracionBruta * integraM
-                    if comision == "FLUJO":
-                        afpComision = remuneracionBruta * integraF
-                    afpPrima = remuneracionBruta * primaS
-                    if planilla + movilidad > remMax:
-                        afpPrima = remMax * primaS
-                    afpAporte = remuneracionBruta * aporteO
-                case "PRIMA":
-                    afpComision = remuneracionBruta * primaM
-                    if comision == "FLUJO":
-                        afpComision = remuneracionBruta * primaF
-                    afpPrima = remuneracionBruta * primaS
-                    if planilla + movilidad > remMax:
-                        afpPrima = remMax * primaS
-                    afpAporte = remuneracionBruta * aporteO
-                case "PROFUTURO":
-                    afpComision = remuneracionBruta * profuturoM
-                    if comision == "FLUJO":
-                        afpComision = remuneracionBruta * profuturoF
-                    afpPrima = remuneracionBruta * primaS
-                    if planilla + movilidad > remMax:
-                        afpPrima = remMax * primaS
-                    afpAporte = remuneracionBruta * aporteO
+            #onp = 0
+            #afpComision = 0
+            #afpPrima = 0
+            #afpAporte = 0
+            #match aportacion:
+            #    case "ONP":
+            #        onp = remuneracionBruta * onpA
+            #    case "HABITAT":                    
+            #        afpComision = remuneracionBruta * habitatM
+            #        if comision == "FLUJO":
+            #            afpComision = remuneracionBruta * habitatF
+            #        afpPrima = remuneracionBruta * primaS
+            #        if planilla + movilidad > remMax:
+            #            afpPrima = remMax * primaS
+            #        afpAporte = remuneracionBruta * aporteO
+            #    case "INTEGRA":
+            #        afpComision = remuneracionBruta * integraM
+            #        if comision == "FLUJO":
+            #            afpComision = remuneracionBruta * integraF
+            #        afpPrima = remuneracionBruta * primaS
+            #        if planilla + movilidad > remMax:
+            #            afpPrima = remMax * primaS
+            #        afpAporte = remuneracionBruta * aporteO
+            #    case "PRIMA":
+            #        afpComision = remuneracionBruta * primaM
+            #        if comision == "FLUJO":
+            #            afpComision = remuneracionBruta * primaF
+            #        afpPrima = remuneracionBruta * primaS
+            #        if planilla + movilidad > remMax:
+            #            afpPrima = remMax * primaS
+            #        afpAporte = remuneracionBruta * aporteO
+            #    case "PROFUTURO":
+            #        afpComision = remuneracionBruta * profuturoM
+            #        if comision == "FLUJO":
+            #            afpComision = remuneracionBruta * profuturoF
+            #        afpPrima = remuneracionBruta * primaS
+            #        if planilla + movilidad > remMax:
+            #            afpPrima = remMax * primaS
+            #        afpAporte = remuneracionBruta * aporteO
 
             # Redondear a 2 decimales
             planilla = f"{planilla:.2f}"
